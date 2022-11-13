@@ -1,10 +1,5 @@
 export const navLinks = [
   {
-    name: "Home",
-    icon: "/logo.png",
-    path: "/",
-  },
-  {
     name: "Play",
     path: "",
   },
