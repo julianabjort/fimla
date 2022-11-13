@@ -3,13 +3,13 @@ import React from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 
 const Header = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const navLinks = [
     { name: "Home", path: "/" },
     {
       name: "Play",
-      path: "/play",
+      path: "",
     },
     {
       name: "Stats",

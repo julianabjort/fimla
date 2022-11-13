@@ -1,18 +1,49 @@
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import React from "react";
 
 export default function Home() {
   const { data: session, status } = useSession();
-  console.log("session", session);
+  const games = [
+    {
+      name: "Wordle",
+      path: "/games/wordle",
+    },
+    {
+      name: "Quordle",
+      path: "/games/quordle",
+    },
+    {
+      name: "Spelling Bee",
+      path: "/games/spelling-bee",
+    },
+    {
+      name: "Scrabble",
+      path: "/games/scrabble",
+    },
+  ];
+
   if (status === "loading") {
     return <h1>Loading..</h1>;
   }
   if (session) {
     return (
       <>
-        <div>Signed in as {session.user?.email}</div>
-        <button type="button" onClick={() => signOut()}>
-          Sign out
-        </button>
+        <section className="w-full grid grid-cols-2 grid-rows-auto gap-2">
+          {React.Children.toArray(
+            games.map((link) => (
+              <Link href={link.path}>
+                <div className="flex w-full h-64 bg-dark rounded-md items-center justify-center">
+                  <div className="flex gap-x-4 p-4 items-center">
+                    <div className="w-10 h-10 rounded-md bg-light"></div>
+                    <h2 className="heading-2">{link.name}</h2>
+                  </div>
+                </div>
+              </Link>
+            ))
+          )}
+        </section>
+        <div>Signed in as {session.user?.name}</div>
       </>
     );
   }
@@ -21,9 +52,6 @@ export default function Home() {
       <div>
         <h1>Not signed in</h1>
       </div>
-      <button type="button" onClick={() => signIn()}>
-        Sign in
-      </button>
     </div>
   );
 }

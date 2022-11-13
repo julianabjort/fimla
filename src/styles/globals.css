@@ -2,12 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  @font-face {
+    font-family: "Apercu";
+    src: url("/fonts/apercu-light.woff2") format("woff2");
+  }
+}
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    color: white;
+    background: #010409;
+  }
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: Helvetica Neue, sans-serif;
 }
 
 a {
@@ -19,12 +34,22 @@ a {
   box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
+.heading-1 {
+  @apply text-4xl font-medium;
+}
+
+.heading-2 {
+  @apply text-2xl;
+}
+
+.center {
+  @apply items-center justify-center;
+}
+
+.center-x {
+  @apply items-center;
+}
+
+.center-y {
+  @apply justify-center;
 }

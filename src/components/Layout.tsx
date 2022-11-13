@@ -1,3 +1,4 @@
+import Footer from "./Footer";
 import Header from "./Header";
 
 // type Content = {
@@ -6,9 +7,10 @@ import Header from "./Header";
 
 const Layout = ({ children }: any) => {
   return (
-    <div className="mx-56">
+    <div className="mx-56 h-screen flex flex-col justify-between">
       <Header />
       {children}
+      <Footer />
     </div>
   );
 };
