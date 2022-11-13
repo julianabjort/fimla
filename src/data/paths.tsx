@@ -2,7 +2,6 @@ export const navLinks = [
   {
     name: "Home",
     icon: "/logo.png",
-    size: "w-36",
     path: "/",
   },
   {
@@ -23,9 +22,8 @@ export const navLinks = [
   },
   {
     name: "Settings",
-    icon: "/settings-icon.png",
-    size: "w-5",
-    path: "",
+    // icon: "/settings-icon.png",
+    path: "/user/settings",
   },
 ];
 
