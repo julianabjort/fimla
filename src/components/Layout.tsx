@@ -7,10 +7,12 @@ import Header from "./Header";
 
 const Layout = ({ children }: any) => {
   return (
-    <div className="mx-56 h-screen flex flex-col justify-between">
+    <div className="mx-20">
       <Header />
-      {children}
-      <Footer />
+      <div className="mx-36 h-[90vh] flex flex-col justify-around">
+        {children}
+        <Footer />
+      </div>
     </div>
   );
 };

@@ -1,35 +1,20 @@
 import Link from "next/link";
 import React from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { navLinks } from "../data/paths";
 
 const Header = () => {
   const { data: session } = useSession();
-
-  const navLinks = [
-    { name: "Home", path: "/" },
-    {
-      name: "Play",
-      path: "",
-    },
-    {
-      name: "Stats",
-      path: "/stats",
-    },
-    {
-      name: "About",
-      path: "/about",
-    },
-    {
-      name: "FAQ",
-      path: "/faq",
-    },
-  ];
   return (
-    <nav className="flex justify-between my-10">
+    <nav className="flex justify-between items-center my-10">
       {React.Children.toArray(
         navLinks.map((link) => (
           <Link href={link.path}>
-            <div>{link.name}</div>
+            {link.icon ? (
+              <img src={link.icon} className={link.size}></img>
+            ) : (
+              link.name
+            )}
           </Link>
         ))
       )}

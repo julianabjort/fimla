@@ -1,27 +1,10 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
+import { games } from "../data/paths";
 
 export default function Home() {
   const { data: session, status } = useSession();
-  const games = [
-    {
-      name: "Wordle",
-      path: "/games/wordle",
-    },
-    {
-      name: "Quordle",
-      path: "/games/quordle",
-    },
-    {
-      name: "Spelling Bee",
-      path: "/games/spelling-bee",
-    },
-    {
-      name: "Scrabble",
-      path: "/games/scrabble",
-    },
-  ];
 
   if (status === "loading") {
     return <h1>Loading..</h1>;
@@ -43,7 +26,7 @@ export default function Home() {
             ))
           )}
         </section>
-        <div>Signed in as {session.user?.name}</div>
+        {/* <div>Signed in as {session.user?.name}</div> */}
       </>
     );
   }
