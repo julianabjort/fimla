@@ -33,9 +33,9 @@ const Header = () => {
 
       <div className="flex w-1/3 gap-x-4 justify-end">
         {session ? (
-          <button onClick={() => signOut()}>Sign out</button>
+          <button onClick={() => signOut()}>SIGN OUT</button>
         ) : (
-          <button onClick={() => signIn()}>Sign in</button>
+          <button onClick={() => signIn()}>SIGN IN</button>
         )}
         <button onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
           {theme === "light" ? <HiMoon /> : <HiSun />}
