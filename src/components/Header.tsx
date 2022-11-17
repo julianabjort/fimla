@@ -14,7 +14,7 @@ const Header = () => {
   if (!mounted) return null;
 
   return (
-    <nav className="flex justify-between items-center my-10">
+    <nav className="sticky top-0 z-50 flex items-center justify-between py-8 bg-background">
       <div className="w-1/3">
         <Link href="/">
           {theme === "light" ? (
@@ -31,11 +31,11 @@ const Header = () => {
         )}
       </div>
 
-      <div className="flex w-1/3 gap-x-4 justify-end">
+      <div className="flex justify-end w-1/3 gap-x-4">
         {session ? (
-          <button onClick={() => signOut()}>SIGN OUT</button>
+          <button onClick={() => signOut()}>Sign out</button>
         ) : (
-          <button onClick={() => signIn()}>SIGN IN</button>
+          <button onClick={() => signIn()}>Sign in</button>
         )}
         <button onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
           {theme === "light" ? <HiMoon /> : <HiSun />}

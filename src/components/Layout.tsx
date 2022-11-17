@@ -7,9 +7,9 @@ import Header from "./Header";
 
 const Layout = ({ children }: any) => {
   return (
-    <div className="mx-20">
+    <div className="mx-6 md:mx-20">
       <Header />
-      <div className="mx-36 h-[90vh] flex flex-col justify-around">
+      <div className="flex flex-col justify-around md:mx-20 lg:mx-36">
         {children}
         <Footer />
       </div>
