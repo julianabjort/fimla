@@ -1,4 +1,4 @@
-const Guess = ({
+const WordGrid = ({
   word,
   guess,
   isGuessed,
@@ -30,4 +30,4 @@ const Guess = ({
   );
 };
 
-export default Guess;
+export default WordGrid;
