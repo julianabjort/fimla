@@ -13,9 +13,9 @@ const WordGrid = ({
         const bgColor = !isGuessed
           ? "bg-lighter dark:bg-dark"
           : guess[i] === word[i]
-          ? "bg-green-400"
+          ? "bg-green"
           : word.includes(guess[i])
-          ? "bg-yellow-400"
+          ? "bg-yellow"
           : "bg-lighter dark:bg-dark";
         return (
           <div

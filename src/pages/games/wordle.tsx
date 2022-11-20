@@ -16,7 +16,7 @@ const wordle = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center my-20 justify-evenly">
+    <div className="flex flex-col items-center my-10 justify-evenly">
       <h1 className="heading-1">Wordle</h1>
       <h1 className="h-6 px-2 rounded-md text-error">{store.error}</h1>
       {store.guesses.map((_, i) => (
@@ -33,6 +33,7 @@ const wordle = () => {
         <button onClick={store.startGame}>Play again</button>
       )}
       <Keyboard store={store} />
+      <button onClick={store.calculateScore}>Save</button>
       <h1>word: {store.word}</h1>
       <h1>guesses: {JSON.stringify(store.guesses)}</h1>
       <h1>numberOfGuesses: {store.numberOfGuesses}</h1>

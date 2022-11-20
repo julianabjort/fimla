@@ -4,12 +4,27 @@ export default {
   word: "",
   guesses: [],
   numberOfGuesses: 0,
+  totalScore: 0,
+  scorePercentage: 0,
 
   get won() {
     return this.guesses[this.numberOfGuesses - 1] === this.word;
   },
   get lost() {
     return this.numberOfGuesses === 6;
+  },
+  get roundComplete() {
+    return (
+      this.guesses[this.numberOfGuesses - 1] === this.word ||
+      this.numberOfGuesses === 6
+    );
+  },
+
+  // compare this.word and allGuessedLetters and get all matches - to calculate score based on how many green letters you got in the grid
+  get correctLetters() {
+    return this.allGuessedLetters.filter((letter1) =>
+      this.word.split("").some((letter2) => letter1 === letter2)
+    );
   },
 
   // Array with all the letters that have been guessed
@@ -38,17 +53,23 @@ export default {
     this.word = words[Math.round(Math.random() * words.length)];
     this.guesses.replace(new Array(6).fill(""));
     this.numberOfGuesses = 0;
+    this.totalScore = 0;
+    this.result = [];
   },
   submitGuess() {
+    this.error = "";
     if (words.includes(this.guesses[this.numberOfGuesses])) {
       this.numberOfGuesses += 1;
     } else {
       this.error = "Not a valid word";
     }
+    if (this.roundComplete) {
+      this.handleStats();
+    }
   },
 
   handleKeyup(e) {
-    if (this.won || this.lost) {
+    if (this.roundComplete) {
       return;
     }
     if (e.key === "Enter") {
@@ -60,7 +81,6 @@ export default {
       ].slice(0, this.guesses[this.numberOfGuesses].length - 1);
       return;
     }
-
     if (
       this.guesses[this.numberOfGuesses].length < 5 &&
       e.key.match(/^[a-z]$/)
@@ -75,5 +95,44 @@ export default {
       this.guesses[this.numberOfGuesses] =
         this.guesses[this.numberOfGuesses] + key.toLowerCase();
     }
+  },
+
+  handleStats() {
+    this.calculateScore();
+
+    if (typeof window !== "undefined") {
+      let stats = JSON.parse(localStorage.getItem("stats"));
+      if (stats === null)
+        stats = {
+          wins: 0,
+          losses: 0,
+          gamesPlayed: 0,
+          totalScore: 0,
+          avgScore: 0,
+          avgTurns: 0,
+        };
+
+      if (this.won) {
+        stats.wins += 1;
+      }
+      if (this.lost) {
+        stats.losses += 1;
+      }
+      stats.gamesPlayed += 1;
+      stats.totalScore = stats.totalScore + this.totalScore;
+      const turns = (stats.avgTurns + this.numberOfGuesses) / stats.gamesPlayed;
+      stats.avgTurns = Math.round((turns * 10) / 10);
+
+      stats.avgScore = Math.round(stats.totalScore / stats.gamesPlayed);
+
+      localStorage.setItem("stats", JSON.stringify(stats));
+    }
+  },
+  calculateScore() {
+    const unUsedLetters = (30 - this.allGuessedLetters.length) * 4;
+    this.totalScore = unUsedLetters + this.correctLetters.length * 2;
+    this.scorePercentage = (this.totalScore / 110) * 100;
+    console.log(this.scorePercentage);
+    console.log(Math.round(this.scorePercentage));
   },
 };

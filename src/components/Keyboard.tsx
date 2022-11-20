@@ -8,12 +8,12 @@ const Keyboard = ({ store }) => {
         <div key={i} className="flex my-1 center">
           {row.split("").map((key, i) => {
             const bgColor = store.greenLetters.includes(key)
-              ? "bg-green-400"
+              ? "bg-green"
               : store.yellowLetters.includes(key)
-              ? "bg-yellow-400"
+              ? "bg-yellow"
               : store.allGuessedLetters.includes(key)
-              ? "bg-dark"
-              : "bg-light";
+              ? "bg-medium dark:bg-dark dark:text-white"
+              : "bg-lighter";
             return (
               <div
                 onClick={() => store.handleKeyClick(key)}
