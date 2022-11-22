@@ -42,7 +42,7 @@ export default {
     });
   },
 
-  // Array of yellow letters - correct letters in wrong position
+  // Array of correct letters in wrong or right position
   get yellowLetters() {
     return this.word
       .split("")
@@ -122,7 +122,6 @@ export default {
       stats.totalScore = stats.totalScore + this.totalScore;
       const turns = (stats.avgTurns + this.numberOfGuesses) / stats.gamesPlayed;
       stats.avgTurns = Math.round((turns * 10) / 10);
-
       stats.avgScore = Math.round(stats.totalScore / stats.gamesPlayed);
 
       localStorage.setItem("stats", JSON.stringify(stats));
