@@ -63,13 +63,6 @@ export default NextAuth({
       }
       return token;
     }, 
-    // async session({ session, token, user }) {
-    //   // Send properties to the client, like an access_token and user id from a provider.
-    //   session.accessToken = token.accessToken
-    //   session.user.id = token.id
-      
-    //   return session
-    // }
     // async session ({ session, token }) {
     //     if (token) {
     //         session.id = token.id
