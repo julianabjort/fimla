@@ -1,10 +1,13 @@
-import React from "react";
+import { observer } from "mobx-react-lite";
 
-const SpellingBeeGrid = ({ letters }) => {
+const SpellingBeeGrid = ({ store }) => {
   return (
-    <div className="flex">
-      {letters.map((letter, i) => (
-        <div className="flex w-10 h-10 bg-dark center" key={i}>
+    <div className="flex gap-x-4">
+      {store.letters.map((letter, i) => (
+        <div
+          className="flex w-24 text-4xl border border-dark dark:border-white rounded-xl aspect-square center"
+          key={i}
+        >
           {letter}
         </div>
       ))}
@@ -12,4 +15,4 @@ const SpellingBeeGrid = ({ letters }) => {
   );
 };
 
-export default SpellingBeeGrid;
+export default observer(SpellingBeeGrid);

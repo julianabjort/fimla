@@ -2,22 +2,66 @@ import { useEffect, useState } from "react";
 import { observer, useLocalObservable } from "mobx-react-lite";
 import SpellingBeeStore from "../../stores/SpellingBeeStore";
 import SpellingBeeGrid from "../../components/SpellingBeeGrid";
+import { HiRefresh } from "react-icons/hi";
 
 const spellingBee = () => {
   const store = useLocalObservable(() => SpellingBeeStore);
-  // useEffect(() => {
-  //   store.startGame();
-  // }, []);
+  const [word, setWord] = useState("");
+
+  useEffect(() => {
+    store.startGame();
+    window.addEventListener("keydown", store.handleKeydown);
+    return () => {
+      window.removeEventListener("keydown", store.handleKeydown);
+    };
+  }, []);
+
+  useEffect(() => {
+    store.word = word;
+  }, [word]);
+
+  const clearInput = (e) => {
+    if (e.key === "Enter") {
+      setWord("");
+      store.error = "";
+    }
+  };
 
   return (
-    <div className="flex flex-col items-center my-10 justify-evenly">
-      <SpellingBeeGrid letters={store.letters} />
-      <button
-        className="p-2 m-2 text-black bg-white rounded-md"
-        onClick={store.startGame}
-      >
-        refresh
-      </button>
+    <div className="flex flex-col items-center my-20 justify-evenly">
+      <h1 className="h-10 p-2 rounded-md text-error">{store.error}</h1>
+      <div className="flex gap-x-6">
+        <SpellingBeeGrid store={store} />
+        <button onClick={() => store.shuffle(store.letters)}>
+          <HiRefresh />
+        </button>
+        <button className="m-2" onClick={store.startGame}>
+          refresh
+        </button>
+      </div>
+
+      <input
+        placeholder="Type something.."
+        className="w-full h-20 my-10 text-2xl text-center bg-dark rounded-xl"
+        type="text"
+        value={word}
+        onChange={(e) => setWord(e.target.value)}
+        onKeyUp={clearInput}
+      />
+      <div className="flex w-full gap-x-4">
+        <div className="w-full h-56 p-4 rounded-xl bg-dark">
+          <h2 className="heading-3">4 letter words</h2>
+          {store.fourLetterWords.map((word, i) => (
+            <div key={i}>{word}</div>
+          ))}
+        </div>
+        <div className="w-full h-56 p-4 rounded-xl bg-dark">
+          <h2 className="heading-3">5 letter words</h2>
+          {store.fiveLetterWords.map((word, i) => (
+            <div key={i}>{word}</div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
