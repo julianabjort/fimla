@@ -2,6 +2,8 @@ import fiveLetterWords from "../data/fiveLetterWords.json";
 import fourLetterWords from "../data/fourLetterWords.json";
 
 export default {
+  // DATA
+
   letters: [],
   fourLetterWords: [],
   fiveLetterWords: [],
@@ -10,6 +12,8 @@ export default {
   vowels: "eyuioa",
   consonants: "qwrtpsdfghjklcvbnm",
   error: "",
+
+  // FUNCTIONS
 
   getRandomLetters(arr, num) {
     const letters = [...arr].sort(() => 0.5 - Math.random());
@@ -39,6 +43,15 @@ export default {
     }
   },
 
+  allLetterCombos(letters, length) {
+    return Array.from({ length })
+      .fill(letters)
+      .reduce((a, b) =>
+        a.reduce((r, v) => r.concat(b.map((w) => [].concat(v, w))), [])
+      )
+      .map((a) => a.join(""));
+  },
+
   handleKeydown(e) {
     if (e.key === "Backspace") {
       this.error = "";
@@ -48,6 +61,34 @@ export default {
     if (e.key === "Enter") {
       return this.submitWord();
     }
+  },
+
+  // COMPUTED PROPERTIES
+
+  get allFourLetterWords() {
+    return this.allLetterCombos(this.letters, 4).filter((combo) =>
+      fourLetterWords.some((word) => combo === word)
+    );
+  },
+  
+  get allFiveLetterWords() {
+    return this.allLetterCombos(this.letters, 5).filter((combo) =>
+      fiveLetterWords.some((word) => combo === word)
+    );
+  },
+  get allFourLetterLength() {
+    return this.allFourLetterWords.length;
+  },
+
+  get allFiveLetterLength() {
+    return this.allFiveLetterWords.length;
+  },
+
+  get userFourLetterLength() {
+    return this.fourLetterWords.length;
+  },
+  get userFiveLetterLength() {
+    return this.fiveLetterWords.length;
   },
 
   get randomLetters() {

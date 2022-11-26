@@ -50,13 +50,23 @@ const spellingBee = () => {
       />
       <div className="flex w-full gap-x-4">
         <div className="w-full h-56 p-4 rounded-xl bg-dark">
-          <h2 className="heading-3">4 letter words</h2>
+          <div className="flex justify-between">
+            <h2 className="heading-3">4 letter words</h2>
+            <p>
+              {store.userFourLetterLength} / {store.allFourLetterLength}
+            </p>
+          </div>
           {store.fourLetterWords.map((word, i) => (
             <div key={i}>{word}</div>
           ))}
         </div>
         <div className="w-full h-56 p-4 rounded-xl bg-dark">
-          <h2 className="heading-3">5 letter words</h2>
+          <div className="flex justify-between">
+            <h2 className="heading-3">5 letter words</h2>
+            <p>
+              {store.userFiveLetterLength} / {store.allFiveLetterLength}
+            </p>
+          </div>
           {store.fiveLetterWords.map((word, i) => (
             <div key={i}>{word}</div>
           ))}
