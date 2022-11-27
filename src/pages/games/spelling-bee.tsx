@@ -35,21 +35,18 @@ const spellingBee = () => {
         <button onClick={() => store.shuffle(store.letters)}>
           <HiRefresh />
         </button>
-        <button className="m-2" onClick={store.startGame}>
-          refresh
-        </button>
       </div>
 
       <input
         placeholder="Type something.."
-        className="w-full h-20 my-10 text-2xl text-center bg-dark rounded-xl"
+        className="w-full h-20 my-10 text-2xl text-center outline-none bg-lightest dark:bg-dark rounded-xl "
         type="text"
         value={word}
         onChange={(e) => setWord(e.target.value)}
         onKeyUp={clearInput}
       />
       <div className="flex w-full gap-x-4">
-        <div className="w-full h-56 p-4 rounded-xl bg-dark">
+        <div className="w-full h-56 p-4 rounded-xl bg-lightest dark:bg-dark">
           <div className="flex justify-between">
             <h2 className="heading-3">4 letter words</h2>
             <p>
@@ -60,7 +57,7 @@ const spellingBee = () => {
             <div key={i}>{word}</div>
           ))}
         </div>
-        <div className="w-full h-56 p-4 rounded-xl bg-dark">
+        <div className="w-full h-56 p-4 rounded-xl bg-lightest dark:bg-dark">
           <div className="flex justify-between">
             <h2 className="heading-3">5 letter words</h2>
             <p>
@@ -71,7 +68,7 @@ const spellingBee = () => {
             <div key={i}>{word}</div>
           ))}
         </div>
-        <div className="w-full h-56 p-4 rounded-xl bg-dark">
+        {/* <div className="w-full h-56 p-4 rounded-xl bg-dark">
           <div className="flex justify-between">
             <h2 className="heading-3">6 letter words</h2>
             <p>
@@ -81,7 +78,7 @@ const spellingBee = () => {
           {store.sixLetterWords.map((word, i) => (
             <div key={i}>{word}</div>
           ))}
-        </div>
+        </div> */}
       </div>
     </div>
   );
