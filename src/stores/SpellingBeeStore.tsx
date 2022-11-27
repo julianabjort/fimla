@@ -1,12 +1,13 @@
-import fiveLetterWords from "../data/fiveLetterWords.json";
 import fourLetterWords from "../data/fourLetterWords.json";
+import fiveLetterWords from "../data/fiveLetterWords.json";
+import sixLetterWords from "../data/sixLetterWords.json";
 
 export default {
-  // DATA
-
   letters: [],
   fourLetterWords: [],
   fiveLetterWords: [],
+  sixLetterWords: [],
+  sevenLetterWords: [],
   word: "",
   numberOfGuesses: 0,
   vowels: "eyuioa",
@@ -29,6 +30,7 @@ export default {
     this.letters = this.randomLetters;
     this.fourLetterWords = [];
     this.fiveLetterWords = [];
+    this.sixLetterWords = [];
     this.error = "";
   },
 
@@ -38,6 +40,8 @@ export default {
       this.fourLetterWords.push(this.word);
     } else if (fiveLetterWords.includes(this.word)) {
       this.fiveLetterWords.push(this.word);
+    } else if (sixLetterWords.includes(this.word)) {
+      this.sixLetterWords.push(this.word);
     } else {
       this.error = "Invalid word";
     }
@@ -70,12 +74,19 @@ export default {
       fourLetterWords.some((word) => combo === word)
     );
   },
-  
+
   get allFiveLetterWords() {
     return this.allLetterCombos(this.letters, 5).filter((combo) =>
       fiveLetterWords.some((word) => combo === word)
     );
   },
+
+  get allSixLetterWords() {
+    return this.allLetterCombos(this.letters, 6).filter((combo) =>
+      sixLetterWords.some((word) => combo === word)
+    );
+  },
+
   get allFourLetterLength() {
     return this.allFourLetterWords.length;
   },
@@ -84,11 +95,20 @@ export default {
     return this.allFiveLetterWords.length;
   },
 
+  get allSixLetterLength() {
+    return this.allSixLetterWords.length;
+  },
+
   get userFourLetterLength() {
     return this.fourLetterWords.length;
   },
+
   get userFiveLetterLength() {
     return this.fiveLetterWords.length;
+  },
+
+  get userSixLetterLength() {
+    return this.sixLetterWords.length;
   },
 
   get randomLetters() {
