@@ -29,7 +29,7 @@ const Keyboard2 = ({ store }) => {
             : "bg-lighter";
             return (
               <div
-                // onClick={() => store.handleKeyClick(key)}
+                onClick={() => store.handleKeyClick(key)}
                 key={i}
                 className={`grid grid-cols-2 w-12 h-12 mx-1 cursor-pointer capitalize rounded-md  text-background`}
               >

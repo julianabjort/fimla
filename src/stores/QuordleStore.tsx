@@ -174,6 +174,13 @@ export default {
     }
   },
   
+  handleKeyClick(key) {
+    if (this.guesses[this.currentGuess].length < 5) {
+      this.guesses[this.currentGuess] =
+        this.guesses[this.currentGuess] + key.toLowerCase();
+    }
+  },
+
   handleStats() {
     this.calculateScore();
     if (typeof window !== "undefined") {
