@@ -14,7 +14,7 @@ const quordle = () => {
       window.removeEventListener('keyup', store.handleKeyup)
     }
   }, [])
-console.log("won ? ", store.win1, store.win2,store.win3,store.win4, "WIN ? ", store.win, store.won)
+// console.log("won ? ", store.win1, store.win2,store.win3,store.win4, "WIN ? ", store.win, store.won)
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">
       <h1 className="heading-1">Quordle</h1>
@@ -23,7 +23,7 @@ console.log("won ? ", store.win1, store.win2,store.win3,store.win4, "WIN ? ", st
           <div>
             {store.guesses.map((_, i) => {
             if (store.guesses[i] === store.word1 && i < store.currentGuess) {
-            console.log("Got it")
+            // console.log("Got it")
 
             // 1. Disable this quordle grid
             

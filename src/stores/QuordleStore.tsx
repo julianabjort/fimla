@@ -25,16 +25,17 @@ export default {
     if(won3){this.win3 = true}
     const won4 = this.guesses[this.currentGuess - 1] === this.word4
     if(won4){this.win4 = true}
+    // if (!this.win1 === true && this.win2 === true && this.win3 === true && this.win4 === true){
+    //   return this.win === false
+    // }
     // if all four words are correct you win
-    if (!this.win1 === true && this.win2 === true && this.win3 === true && this.win4 === true){
-      this.win = false
-    }
     if(this.win1 === true && this.win2 === true && this.win3 === true && this.win4 === true) {
       this.win = true
+      // return this.win === true
     }
-    return won1 && won2 && won3 && won4
+    // return won1 && won2 && won3 && won4
+    return this.win === true
   },
-
 
   get lost() {
     // return this.currentGuess === 6
@@ -50,9 +51,10 @@ export default {
     if(won3){this.win3 = true}
     const won4 = this.guesses[this.currentGuess - 1] === this.word4
     if(won4){this.win4 = true}
-    console.log("HERE")
+    console.log(this.win)
     return (
-      won1 && won2 && won3 && won4 ||
+      // won1 && won2 && won3 && won4 ||
+      this.won ||
       this.currentGuess === 6
     );
   },
@@ -150,6 +152,7 @@ export default {
       this.currentGuess += 1
     } 
     if (this.roundComplete) {
+      console.log("Round Complete")
       this.handleStats();
     }
   },
@@ -200,7 +203,7 @@ export default {
         avgTurns: 0,
       };
 
-      if(this.win === true){
+      if(this.won){
         stats.wins += 1;
       }
       if (this.lost) {
