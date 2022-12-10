@@ -1,4 +1,5 @@
 import { warnEnvConflicts } from "@prisma/client/runtime";
+import { loadStaticPaths } from "next/dist/server/dev/static-paths-worker";
 import { threadId } from "worker_threads";
 import words from "../data/words.json";
 
@@ -25,6 +26,9 @@ export default {
     const won4 = this.guesses[this.currentGuess - 1] === this.word4
     if(won4){this.win4 = true}
     // if all four words are correct you win
+    if (!this.win1 === true && this.win2 === true && this.win3 === true && this.win4 === true){
+      this.win = false
+    }
     if(this.win1 === true && this.win2 === true && this.win3 === true && this.win4 === true) {
       this.win = true
     }
@@ -33,7 +37,8 @@ export default {
 
 
   get lost() {
-    return this.currentGuess === 6
+    // return this.currentGuess === 6
+    return this.win === false && this.currentGuess === 6
   },
 
   get roundComplete() {
@@ -216,7 +221,6 @@ export default {
     this.scorePercentage = (this.totalScore / 110) * 100;
     console.log(this.scorePercentage);
     console.log(Math.round(this.scorePercentage));
-    console.log(this.totalscore)
     console.log(unUsedLetters)
     console.log(this.allGuessedLetters)
     console.log(this.correctLetters)
