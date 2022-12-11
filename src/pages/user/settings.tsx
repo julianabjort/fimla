@@ -4,7 +4,7 @@ import { useSession, signOut } from "next-auth/react";
 const settings = () => {
   const { data: session } = useSession();
   
-  const deleteUser = async(e:any) => {
+  const deleteUser = async(e:string) => {
     console.log("DELETE USER FUNCTION ", e)
     
     try{
@@ -14,11 +14,11 @@ const settings = () => {
         body: JSON.stringify(e)
       });
       console.log("RESPONSY", response.json())
-      signOut()
+      signOut();
       
       // Redirect to home page ? //
       
-      ;    } catch(error){
+      } catch(error){
         console.log("There was an error deleting from the DB ", error)
       }
     }
