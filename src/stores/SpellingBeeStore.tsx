@@ -87,30 +87,6 @@ export default {
     );
   },
 
-  get allFourLetterLength() {
-    return this.allFourLetterWords.length;
-  },
-
-  get allFiveLetterLength() {
-    return this.allFiveLetterWords.length;
-  },
-
-  get allSixLetterLength() {
-    return this.allSixLetterWords.length;
-  },
-
-  get userFourLetterLength() {
-    return this.fourLetterWords.length;
-  },
-
-  get userFiveLetterLength() {
-    return this.fiveLetterWords.length;
-  },
-
-  get userSixLetterLength() {
-    return this.sixLetterWords.length;
-  },
-
   get randomLetters() {
     return this.getRandomLetters(this.vowels, 3).concat(
       this.getRandomLetters(this.consonants, 4)

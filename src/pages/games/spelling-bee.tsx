@@ -50,7 +50,7 @@ const spellingBee = () => {
           <div className="flex justify-between">
             <h2 className="heading-3">4 letter words</h2>
             <p>
-              {store.userFourLetterLength} / {store.allFourLetterLength}
+              {store.fourLetterWords.length} / {store.allFourLetterWords.length}
             </p>
           </div>
           {store.fourLetterWords.map((word, i) => (
@@ -61,7 +61,7 @@ const spellingBee = () => {
           <div className="flex justify-between">
             <h2 className="heading-3">5 letter words</h2>
             <p>
-              {store.userFiveLetterLength} / {store.allFiveLetterLength}
+              {store.fiveLetterWords.length} / {store.allFiveLetterWords.length}
             </p>
           </div>
           {store.fiveLetterWords.map((word, i) => (
@@ -72,7 +72,7 @@ const spellingBee = () => {
           <div className="flex justify-between">
             <h2 className="heading-3">6 letter words</h2>
             <p>
-              {store.userSixLetterLength} / {store.allSixLetterLength}
+              {store.sixLetterWords.length} / {store.allSixLetterWords.length}
             </p>
           </div>
           {store.sixLetterWords.map((word, i) => (
