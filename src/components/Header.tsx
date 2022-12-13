@@ -5,6 +5,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { navLinks } from "../data/paths";
 import { useTheme } from "next-themes";
 import { HiSun, HiMoon, HiMenu, HiX } from "react-icons/hi";
+import { useRouter } from "next/router";
 
 const Header = () => {
   const { theme, setTheme } = useTheme();
@@ -29,7 +30,7 @@ const Header = () => {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
-
+  const router = useRouter();
   return (
     <div>
       <nav className="sticky top-0 z-50 flex items-center justify-between py-8 dark:bg-background">
@@ -45,11 +46,15 @@ const Header = () => {
 
         <div className="items-center hidden w-3/5 justify-evenly md:flex">
           {React.Children.toArray(
-            navLinks.map((link) => (
-              <Link className="" href={link.path}>
+            navLinks.map((link) => {
+              const active = router.pathname === link.path
+              ? "border-b border-black"
+              : ""
+              return (
+              <Link className={`${active}`} href={link.path}>
                 {link.name}
               </Link>
-            ))
+            )})
           )}
         </div>
 
