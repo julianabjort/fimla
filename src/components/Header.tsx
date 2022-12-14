@@ -27,9 +27,9 @@ const Header = () => {
       </div>
     );
   };
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
+  // const [mounted, setMounted] = useState(false);
+  // useEffect(() => setMounted(true), []);
+  // if (!mounted) return null;
   const router = useRouter();
   return (
     <div>
@@ -47,14 +47,14 @@ const Header = () => {
         <div className="items-center hidden w-3/5 justify-evenly md:flex">
           {React.Children.toArray(
             navLinks.map((link) => {
-              const active = router.pathname === link.path
-              ? "border-b border-black"
-              : ""
+              const active =
+                router.pathname === link.path && "border-b border-black";
               return (
-              <Link className={`${active}`} href={link.path}>
-                {link.name}
-              </Link>
-            )})
+                <Link className={`${active}`} href={link.path}>
+                  {link.name}
+                </Link>
+              );
+            })
           )}
         </div>
 
