@@ -2,12 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
+/* @layer base {
   @font-face {
     font-family: "Apercu";
     src: url("./fonts/apercu-light.woff2") format("woff2");
   }
-}
+} */
 /* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
@@ -22,7 +22,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: Apercu, sans-serif;
+  /* font-family: Apercu, sans-serif; */
 }
 
 a {
