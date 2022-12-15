@@ -11,21 +11,29 @@ const Keyboard2 = ({ store }) => {
               ? "bg-green"
               : store.yellowLetters1.includes(key)
               ? "bg-yellow"
+              : store.allGuessedLetters.includes(key)
+              ? "bg-medium dark:bg-mediumdark dark:text-white"
               : "bg-lighter";
             const bgColor2 = store.greenLetters2.includes(key)
               ? "bg-green"
               : store.yellowLetters2.includes(key)
               ? "bg-yellow"
+              : store.allGuessedLetters.includes(key)
+              ? "bg-medium dark:bg-mediumdark dark:text-white"
               : "bg-lighter";
             const bgColor3 = store.greenLetters3.includes(key)
               ? "bg-green"
               : store.yellowLetters3.includes(key)
               ? "bg-yellow"
+              : store.allGuessedLetters.includes(key)
+              ? "bg-medium dark:bg-mediumdark dark:text-white"
               : "bg-lighter";
             const bgColor4 = store.greenLetters4.includes(key)
               ? "bg-green"
               : store.yellowLetters4.includes(key)
               ? "bg-yellow"
+              : store.allGuessedLetters.includes(key)
+              ? "bg-medium dark:bg-mediumdark dark:text-white"
               : "bg-lighter";
             return (
               <div
