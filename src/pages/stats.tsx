@@ -8,7 +8,9 @@ const stats = () => {
   const [stats, setStats] = useState({});
   const [qStats, setQstats] = useState({});
   const [wordle, setWordle] = useState(true);
-  const [quordle, setQuordle] = useState(false)
+  const [quordle, setQuordle] = useState(false);
+  const [wHighScore, setWhighScore] = useState({});
+  const [qHighScore, setQhighScore] = useState({});
 
   let wGamesPlayed = stats[0]?.wins + stats[0]?.losses || 0
   let qGamesPlayed = qStats[0]?.wins + qStats[0]?.losses || 0
@@ -31,7 +33,11 @@ const stats = () => {
         });
         const allStats = await response.json()
         const myStats = allStats.filter(i => i.userEmail === userSession.email)
-          setStats(myStats);
+        // const highScore = Math.max(...allStats.map(i => i.totalScore))
+        const highScore = Math.max.apply(Math,allStats.map(function(i){return i.totalScore;}))
+        const wHighScore = [allStats.find(function(i){ return i.totalScore == highScore; })]
+        setStats(myStats);
+        setWhighScore(wHighScore);
       } catch (error) {
           console.log("error: ", error)
       }
@@ -42,7 +48,10 @@ const stats = () => {
         });
         const allStats = await response.json()
         const qStats = allStats.filter(i => i.userEmail === userSession.email)
-          setQstats(qStats);
+        const highScore = Math.max.apply(Math,allStats.map(function(i){return i.totalScore;}))
+        const qHighScore = [allStats.find(function(i){ return i.totalScore == highScore; })]
+        setQstats(qStats);
+        setQhighScore(qHighScore);
       } catch (error) {
           console.log("error: ", error)
       }
@@ -117,6 +126,16 @@ const stats = () => {
 
         </div>
       </section>
+        <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+        <h2 className="border-b-[0.5px] pb-1  heading-2">Record holders</h2>
+          {wordle ? (<>
+              <h3 className="text-7xl">{wHighScore[0]?.totalScore || ""}</h3>
+              <p>{wHighScore[0]?.userEmail || ""}</p> </>) 
+            : quordle ? (<>
+              <h3 className="text-7xl">{qHighScore[0]?.totalScore || ""}</h3>
+              <p>{wHighScore[0]?.userEmail || ""}</p> </>) 
+              :(<></>)}
+        </div>
     </div>
   );
 };
