@@ -30,7 +30,7 @@ const Keyboard = ({ store }) => {
       <div className="flex gap-x-2 center">
         {enterAndDelete.map((key, i) => (
           <div
-            className="w-1/3 py-2 text-center rounded-lg cursor-pointer bg-lighter"
+            className="w-1/3 py-2 text-center rounded-lg cursor-pointer bg-lighter dark:text-dark"
             key={i}
             onClick={() => store.handleKeyClick(key)}
           >

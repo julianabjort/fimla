@@ -36,12 +36,18 @@ export default {
 
   submitWord() {
     this.error = "";
-    if (fourLetterWords.includes(this.word)) {
+    if (
+      this.fourLetterWords.includes(this.word) ||
+      this.fiveLetterWords.includes(this.word) ||
+      this.sixLetterWords.includes(this.word)
+    ) {
+      this.error = "Already found";
+    } else if (this.allFourLetterWords.includes(this.word)) {
       this.fourLetterWords.push(this.word);
-    } else if (fiveLetterWords.includes(this.word)) {
+    } else if (this.allFiveLetterWords.includes(this.word)) {
       this.fiveLetterWords.push(this.word);
-    } else if (sixLetterWords.includes(this.word)) {
-      this.sixLetterWords.push(this.word);
+      // } else if (this.allSixLetterWords.includes(this.word)) {
+      //   this.sixLetterWords.push(this.word);
     } else {
       this.error = "Invalid word";
     }
@@ -65,6 +71,14 @@ export default {
     if (e.key === "Enter") {
       return this.submitWord();
     }
+  },
+
+  handleLetterClick(letter) {
+    console.log(letter);
+  },
+
+  handleDelete() {
+    new KeyboardEvent("keydown", { keyCode: 8, which: 8 });
   },
 
   // COMPUTED PROPERTIES
