@@ -126,15 +126,15 @@ const stats = () => {
 
         </div>
       </section>
-        <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+        <div className="flex flex-col justify-between w-full p-6 rounded-md bg-lighter dark:bg-darker">
         <h2 className="border-b-[0.5px] pb-1  heading-2">Record holders</h2>
-          {wordle ? (<>
-              <h3 className="text-7xl">{wHighScore[0]?.totalScore || ""}</h3>
-              <p>{wHighScore[0]?.userEmail || ""}</p> </>) 
-            : quordle ? (<>
-              <h3 className="text-7xl">{qHighScore[0]?.totalScore || ""}</h3>
-              <p>{wHighScore[0]?.userEmail || ""}</p> </>) 
-              :(<></>)}
+          {wordle ? (<div className="grid grid-flow-col mt-4">
+              <p>{wHighScore[0]?.userEmail.split('@')[0] || ""}</p> 
+              <p className="">{wHighScore[0]?.totalScore || ""}</p> </div>) 
+            : quordle ? (<div className="grid grid-flow-col mt-4">
+              <p>{qHighScore[0]?.userEmail.split('@')[0] || ""}</p>  
+              <p className="">{qHighScore[0]?.totalScore || ""}</p> </div>)
+              :(<div></div>)}
         </div>
     </div>
   );
