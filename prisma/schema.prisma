@@ -46,6 +46,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Tournaments   UsersInTournament[]
   wordleStats   WordleStats?
   quordleStats  QuordleStats?
 }
@@ -74,4 +75,19 @@ model QuordleStats {
   totalScore  Int     @default(0)
   user        User    @relation(fields: [userEmail], references: [email], onDelete: Cascade)
   userEmail   String  @unique
+}
+
+model Tournaments {
+  id          String  @id @default(cuid())
+  name        String
+  users       UsersInTournament[]
+}
+
+model UsersInTournament {
+  user          User @relation(fields: [userId], references: [id])
+  userId        String 
+  tournament    Tournaments @relation(fields: [tournamentId], references: [id])
+  tournamentId  String 
+  guesses       Int
+  @@id([userId, tournamentId])
 }
