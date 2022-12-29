@@ -69,40 +69,59 @@ const scrabble = () => {
     <div className="flex flex-col items-center my-10 justify-evenly">
       <h1 className="heading-1 mb-5">Create a tournament</h1>
       <div className="flex flex-col w-1/2 bg-lighter dark:bg-darker rounded-md p-10 justify-center">
-        <form action="#" method="POST" className="flex flex-col">
-          <label htmlFor="" className="border-b-[0.5px] pb-1 heading-2">
-            Tournament Name
-          </label>
-          <div className="mt-5">
-            <input
-              type="text"
-              className="p-1 dark:bg-dark rounded-md"
-              onChange={(e) => setName(e.target.value)}
-            />
-            <button
-              value="Submit"
-              onClick={createTournament}
-              className="w-16 h-10 ml-4 rounded-md bg-light dark:bg-dark"
-            >
-              Create
-            </button>
-          </div>
-        </form>
-        <div className="flex flex-col mt-10">
-          <h1 className="border-b-[0.5px] pb-1 heading-2">Your tournaments</h1>
+        {session ? (
+          <>
+            <form action="#" method="POST" className="flex flex-col">
+              <label htmlFor="" className="border-b-[0.5px] pb-1 heading-2">
+                Tournament Name
+              </label>
+              <div className="mt-5">
+                <input
+                  type="text"
+                  className="p-1 dark:bg-dark rounded-md"
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <button
+                  value="Submit"
+                  onClick={createTournament}
+                  className="w-16 h-10 ml-4 rounded-md bg-light dark:bg-dark"
+                >
+                  Create
+                </button>
+              </div>
+            </form>
+            <div className="flex flex-col mt-10">
+              <h1 className="border-b-[0.5px] pb-1 heading-2">
+                Your tournaments
+              </h1>
 
-          {UserInTournament.map((o, key) => (
-            <ul key={key}>
-              <li className="flex justify-between">
-                <p>{o.tournamentId}</p>
+              {UserInTournament.map((o, key) => (
+                <ul key={key}>
+                  <li className="flex justify-between">
+                    <p>{o.tournamentName}</p>
 
-                <Link href={`tournaments/` + o.tournamentId}>
-                  <button>Join</button>
-                </Link>
-              </li>
-            </ul>
-          ))}
-        </div>
+                    <Link href={`tournaments/` + o.tournamentId}>
+                      <button>Join</button>
+                    </Link>
+                  </li>
+                </ul>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex flex-col items-center gap-4">
+              <h2 className="border-b-[0.5px] pb-1 heading-2">
+                To create an tournament you need to
+              </h2>
+              <button className="h-10 px-4 rounded-md bg-light">Sign in</button>
+              <p>or</p>
+              <button className="h-10 px-4 rounded-md bg-light">
+                Create a new account
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

@@ -33,8 +33,10 @@ async function CreateUsersInTournament(req:NextApiRequest, res:NextApiResponse) 
   try{
     const tournament = await prisma.usersInTournament.create({
       data:{
-        userId:body.userID,
+        userId: body.userID,
+        userName: body.userName,
         tournamentId: body.tournamentID,
+        tournamentName: body.tournamentName,
         guesses: 0,
       }
     })

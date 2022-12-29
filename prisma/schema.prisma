@@ -84,10 +84,12 @@ model Tournaments {
 }
 
 model UsersInTournament {
-  user          User @relation(fields: [userId], references: [id])
-  userId        String 
-  tournament    Tournaments @relation(fields: [tournamentId], references: [id])
-  tournamentId  String 
-  guesses       Int
-  @@id([userId, tournamentId])
+  user            User @relation(fields: [userId], references: [id])
+  userId          String 
+  userName        String @default("")
+  tournament      Tournaments @relation(fields: [tournamentId], references: [id])
+  tournamentId    String
+  tournamentName  String @default("")
+  guesses         Int
+  @@id([userId,   tournamentId])
 }
