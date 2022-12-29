@@ -21,6 +21,27 @@ const settings = () => {
       console.log("There was an error deleting from the DB ", error);
     }
   };
+
+  const deleteStats = async (e: string) => {
+    console.log("Deleting Wordle Stats", e);
+    try{
+      const response = await fetch(`/api/wordle-stats`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(e),
+      });
+      console.log("Deleted", response.json())
+      const response2 = await fetch(`/api/quordle-stats`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(e),
+      });
+      console.log("Deleted", response2.json())
+    } catch(error) {
+      console.log("There was an error in deleting from the DB", error)
+    }
+  };
+
   return (
     <div className="flex flex-col gap-y-4">
       <h1 className="my-10 heading-1">Settings</h1>
@@ -40,7 +61,10 @@ const settings = () => {
             </h2>
             <div className="flex flex-col gap-2 mb-4">
               <p>Clear your stats and game history</p>
-              <button className="h-10 rounded-md w-28 bg-light">
+              <button 
+                className="h-10 rounded-md w-28 bg-light"
+                onClick={() => deleteStats(session.user?.email)}
+                >
                 Reset Stats
               </button>
             </div>
