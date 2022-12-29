@@ -12,24 +12,24 @@ const settings = () => {
   const userId = session?.user.id;
   // useEffect(() => {
   //   console.log(userId, userName, userLocation, userDob);
-  // }, [userId, userName, userLocation, userDob]);
+  // }, [session, userName, userLocation, userDob]);
 
   const readUserInfo = async () => {
-    try {
-      const response = await fetch(`/api/user-stats`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      console.log("RESPONSY", userSession);
-      setUserInfo(await response.json());
-    } catch (error) {
-      console.log("There was an error reading from the DB ", error);
-    }
-    console.log("Usersession.id: ", userSession.id);
-    let theUser = users.filter((i) => i.id === userSession.id);
-    console.log("user: ", theUser);
-    setUser(theUser);
-    console.log("the user:", theUser);
+    // try {
+    //   const response = await fetch(`/api/user-stats`, {
+    //     method: "GET",
+    //     headers: { "Content-Type": "application/json" },
+    //   });
+    //   console.log("RESPONSY", userSession);
+    //   setUserInfo(await response.json());
+    // } catch (error) {
+    //   console.log("There was an error reading from the DB ", error);
+    // }
+    // console.log("Usersession.id: ", userSession.id);
+    // let theUser = users.filter((i) => i.id === userSession.id);
+    // console.log("user: ", theUser);
+    // setUser(theUser);
+    // console.log("the user:", theUser);
   };
   const updateUserInfo = async (e: string) => {
     // if no userinfo then create
@@ -91,46 +91,33 @@ const settings = () => {
         {session ? (
           <>
             <h1 className="heading-1 mb-10">Hey {session.user?.name}</h1>
-            <h2 className="border-b-[0.5px] pb-1 heading-2">Username</h2>
-            <p>What is your favourite nickname?</p>
+            <h2 className="border-b-[0.5px] pb-1 heading-2">
+              User Information
+            </h2>
             <div className="flex mb-4">
-              <label htmlFor=""></label>
-              <input
-                onChange={(e) => setUserName(e.target.value)}
-                placeholder="current nickname"
-                type="text"
-                className="p-1 rounded-md"
-              />
-              <button className="w-16 h-10 ml-4 rounded-md bg-light">
-                Set
-              </button>
-            </div>
-            <h2 className="border-b-[0.5px] pb-1 heading-2">Date of Birth</h2>
-            <div className="flex mb-4">
-              <label htmlFor=""></label>
-              <input
-                onChange={(e) => setUserDob(e.target.value)}
-                placeholder="01/01/2023"
-                type="date"
-                className="p-1 rounded-md"
-              />
-              <button className="w-16 h-10 ml-4 rounded-md bg-light">
-                Set
-              </button>
-            </div>
-            <h2 className="border-b-[0.5px] pb-1 heading-2">Location</h2>
-            <p>Tell us where you are in the world!</p>
-            <div className="flex mb-4">
-              <label htmlFor=""></label>
-              <input
-                onChange={(e) => setUserLocation(e.target.value)}
-                placeholder="Maybe Iceland?"
-                type="text"
-                className="p-1 rounded-md"
-              />
-              <button className="w-16 h-10 ml-4 rounded-md bg-light">
-                Set
-              </button>
+              <form className="flex flex-col mb-4" action="">
+                <label htmlFor="">What is your favourite nickname?</label>
+                <input
+                  onChange={(e) => setUserName(e.target.value)}
+                  placeholder="current nickname"
+                  type="text"
+                  className="p-1 rounded-md mb-5"
+                />
+                <label htmlFor="">Date of Birth</label>
+                <input
+                  onChange={(e) => setUserDob(e.target.value)}
+                  placeholder="01/01/2023"
+                  type="date"
+                  className="p-1 rounded-md mb-5"
+                />
+                <label htmlFor="">Tell us where you are in the world!</label>
+                <input
+                  onChange={(e) => setUserLocation(e.target.value)}
+                  placeholder="Maybe Iceland?"
+                  type="text"
+                  className="p-1 rounded-md mb-5"
+                />
+              </form>
             </div>
             <h2 className="border-b-[0.5px] pb-1 mt-2 heading-2">
               Reset Account
