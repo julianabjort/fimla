@@ -1,10 +1,27 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const scrabble = () => {
+  const { data: session } = useSession();
   const [tournamentName, setName] = useState("");
   const [tournaments, setTournaments] = useState([]);
-
+  const [UserInTournament, setUsersInTournament] = useState([]);
+  const findUsersInTournaments = async () => {
+    try {
+      const response = await fetch(`/api/single-tournament`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await response.json();
+      const userInTournament = data.filter((i) => i.userId === session.user.id);
+      setUsersInTournament(userInTournament);
+      // console.log("data: ", data);
+      // console.log("users in tournaments: ", UsersInTournament);
+    } catch (error) {
+      console.log("error reading tournaments: ", error);
+    }
+  };
   const readTournaments = async () => {
     try {
       const response = await fetch(`/api/tournaments`, {
@@ -12,12 +29,20 @@ const scrabble = () => {
         headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
+      const myTournaments = data.filter((i) => i.id === UserInTournament.id);
+      data.includes();
       setTournaments(data);
       console.log("data: ", data);
-      console.log("tournaments: ", tournaments);
+      // console.log("tournaments: ", tournaments);
     } catch (error) {
       console.log("error reading tournaments: ", error);
     }
+  };
+  const function1 = () => {
+    console.log(
+      "hello",
+      UserInTournament.filter((i) => i.tournamentId === tournaments.id)
+    );
   };
   const createTournament = async () => {
     const body = tournamentName;
@@ -33,11 +58,13 @@ const scrabble = () => {
     }
   };
   useEffect(() => {
-    readTournaments();
-  }, []);
+    findUsersInTournaments();
+  }, [session]);
   useEffect(() => {
-    console.log("tournaments: ", tournaments);
-  }, [tournaments]);
+    console.log(UserInTournament);
+    readTournaments();
+    function1();
+  }, [UserInTournament]);
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">
       <h1 className="heading-1 mb-5">Create a tournament</h1>
@@ -63,11 +90,13 @@ const scrabble = () => {
         </form>
         <div className="flex flex-col mt-10">
           <h1 className="border-b-[0.5px] pb-1 heading-2">Your tournaments</h1>
-          {tournaments.map((i, key) => (
+
+          {UserInTournament.map((o, key) => (
             <ul key={key}>
               <li className="flex justify-between">
-                <p>{i.name}</p>
-                <Link href={`tournaments/` + i.id}>
+                <p>{o.tournamentId}</p>
+
+                <Link href={`tournaments/` + o.tournamentId}>
                   <button>Join</button>
                 </Link>
               </li>

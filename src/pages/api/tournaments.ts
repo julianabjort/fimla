@@ -21,7 +21,6 @@ if(req.method === 'GET') {
 async function ReadTournaments(req:NextApiRequest, res:NextApiResponse){
   try{
     const tournaments = await prisma.tournaments.findMany()
-    console.log("Wordle Stats: ", tournaments)
     return res.status(200).json(tournaments)
   } catch(error){
     res.status(500).json({error:"Error fetching user stats"})
