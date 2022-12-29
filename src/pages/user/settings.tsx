@@ -3,7 +3,7 @@ import { useSession, signOut } from "next-auth/react";
 
 const settings = () => {
   const { data: session } = useSession();
-
+  const updateUserInfo = async (e: string) => {};
   const deleteUser = async (e: string) => {
     console.log("DELETE USER FUNCTION ", e);
 
@@ -24,21 +24,21 @@ const settings = () => {
 
   const deleteStats = async (e: string) => {
     console.log("Deleting Wordle Stats", e);
-    try{
+    try {
       const response = await fetch(`/api/wordle-stats`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(e),
       });
-      console.log("Deleted", response.json())
+      console.log("Deleted", response.json());
       const response2 = await fetch(`/api/quordle-stats`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(e),
       });
-      console.log("Deleted", response2.json())
-    } catch(error) {
-      console.log("There was an error in deleting from the DB", error)
+      console.log("Deleted", response2.json());
+    } catch (error) {
+      console.log("There was an error in deleting from the DB", error);
     }
   };
 
@@ -61,10 +61,10 @@ const settings = () => {
             </h2>
             <div className="flex flex-col gap-2 mb-4">
               <p>Clear your stats and game history</p>
-              <button 
+              <button
                 className="h-10 rounded-md w-28 bg-light"
                 onClick={() => deleteStats(session.user?.email)}
-                >
+              >
                 Reset Stats
               </button>
             </div>
