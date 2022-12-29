@@ -1,9 +1,51 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 
 const settings = () => {
   const { data: session } = useSession();
-  const updateUserInfo = async (e: string) => {};
+  const [userInfo, setUserInfo] = useState({});
+  const [userName, setUserName] = useState("");
+  const [userLocation, setUserLocation] = useState("");
+  const [userDob, setUserDob] = useState("");
+
+  const userSession = session?.user;
+  const userId = session?.user.id;
+  // useEffect(() => {
+  //   console.log(userId, userName, userLocation, userDob);
+  // }, [userId, userName, userLocation, userDob]);
+
+  const readUserInfo = async () => {
+    try {
+      const response = await fetch(`/api/user-stats`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      console.log("RESPONSY", userSession);
+      setUserInfo(await response.json());
+    } catch (error) {
+      console.log("There was an error reading from the DB ", error);
+    }
+    console.log("Usersession.id: ", userSession.id);
+    let theUser = users.filter((i) => i.id === userSession.id);
+    console.log("user: ", theUser);
+    setUser(theUser);
+    console.log("the user:", theUser);
+  };
+  const updateUserInfo = async (e: string) => {
+    // if no userinfo then create
+    const body = { userId, userName, userLocation, userDob };
+
+    try {
+      const response = await fetch(`/api/username`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      // if already is userinfo then update
+    } catch (error) {
+      console.log("There was an error posting to the DB ", error);
+    }
+  };
   const deleteUser = async (e: string) => {
     console.log("DELETE USER FUNCTION ", e);
 
@@ -48,10 +90,44 @@ const settings = () => {
       <div className="flex flex-col w-full p-6 rounded-md bg-lighter dark:bg-darker">
         {session ? (
           <>
+            <h1 className="heading-1 mb-10">Hey {session.user?.name}</h1>
             <h2 className="border-b-[0.5px] pb-1 heading-2">Username</h2>
+            <p>What is your favourite nickname?</p>
             <div className="flex mb-4">
               <label htmlFor=""></label>
-              <input type="text" className="p-1 rounded-md" />
+              <input
+                onChange={(e) => setUserName(e.target.value)}
+                placeholder="current nickname"
+                type="text"
+                className="p-1 rounded-md"
+              />
+              <button className="w-16 h-10 ml-4 rounded-md bg-light">
+                Set
+              </button>
+            </div>
+            <h2 className="border-b-[0.5px] pb-1 heading-2">Date of Birth</h2>
+            <div className="flex mb-4">
+              <label htmlFor=""></label>
+              <input
+                onChange={(e) => setUserDob(e.target.value)}
+                placeholder="01/01/2023"
+                type="date"
+                className="p-1 rounded-md"
+              />
+              <button className="w-16 h-10 ml-4 rounded-md bg-light">
+                Set
+              </button>
+            </div>
+            <h2 className="border-b-[0.5px] pb-1 heading-2">Location</h2>
+            <p>Tell us where you are in the world!</p>
+            <div className="flex mb-4">
+              <label htmlFor=""></label>
+              <input
+                onChange={(e) => setUserLocation(e.target.value)}
+                placeholder="Maybe Iceland?"
+                type="text"
+                className="p-1 rounded-md"
+              />
               <button className="w-16 h-10 ml-4 rounded-md bg-light">
                 Set
               </button>
@@ -82,8 +158,6 @@ const settings = () => {
                 Delete Account
               </button>
             </div>
-            <p>{session.user?.name}</p>
-            <p>{session.user?.email}</p>
           </>
         ) : (
           <>
