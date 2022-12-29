@@ -46,6 +46,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  wordleStats   WordleStats?
+  quordleStats  QuordleStats?
 }
 
 model VerificationToken {
@@ -54,4 +56,22 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model WordleStats {
+  id          String  @id @default(cuid())
+  wins        Int     @default(0)
+  losses      Int     @default(0)
+  totalScore  Int     @default(0)
+  user        User    @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  userEmail   String  @unique
+}
+
+model QuordleStats {
+  id          String  @id @default(cuid())
+  wins        Int     @default(0)
+  losses      Int     @default(0)
+  totalScore  Int     @default(0)
+  user        User    @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  userEmail   String  @unique
 }
