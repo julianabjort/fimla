@@ -97,8 +97,10 @@ model UsersInTournament {
 }
 
 model UserInfo {
-  id          Int       @id @default(autoincrement())
-  username    String?  
-  user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String?   @unique
+  id            Int       @id @default(autoincrement())
+  username      String?  
+  userDob       String?
+  userLocation  String?
+  user          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String?   @unique
 }
