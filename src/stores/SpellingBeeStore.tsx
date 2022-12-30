@@ -57,7 +57,7 @@ export default {
     return Array.from({ length })
       .fill(letters)
       .reduce((a, b) =>
-        a.reduce((r, v) => r.concat(b.map((w) => [].concat(v, w))), [])
+        a.reduce((c, d) => c.concat(b.map((e) => [].concat(d, e))), [])
       )
       .map((a) => a.join(""));
   },
@@ -72,15 +72,6 @@ export default {
       return this.submitWord();
     }
   },
-
-  handleLetterClick(letter) {
-    console.log(letter);
-  },
-
-  handleDelete() {
-    new KeyboardEvent("keydown", { keyCode: 8, which: 8 });
-  },
-
   // COMPUTED PROPERTIES
 
   get allFourLetterWords() {
