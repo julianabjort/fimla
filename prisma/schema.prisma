@@ -97,10 +97,8 @@ model UsersInTournament {
 }
 
 model UserInfo {
-  id          String    @id @default(cuid())
-  username    String  
-  dob         DateTime  
-  location    String    @default("Iceland")  
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String    @unique
+  id          Int       @id @default(autoincrement())
+  username    String?  
+  user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String?   @unique
 }
