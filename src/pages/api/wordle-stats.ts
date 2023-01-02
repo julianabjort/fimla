@@ -8,8 +8,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { method } = req;
-  const body = req.body;
+  const { method, body } = req;
 
   switch (method) {
     case "GET":
@@ -65,10 +64,6 @@ export default async function handler(
         console.log(error);
         res.status(500).json({ error: "Error deleting stats from the DB" });
       }
-      break;
-    default:
-      res.setHeader("Allow", ["GET"]);
-      res.status(405).end(`Method ${method} Not Allowed`);
       break;
   }
 
