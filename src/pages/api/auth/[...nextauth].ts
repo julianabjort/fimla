@@ -65,7 +65,7 @@ export default NextAuth({
     },
     async session({ session, token }) {
       if (session?.user) {
-        session.user.id = token.uid;
+        session.user["id"] = token.uid;
       }
       return session;
     },

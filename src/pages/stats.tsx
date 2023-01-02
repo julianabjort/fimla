@@ -78,7 +78,9 @@ const stats = () => {
       }
     } else {
       console.log("no session");
-      let stats = [JSON.parse(localStorage.getItem("stats"))];
+      let stats = [JSON.parse(localStorage.getItem("stats")!)];
+      // let stats: { [key: string]: any }[] = [JSON.parse(localStorage.getItem("stats")!)];
+
       if (stats !== null) setStats(stats);
       console.log(stats);
     }

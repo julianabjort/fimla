@@ -62,16 +62,8 @@ const quordle = () => {
       let wins = 0;
       let losses = 0;
       let totalScore = 0;
-      if (!qStats) {
-        totalScore = store.totalScore;
-        if (store.wonAll) {
-          wins = 1;
-        }
-        if (store.lost) {
-          losses = 1;
-        }
-      } else {
-        const userStats = qStats;
+      if (qStats[0]) {
+        const userStats = qStats[0];
         totalScore = userStats.totalScore + store.totalScore;
         console.log("store: ", store.totalScore);
         if (store.wonAll) {
@@ -80,26 +72,37 @@ const quordle = () => {
         if (store.lost) {
           losses = userStats.losses + 1;
         }
+      } else {
+        totalScore = store.totalScore;
+        if (store.wonAll) {
+          wins = 1;
+        }
+        if (store.lost) {
+          losses = 1;
+        }
       }
       const body = { user, totalScore, wins, losses };
       console.log("TOTAL: ", totalScore);
-      try {
-        const response = await fetch(`/api/quordle-stats`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-      } catch (error) {
-        console.log("error: ", error);
-      }
-      try {
-        const response = await fetch(`/api/quordle-stats`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-      } catch (error) {
-        console.log("error: ", error);
+      if (qStats[0]) {
+        try {
+          const response = await fetch(`/api/quordle-stats`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+        } catch (error) {
+          console.log("error: ", error);
+        }
+      } else {
+        try {
+          const response = await fetch(`/api/quordle-stats`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+        } catch (error) {
+          console.log("error: ", error);
+        }
       }
     }
   };
@@ -173,14 +176,17 @@ const quordle = () => {
             </div>
           </div>
         )}
+        {(store.lost || store.won) && (
+          <>
+            <button onClick={addQuordleStats}>Save your score!</button>
+          </>
+        )}
       </div>
       <Keyboard2 store={store} />
       {/* <h1>word1: {store.word1}</h1>
       <h1>word2: {store.word2}</h1>
       <h1>word3: {store.word3}</h1>
       <h1>word4: {store.word4}</h1> */}
-      <button onClick={addQuordleStats}>Save your score!</button>
-
       {/* <button onClick={store.calculateScore}>Save</button>
       <h1>guesses: {JSON.stringify(store.guesses)}</h1>
       <h1>guesses2: {JSON.stringify(store.guesses2)}</h1>

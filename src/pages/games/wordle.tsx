@@ -89,24 +89,27 @@ const wordle = () => {
       }
       const body = { user, totalScore, wins, losses };
       console.log("TOTAL: ", totalScore);
-      try {
-        console.log("BODY: ", body);
-        const response = await fetch(`/api/wordle-stats`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-      } catch (error) {
-        console.log("error: ", error);
-      }
-      try {
-        const response = await fetch(`/api/wordle-stats`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-      } catch (error) {
-        console.log("error: ", error);
+      if (stats[0]) {
+        try {
+          const response = await fetch(`/api/wordle-stats`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+        } catch (error) {
+          console.log("error: ", error);
+        }
+      } else {
+        try {
+          console.log("BODY: ", body);
+          const response = await fetch(`/api/wordle-stats`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+        } catch (error) {
+          console.log("error: ", error);
+        }
       }
     }
   };

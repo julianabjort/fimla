@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { observer, useLocalObservable } from "mobx-react-lite";
-import WordGrid from "../../../components/WordGrid";
-import Keyboard from "../../../components/Keyboard";
+import WordGrid from "../../components/WordGrid";
+import Keyboard from "../../components/Keyboard";
 
-import { useSession, signOut } from "next-auth/react";
-import { redirect } from "next/dist/server/api-utils";
-import WordleStore from "../../../stores/WordleStore";
+import { useSession } from "next-auth/react";
+import WordleStore from "../../stores/WordleStore";
 
 import { useRouter } from "next/router";
 
@@ -15,9 +14,9 @@ const tournament = () => {
   const router = useRouter();
   const tournamentID = router.query["id"];
   const userSession = session?.user;
-  const userName = session?.user.name;
+  const userName = session?.user?.["name"];
   console.log("username: ", userName);
-  const userID = userSession?.id;
+  const userID = userSession?.["id"];
   const [inTournament, setInTournament] = useState(false);
   const [UsersInTournament, setUsersInTournament] = useState([]);
   const store = useLocalObservable(() => WordleStore);
@@ -79,7 +78,7 @@ const tournament = () => {
     }
   };
   const addUserToTournament = async () => {
-    const tournamentName = tournament[0]?.name;
+    const tournamentName = tournament[0]?.["name"];
     const body = { userName, tournamentID, userID, tournamentName };
     console.log(body);
     try {
@@ -112,12 +111,12 @@ const tournament = () => {
                 <div className="dark:bg-dark m-24 p-5 h-full rounded-md">
                   <h2 className="heading-2">Participants</h2>
                   {UsersInTournament.map((i, key) => (
-                    <p>{i.userName}</p>
+                    <p>{i["userName"]}</p>
                   ))}
                 </div>
 
                 <div className="flex flex-col items-center my-10 justify-evenly">
-                  <h1 className="heading-1">{tournament[0]?.name}</h1>
+                  <h1 className="heading-1">{tournament[0]?.["name"]}</h1>
                   <h1 className="h-6 px-2 rounded-md text-error">
                     {store.error}
                   </h1>
@@ -153,8 +152,8 @@ const tournament = () => {
                   <h2 className="heading-2">Status</h2>
                   {UsersInTournament.map((i, key) => (
                     <>
-                      <p>{i.userName}</p>
-                      <p>{i.guesses}</p>
+                      <p>{i["userName"]}</p>
+                      <p>{i["guesses"]}</p>
                     </>
                   ))}
                 </div>

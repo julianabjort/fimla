@@ -1,7 +1,7 @@
 import React from "react";
 
-const faq = () => {
+const leaderboard = () => {
   return <div>faq</div>;
 };
 
-export default faq;
+export default leaderboard;

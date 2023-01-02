@@ -9,12 +9,12 @@ export const navLinks = [
     path: "/stats",
   },
   {
-    name: "About",
-    path: "/about",
+    name: "Groups",
+    path: "/groups",
   },
   {
-    name: "FAQ",
-    path: "/faq",
+    name: "Leaderboard",
+    path: "/leaderboard",
   },
   {
     name: "Settings",
@@ -37,7 +37,7 @@ export const games = [
     path: "/games/spelling-bee",
   },
   {
-    name: "Scrabble",
-    path: "/games/scrabble",
+    name: "Crosswords",
+    path: "/groups",
   },
 ];

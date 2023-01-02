@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 
-const scrabble = () => {
+const groups = () => {
   const { data: session } = useSession();
+  const userID = session?.user?.["id"];
+  const userName = session?.user?.["name"];
   const [tournamentName, setName] = useState("");
   const [tournaments, setTournaments] = useState([]);
   const [UserInTournament, setUsersInTournament] = useState([]);
@@ -15,7 +17,7 @@ const scrabble = () => {
       });
       const data = await response.json();
       const userInTournament = data.filter(
-        (i: { userId: any }) => i.userId === session?.user?.id
+        (i: { userId: any }) => i.userId === session?.user?.["id"]
       );
       setUsersInTournament(userInTournament);
       // console.log("data: ", data);
@@ -24,6 +26,7 @@ const scrabble = () => {
       console.log("error reading tournaments: ", error);
     }
   };
+
   const readTournaments = async () => {
     try {
       const response = await fetch(`/api/tournaments`, {
@@ -32,7 +35,7 @@ const scrabble = () => {
       });
       const data = await response.json();
       const myTournaments = data.filter(
-        (i: { id: any }) => i.id === UserInTournament.id
+        (i: { id: any }) => i.id === UserInTournament["id"]
       );
       data.includes();
       setTournaments(data);
@@ -45,11 +48,11 @@ const scrabble = () => {
   const function1 = () => {
     console.log(
       "hello",
-      UserInTournament.filter((i) => i.tournamentId === tournaments.id)
+      UserInTournament.filter((i) => i["tournamentId"] === tournaments["id"])
     );
   };
   const createTournament = async () => {
-    const body = tournamentName;
+    const body = { tournamentName, userName, userID };
     console.log(body);
     try {
       const response = await fetch(`/api/tournaments`, {
@@ -61,6 +64,20 @@ const scrabble = () => {
       console.log("error: ", error);
     }
   };
+  // const addUserToTournament = async () => {
+  //   const tournamentName = tournament[0]?.['name'];
+  //   const body = { userName, tournamentID, userID, tournamentName };
+  //   console.log(body);
+  //   try {
+  //     const response = await fetch(`/api/single-tournament`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(body),
+  //     });
+  //   } catch (error) {
+  //     console.log("error: ", error);
+  //   }
+  // };
   useEffect(() => {
     findUsersInTournaments();
   }, [session]);
@@ -71,13 +88,13 @@ const scrabble = () => {
   }, [UserInTournament]);
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">
-      <h1 className="mb-5 heading-1">Create a tournament</h1>
+      <h1 className="mb-5 heading-1">Create a group</h1>
       <div className="flex flex-col justify-center w-1/2 p-10 rounded-md bg-lighter dark:bg-darker">
         {session ? (
           <>
-            <form action="#" method="POST" className="flex flex-col">
+            <form action="" method="POST" className="flex flex-col">
               <label htmlFor="" className="border-b-[0.5px] pb-1 heading-2">
-                Tournament Name
+                Group Name
               </label>
               <div className="mt-5">
                 <input
@@ -95,17 +112,15 @@ const scrabble = () => {
               </div>
             </form>
             <div className="flex flex-col mt-10">
-              <h1 className="border-b-[0.5px] pb-1 heading-2">
-                Your tournaments
-              </h1>
+              <h1 className="border-b-[0.5px] pb-1 heading-2">Your groups</h1>
 
               {UserInTournament.map((o, key) => (
                 <ul key={key}>
                   <li className="flex justify-between">
-                    <p>{o.tournamentName}</p>
+                    <p>{o["tournamentName"]}</p>
 
-                    <Link href={`tournaments/` + o.tournamentId}>
-                      <button>Join</button>
+                    <Link href={`groups/` + o["tournamentId"]}>
+                      <button>Open</button>
                     </Link>
                   </li>
                 </ul>
@@ -116,7 +131,7 @@ const scrabble = () => {
           <>
             <div className="flex flex-col items-center gap-4">
               <h2 className="border-b-[0.5px] pb-1 heading-2">
-                To create an tournament you need to
+                To create a group you need to
               </h2>
               <button className="h-10 px-4 rounded-md bg-light">Sign in</button>
               <p>or</p>
@@ -131,4 +146,4 @@ const scrabble = () => {
   );
 };
 
-export default scrabble;
+export default groups;

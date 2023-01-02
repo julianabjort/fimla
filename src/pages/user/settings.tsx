@@ -9,22 +9,21 @@ const settings = () => {
   const [userDob, setUserDob] = useState("");
 
   const userSession = session?.user;
-  const userId = session?.user?.id;
+  const userId = session?.user?.["id"];
+  const userEmail = session?.user?.["email"];
   const user = session?.user;
   useEffect(() => {
     readUserInfo();
   }, [session]);
   useEffect(() => {
-    console.log("userInfo", userInfo);
-    console.log(userLocation);
     if (userLocation === "") {
-      setUserLocation(userInfo[0]?.userLocation);
+      setUserLocation(userInfo[0]?.["userLocation"]);
     }
     if (userName === "") {
-      setUserName(userInfo[0]?.username);
+      setUserName(userInfo[0]?.["username"]);
     }
     if (userDob === "") {
-      setUserDob(userInfo[0]?.userDob);
+      setUserDob(userInfo[0]?.["userDob"]);
     }
   }, [userInfo]);
 
@@ -35,51 +34,47 @@ const settings = () => {
         headers: { "Content-Type": "application/json" },
       });
       const allUserInfo = await response.json();
-      const info = allUserInfo.filter((i) => i.userId === userId);
+      const info = allUserInfo.filter((i: number) => i["userId"] === userId);
       setUserInfo(info);
-      console.log("all user info:", allUserInfo);
       return info;
     } catch (error) {
       console.log("There was an error reading from the DB", error);
     }
-    // setUserInfo(info);
-    // console.log("the user info:", userInfo);
   };
   const updateUserInfo = async (e: any): Promise<any> => {
     e.preventDefault();
     const body = { userId, userName, userDob, userLocation };
-    console.log(JSON.stringify(body));
-    console.log("here");
-    try {
-      const response = fetch(`/api/userinfo`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-    } catch (error) {
-      console.log("There was an error deleting from the DB ", error);
+    if (userInfo[0]) {
+      try {
+        const response = fetch(`/api/userinfo`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+      } catch (error) {
+        console.log("There was an error deleting from the DB ", error);
+      }
+    } else {
+      try {
+        const response = fetch(`/api/userinfo`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+      } catch (error) {
+        console.log("There was an error deleting from the DB ", error);
+      }
     }
-    try {
-      const response = fetch(`/api/userinfo`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-    } catch (error) {
-      console.log("There was an error deleting from the DB ", error);
-    }
+    window.location.reload();
   };
 
-  const deleteUser = async (e: string) => {
-    console.log("DELETE USER FUNCTION ", e);
-
+  const deleteUser = async (e: any) => {
     try {
       const response = await fetch(`/api/user`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(e),
       });
-      console.log("RESPONSY", response.json());
       signOut();
 
       // Redirect to home page ? //
@@ -88,28 +83,25 @@ const settings = () => {
     }
   };
 
-  const deleteStats = async (e: string) => {
-    console.log("Deleting Wordle Stats", e);
+  const deleteStats = async (e: any) => {
     try {
       const response = await fetch(`/api/wordle-stats`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(e),
       });
-      console.log("Deleted", response.json());
       const response2 = await fetch(`/api/quordle-stats`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(e),
       });
-      console.log("Deleted", response2.json());
     } catch (error) {
       console.log("There was an error in deleting from the DB", error);
     }
   };
   useEffect(() => {
     console.log(userId);
-    console.log(session);
+    // console.log(session);
   }, [session]);
   return (
     <div className="flex flex-col gap-y-4">
@@ -129,7 +121,7 @@ const settings = () => {
                 onSubmit={(e) => updateUserInfo(e)}
               >
                 <label htmlFor="username">
-                  What is your favourite nickname? {userInfo[0]?.username}
+                  What is your favourite nickname? {userInfo[0]?.["username"]}
                 </label>
                 <input
                   onChange={(e) => setUserName(e.target.value)}
@@ -140,7 +132,7 @@ const settings = () => {
                 />
                 <label htmlFor="userLocation">
                   Tell us where you are in the world!{" "}
-                  {userInfo[0]?.userLocation}
+                  {userInfo[0]?.["userLocation"]}
                 </label>
                 <input
                   onChange={(e) => setUserLocation(e.target.value)}
@@ -150,7 +142,7 @@ const settings = () => {
                   className="p-1 mb-5 rounded-md"
                 />
                 <label htmlFor="userDob">
-                  Date of birth! {userInfo[0]?.userDob}
+                  Date of birth! {userInfo[0]?.["userDob"]}
                 </label>
                 <input
                   onChange={(e) => setUserDob(e.target.value)}
@@ -171,7 +163,7 @@ const settings = () => {
               <p>Clear your stats and game history</p>
               <button
                 className="h-10 rounded-md w-28 bg-light"
-                onClick={() => deleteStats(session.user?.email)}
+                onClick={() => deleteStats(userEmail)}
               >
                 Reset Stats
               </button>
@@ -185,7 +177,7 @@ const settings = () => {
               </p>
               <button
                 className="w-32 h-10 rounded-md bg-light"
-                onClick={() => deleteUser(session.user?.email)}
+                onClick={() => deleteUser(userEmail)}
               >
                 Delete Account
               </button>
