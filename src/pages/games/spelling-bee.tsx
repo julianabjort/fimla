@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { observer, useLocalObservable } from "mobx-react-lite";
-import SpellingBeeStore from "../../stores/SpellingBeeStore";
+import SpellingBeeStore from "../../stores/SpellingBeeStore.jsx";
 import SpellingBeeGrid from "../../components/SpellingBeeGrid";
 import { HiRefresh } from "react-icons/hi";
 
@@ -20,7 +20,7 @@ const spellingBee = () => {
     store.word = word;
   }, [word]);
 
-  const clearInput = (e) => {
+  const clearInput = (e: { key: string }) => {
     if (e.key === "Enter") {
       setWord("");
       store.error = "";
@@ -59,12 +59,7 @@ const spellingBee = () => {
         >
           <HiRefresh />
         </button>
-        <button
-          onClick={store.handleDelete}
-          className="px-4 py-2 border rounded-xl"
-        >
-          delete
-        </button>
+        <button className="px-4 py-2 border rounded-xl">delete</button>
       </div>
       <div className="flex w-full gap-x-4">
         <div className="w-full h-56 p-4 rounded-xl bg-lightest dark:bg-dark">

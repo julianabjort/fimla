@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 
-const Keyboard = ({ store }) => {
+const Keyboard = ({ store }: any) => {
   const keyboard = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
   const enterAndDelete = ["enter", "delete"];
   return (

@@ -9,7 +9,7 @@ const settings = () => {
   const [userDob, setUserDob] = useState("");
 
   const userSession = session?.user;
-  const userId = session?.user.id;
+  const userId = session?.user?.id;
   const user = session?.user;
   useEffect(() => {
     readUserInfo();
@@ -117,7 +117,7 @@ const settings = () => {
       <div className="flex flex-col w-full p-6 rounded-md bg-lighter dark:bg-darker">
         {session ? (
           <>
-            <h1 className="heading-1 mb-10">Hey {session.user?.name}</h1>
+            <h1 className="mb-10 heading-1">Hey {session.user?.name}</h1>
             <h2 className="border-b-[0.5px] pb-1 heading-2">
               User Information
             </h2>
@@ -136,7 +136,7 @@ const settings = () => {
                   name="username"
                   id="username"
                   type="text"
-                  className="p-1 rounded-md mb-5"
+                  className="p-1 mb-5 rounded-md"
                 />
                 <label htmlFor="userLocation">
                   Tell us where you are in the world!{" "}
@@ -147,7 +147,7 @@ const settings = () => {
                   name="userLocation"
                   id="userLocation"
                   type="text"
-                  className="p-1 rounded-md mb-5"
+                  className="p-1 mb-5 rounded-md"
                 />
                 <label htmlFor="userDob">
                   Date of birth! {userInfo[0]?.userDob}
@@ -157,12 +157,9 @@ const settings = () => {
                   name="userDob"
                   id="userDob"
                   type="date"
-                  className="p-1 rounded-md mb-5"
+                  className="p-1 mb-5 rounded-md"
                 />
-                <button
-                  type="Submit"
-                  className="w-16 h-10 ml-4 rounded-md bg-light dark:bg-dark"
-                >
+                <button className="w-16 h-10 ml-4 rounded-md bg-light dark:bg-dark">
                   Update
                 </button>
               </form>

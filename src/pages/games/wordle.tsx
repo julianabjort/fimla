@@ -3,7 +3,7 @@ import { observer, useLocalObservable } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import WordGrid from "../../components/WordGrid";
 import Keyboard from "../../components/Keyboard";
-import WordleStore from "../../stores/WordleStore";
+import WordleStore from "../../stores/WordleStore.jsx";
 import { useSession } from "next-auth/react";
 
 const wordle = () => {
@@ -35,7 +35,8 @@ const wordle = () => {
         });
         const allStats = await response.json();
         const myStats = allStats.filter(
-          (i) => i.userEmail === userSession.email
+          (i: { userEmail: string | null | undefined }) =>
+            i.userEmail === userSession?.email
         );
         setStats(myStats);
         console.log("my stats: ", myStats);
@@ -57,11 +58,11 @@ const wordle = () => {
     console.log(stats);
     readWordleStats();
     if (session) {
-      const user = session.user.email;
+      const user = session?.user?.email;
       let wins = stats.wins;
       let losses = stats.losses;
       let totalScore = stats.totalScore;
-      if (!stats[0]) {
+      if (!stats) {
         totalScore = store.totalScore;
         if (store.won) {
           wins = 1;
@@ -70,7 +71,7 @@ const wordle = () => {
           losses = 1;
         }
       } else {
-        const userStats = stats[0];
+        const userStats = stats;
         totalScore = userStats.totalScore + store.totalScore;
         console.log("store: ", store.totalScore);
         if (store.won) {

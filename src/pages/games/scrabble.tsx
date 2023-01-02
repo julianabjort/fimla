@@ -14,7 +14,9 @@ const scrabble = () => {
         headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
-      const userInTournament = data.filter((i) => i.userId === session.user.id);
+      const userInTournament = data.filter(
+        (i: { userId: any }) => i.userId === session?.user?.id
+      );
       setUsersInTournament(userInTournament);
       // console.log("data: ", data);
       // console.log("users in tournaments: ", UsersInTournament);
@@ -29,7 +31,9 @@ const scrabble = () => {
         headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
-      const myTournaments = data.filter((i) => i.id === UserInTournament.id);
+      const myTournaments = data.filter(
+        (i: { id: any }) => i.id === UserInTournament.id
+      );
       data.includes();
       setTournaments(data);
       console.log("data: ", data);
@@ -67,8 +71,8 @@ const scrabble = () => {
   }, [UserInTournament]);
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">
-      <h1 className="heading-1 mb-5">Create a tournament</h1>
-      <div className="flex flex-col w-1/2 bg-lighter dark:bg-darker rounded-md p-10 justify-center">
+      <h1 className="mb-5 heading-1">Create a tournament</h1>
+      <div className="flex flex-col justify-center w-1/2 p-10 rounded-md bg-lighter dark:bg-darker">
         {session ? (
           <>
             <form action="#" method="POST" className="flex flex-col">
@@ -78,7 +82,7 @@ const scrabble = () => {
               <div className="mt-5">
                 <input
                   type="text"
-                  className="p-1 dark:bg-dark rounded-md"
+                  className="p-1 rounded-md dark:bg-dark"
                   onChange={(e) => setName(e.target.value)}
                 />
                 <button
