@@ -2,6 +2,7 @@ export const navLinks = [
   {
     name: "Play",
     path: "",
+    dropdown: true,
   },
   {
     name: "Stats",

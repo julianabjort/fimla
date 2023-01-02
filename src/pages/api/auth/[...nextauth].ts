@@ -62,16 +62,16 @@ export default NextAuth({
         console.log("inside jwt callback", "TOKEN:", token, "USER:", user);
       }
       return token;
-    }, 
-    async session ({ session, token }) {
-        if (session?.user) {
-            session.user.id = token.uid
-        }
-        return session;
-    }
+    },
+    async session({ session, token }) {
+      if (session?.user) {
+        session.user.id = token.uid;
+      }
+      return session;
+    },
   },
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
   },
   secret: process.env.SECRET,
 });

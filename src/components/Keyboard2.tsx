@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 
 const Keyboard2 = ({ store }) => {
   const keyboard = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
+  const enterAndDelete = ["enter", "delete"];
   return (
     <div>
       {keyboard.map((row, i) => (
@@ -51,6 +52,17 @@ const Keyboard2 = ({ store }) => {
           })}
         </div>
       ))}
+      <div className="flex gap-x-2 center">
+        {enterAndDelete.map((key, i) => (
+          <div
+            className="w-1/3 py-2 text-center rounded-lg cursor-pointer dark:text-dark bg-lighter"
+            key={i}
+            onClick={() => store.handleKeyClick(key)}
+          >
+            {key}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

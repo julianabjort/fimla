@@ -46,9 +46,11 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  userInfo      UserInfo?
   Tournaments   UsersInTournament[]
   wordleStats   WordleStats?
   quordleStats  QuordleStats?
+  
 }
 
 model VerificationToken {
@@ -92,4 +94,13 @@ model UsersInTournament {
   tournamentName  String @default("")
   guesses         Int
   @@id([userId,   tournamentId])
+}
+
+model UserInfo {
+  id            Int       @id @default(autoincrement())
+  username      String?  
+  userDob       String?
+  userLocation  String?
+  user          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String?   @unique
 }

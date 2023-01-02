@@ -29,22 +29,43 @@ const spellingBee = () => {
 
   return (
     <div className="flex flex-col items-center my-20 justify-evenly">
-      <h1 className="h-10 p-2 rounded-md text-error">{store.error}</h1>
-      <div className="flex gap-x-6">
-        <SpellingBeeGrid store={store} />
-        <button onClick={() => store.shuffle(store.letters)}>
-          <HiRefresh />
-        </button>
+      <div className="flex items-center justify-between w-full border-b-2">
+        <h1 className="pb-2 heading-1">Spelling Bee</h1>
+        <div className="flex cursor-pointer gap-x-8">
+          <p>today's hints</p>
+          <p>yesterday's answers</p>
+        </div>
       </div>
-
+      <h1 className="h-10 p-2 rounded-md text-error">{store.error}</h1>
       <input
-        placeholder="Type something.."
-        className="w-full h-20 my-10 text-2xl text-center outline-none bg-lightest dark:bg-dark rounded-xl "
+        placeholder="Type or click.."
+        className="w-full h-20 my-10 text-2xl text-center outline-none dark:bg-background"
         type="text"
         value={word}
         onChange={(e) => setWord(e.target.value)}
         onKeyUp={clearInput}
       />
+      <SpellingBeeGrid store={store} />
+      <div className="flex my-10 gap-x-6">
+        <button
+          onClick={store.submitWord}
+          className="px-4 py-2 border rounded-xl"
+        >
+          enter
+        </button>
+        <button
+          className="px-3 py-2 border rounded-full"
+          onClick={() => store.shuffle(store.letters)}
+        >
+          <HiRefresh />
+        </button>
+        <button
+          onClick={store.handleDelete}
+          className="px-4 py-2 border rounded-xl"
+        >
+          delete
+        </button>
+      </div>
       <div className="flex w-full gap-x-4">
         <div className="w-full h-56 p-4 rounded-xl bg-lightest dark:bg-dark">
           <div className="flex justify-between">

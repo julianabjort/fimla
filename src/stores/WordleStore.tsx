@@ -19,6 +19,9 @@ export default {
       this.numberOfGuesses === 6
     );
   },
+  get currentGuess() {
+    return this.guesses[this.numberOfGuesses];
+  },
 
   // compare this.word and allGuessedLetters and get all matches - to calculate score based on how many green letters you got in the grid
   get correctLetters() {
@@ -54,11 +57,10 @@ export default {
     this.guesses.replace(new Array(6).fill(""));
     this.numberOfGuesses = 0;
     this.totalScore = 0;
-    this.result = [];
   },
   submitGuess() {
     this.error = "";
-    if (words.includes(this.guesses[this.numberOfGuesses])) {
+    if (words.includes(this.currentGuess)) {
       this.numberOfGuesses += 1;
     } else {
       this.error = "Not a valid word";
@@ -76,24 +78,34 @@ export default {
       return this.submitGuess();
     }
     if (e.key === "Backspace") {
-      this.guesses[this.numberOfGuesses] = this.guesses[
-        this.numberOfGuesses
-      ].slice(0, this.guesses[this.numberOfGuesses].length - 1);
+      this.error = "";
+      this.guesses[this.numberOfGuesses] = this.currentGuess.slice(
+        0,
+        this.currentGuess.length - 1
+      );
       return;
     }
-    if (
-      this.guesses[this.numberOfGuesses].length < 5 &&
-      e.key.match(/^[a-z]$/)
-    ) {
+    if (!this.roundComplete && e.key.match(/^[a-z]$/)) {
       this.guesses[this.numberOfGuesses] =
-        this.guesses[this.numberOfGuesses] + e.key.toLowerCase();
+        this.currentGuess + e.key.toLowerCase();
     }
   },
 
   handleKeyClick(key) {
-    if (this.guesses[this.numberOfGuesses].length < 5) {
+    if (key === "enter") {
+      return this.submitGuess();
+    }
+    if (key === "delete") {
+      this.error = "";
+      this.guesses[this.numberOfGuesses] = this.currentGuess.slice(
+        0,
+        this.currentGuess.length - 1
+      );
+      return;
+    }
+    if (!this.roundComplete) {
       this.guesses[this.numberOfGuesses] =
-        this.guesses[this.numberOfGuesses] + key.toLowerCase();
+        this.currentGuess + key.toLowerCase();
     }
   },
 

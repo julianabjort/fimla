@@ -36,12 +36,18 @@ export default {
 
   submitWord() {
     this.error = "";
-    if (fourLetterWords.includes(this.word)) {
+    if (
+      this.fourLetterWords.includes(this.word) ||
+      this.fiveLetterWords.includes(this.word) ||
+      this.sixLetterWords.includes(this.word)
+    ) {
+      this.error = "Already found";
+    } else if (this.allFourLetterWords.includes(this.word)) {
       this.fourLetterWords.push(this.word);
-    } else if (fiveLetterWords.includes(this.word)) {
+    } else if (this.allFiveLetterWords.includes(this.word)) {
       this.fiveLetterWords.push(this.word);
-    } else if (sixLetterWords.includes(this.word)) {
-      this.sixLetterWords.push(this.word);
+      // } else if (this.allSixLetterWords.includes(this.word)) {
+      //   this.sixLetterWords.push(this.word);
     } else {
       this.error = "Invalid word";
     }
@@ -51,7 +57,7 @@ export default {
     return Array.from({ length })
       .fill(letters)
       .reduce((a, b) =>
-        a.reduce((r, v) => r.concat(b.map((w) => [].concat(v, w))), [])
+        a.reduce((c, d) => c.concat(b.map((e) => [].concat(d, e))), [])
       )
       .map((a) => a.join(""));
   },
@@ -66,7 +72,6 @@ export default {
       return this.submitWord();
     }
   },
-
   // COMPUTED PROPERTIES
 
   get allFourLetterWords() {

@@ -188,6 +188,16 @@ export default {
   },
 
   handleKeyClick(key) {
+    if (key === "enter") {
+      return this.submitGuess();
+    }
+    if (key === "delete") {
+      this.deleteLetter(this.guesses, this.currentGuess);
+      this.deleteLetter(this.guesses2, this.currentGuess2);
+      this.deleteLetter(this.guesses3, this.currentGuess3);
+      this.deleteLetter(this.guesses4, this.currentGuess4);
+      return;
+    }
     if (this.guesses[this.currentGuess].length < 5) {
       this.guesses[this.currentGuess] =
         this.guesses[this.currentGuess] + key.toLowerCase();
