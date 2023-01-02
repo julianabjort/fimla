@@ -59,19 +59,16 @@ const wordle = () => {
     readWordleStats();
     if (session) {
       const user = session?.user?.email;
-      let wins = stats.wins;
-      let losses = stats.losses;
-      let totalScore = stats.totalScore;
-      if (!stats) {
-        totalScore = store.totalScore;
-        if (store.won) {
-          wins = 1;
-        }
-        if (store.lost) {
-          losses = 1;
-        }
-      } else {
-        const userStats = stats;
+      let wins = 0;
+      let losses = 0;
+      let totalScore = 0;
+      // let wins = stats.wins;
+      // let losses = stats.losses;
+      // let totalScore = stats.totalScore;
+      // console.log(wins, losses, totalScore, "first");
+      if (stats[0]) {
+        console.log(stats);
+        const userStats = stats[0];
         totalScore = userStats.totalScore + store.totalScore;
         console.log("store: ", store.totalScore);
         if (store.won) {
@@ -80,10 +77,20 @@ const wordle = () => {
         if (store.lost) {
           losses = userStats.losses + 1;
         }
+      } else {
+        totalScore = store.totalScore;
+        console.log(store.won, store.won, store.lost);
+        if (store.won) {
+          wins = 1;
+        }
+        if (store.lost) {
+          losses = 1;
+        }
       }
       const body = { user, totalScore, wins, losses };
       console.log("TOTAL: ", totalScore);
       try {
+        console.log("BODY: ", body);
         const response = await fetch(`/api/wordle-stats`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
