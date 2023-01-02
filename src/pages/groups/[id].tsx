@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 const tournament = () => {
   const { data: session, status } = useSession();
   const [tournament, setTournament] = useState([]);
+  const tournamentName = tournament[0]?.["name"];
   const router = useRouter();
   const tournamentID = router.query["id"];
   const userSession = session?.user;
@@ -78,7 +79,6 @@ const tournament = () => {
     }
   };
   const addUserToTournament = async () => {
-    const tournamentName = tournament[0]?.["name"];
     const body = { userName, tournamentID, userID, tournamentName };
     console.log(body);
     try {
@@ -90,6 +90,7 @@ const tournament = () => {
     } catch (error) {
       console.log("error: ", error);
     }
+    window.location.reload();
   };
   useEffect(() => {
     readUsersInTournaments();
