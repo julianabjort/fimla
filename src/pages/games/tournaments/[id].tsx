@@ -81,6 +81,7 @@ const tournament = () => {
   const addUserToTournament = async () => {
     const tournamentName = tournament[0]?.name;
     const body = { userName, tournamentID, userID, tournamentName };
+    console.log(body);
     try {
       const response = await fetch(`/api/single-tournament`, {
         method: "POST",
