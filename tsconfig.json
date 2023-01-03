@@ -23,6 +23,6 @@
     "src/stores/WordleStore.jsx",
     "src/stores/QuordleStore.jsx",
     "src/stores/SpellingBeeStore.jsx"
-  ],
+, "src/pages/chat/chat.js"  ],
   "exclude": ["node_modules"]
 }

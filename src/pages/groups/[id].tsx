@@ -168,12 +168,26 @@ const tournament = () => {
                 <div className="dark:bg-dark m-24 p-5 h-full rounded-md">
                   <h2 className="heading-2">Status</h2>
                   <button onClick={readUsersInTournaments}>Check</button>
-                  {UsersInTournament.map((i, key) => (
-                    <>
-                      <p>{i["userName"]}</p>
-                      <p>{i["guesses"]}</p>
-                    </>
-                  ))}
+                  {UsersInTournament.sort(
+                    (prev, next) => next["guesses"] - prev["guesses"]
+                  )
+                    .slice(0, 10)
+                    .map((i, key) => (
+                      <>
+                        <p>{i["userName"]}</p>
+                        <p>{i["guesses"]}</p>
+                      </>
+                    ))}
+                  <button className="bg-light dark:bg-darker rounded-md p-2 w-full">
+                    Chat
+                  </button>
+                  <div>
+                    <ul id="messages"></ul>
+                    <form id="form" action="">
+                      <input id="input" />
+                      <button>Send</button>
+                    </form>
+                  </div>
                 </div>
               </>
             ) : (
