@@ -15,7 +15,6 @@ export default async function handler(
       } catch (error) {
         res.status(500).json({ error: "Error fetching user stats" });
       }
-
     case "POST":
       try {
         const stats = await prisma.wordleStats.create({
@@ -31,7 +30,6 @@ export default async function handler(
         console.log(error);
         res.status(500).json({ error: "Error posting stats to database" });
       }
-
     case "PUT":
       try {
         const stats = await prisma.wordleStats.update({
@@ -47,7 +45,6 @@ export default async function handler(
         console.log(error);
         res.status(500).json({ error: "Error updating stats" });
       }
-
     case "DELETE":
       try {
         const deleteStats = await prisma.wordleStats.delete({
@@ -61,6 +58,9 @@ export default async function handler(
         console.log(error);
         res.status(500).json({ error: "Error deleting stats from the DB" });
       }
+      break;
+    default:
+      res.status(405).json({ message: `Method ${method} Not Allowed` });
       break;
   }
 
