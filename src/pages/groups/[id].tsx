@@ -16,7 +16,6 @@ const tournament = () => {
   const tournamentID = router.query["id"];
   const userSession = session?.user;
   const userName = session?.user?.["name"];
-  console.log("username: ", userName);
   const userID = userSession?.["id"];
   const [inTournament, setInTournament] = useState(false);
   const [UsersInTournament, setUsersInTournament] = useState([]);
@@ -67,20 +66,17 @@ const tournament = () => {
       );
       setUsersInTournament(thisTournament);
       const check = thisTournament.filter((i) => i.userId === userID);
-      console.log(check.length, "cheking");
       if (check.length === 1) {
         setInTournament(true);
       } else {
         setInTournament(false);
       }
-      console.log("check: ", inTournament);
     } catch (error) {
       console.log("error reading tournaments: ", error);
     }
   };
   const addUserToTournament = async () => {
     const body = { userName, tournamentID, userID, tournamentName };
-    console.log(body);
     try {
       const response = await fetch(`/api/single-tournament`, {
         method: "POST",
@@ -92,16 +88,36 @@ const tournament = () => {
     }
     window.location.reload();
   };
+  const updateGuesses = async () => {
+    let games: any;
+    if (store.won) {
+      games = UsersInTournament[0]?.["guesses"] + 1;
+    } else if (store.lost) {
+      games = UsersInTournament[0]?.["guesses"] - 1;
+    }
+    const body = { userID, tournamentID, games };
+    try {
+      const response = await fetch(`/api/single-tournament`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
   useEffect(() => {
     readUsersInTournaments();
     readAllTournaments();
-    console.log(session, "SESSION");
   }, [session]);
   useEffect(() => {
     console.log(inTournament);
   }, [inTournament]);
-  console.log("the word: ", store.word);
-
+  // console.log("the word: ", store.word);
+  if (store.won || store.lost) {
+    updateGuesses();
+  }
+  useEffect(() => {}, []);
   return (
     <div>
       {tournament ? (
@@ -151,6 +167,7 @@ const tournament = () => {
                 </div>
                 <div className="dark:bg-dark m-24 p-5 h-full rounded-md">
                   <h2 className="heading-2">Status</h2>
+                  <button onClick={readUsersInTournaments}>Check</button>
                   {UsersInTournament.map((i, key) => (
                     <>
                       <p>{i["userName"]}</p>
@@ -176,4 +193,4 @@ const tournament = () => {
   );
 };
 
-export default tournament;
+export default observer(tournament);

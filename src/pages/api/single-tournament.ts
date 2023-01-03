@@ -11,6 +11,9 @@ export default async function handler(
   } else if (req.method === "POST") {
     console.log("Posting");
     return await CreateUsersInTournament(req, res);
+  } else if (req.method === "PUT") {
+    console.log("Updating");
+    return await UpdateUsersInTournament(req, res);
   } else if (req.method === "DELETE") {
     console.log("Deleting");
     return await DeleteTournament(req, res);
@@ -45,6 +48,30 @@ async function CreateUsersInTournament(
         tournamentId: body.tournamentID,
         tournamentName: body.tournamentName,
         guesses: 0,
+      },
+    });
+    return res.status(200).json(tournament);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error posting stats to database" });
+  }
+}
+
+async function UpdateUsersInTournament(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const body = req.body;
+  try {
+    const tournament = await prisma.usersInTournament.update({
+      where: {
+        userId_tournamentId: {
+          userId: body.userID,
+          tournamentId: body.tournamentID,
+        },
+      },
+      data: {
+        guesses: body.games,
       },
     });
     return res.status(200).json(tournament);
