@@ -152,11 +152,10 @@ export default {
     const options = {
       method: "GET",
       headers: {
-        "X-RapidAPI-Key": "c6120663f0msh04967d8eca043efp14f234jsn99d6646bb1e5",
-        "X-RapidAPI-Host": "random-words5.p.rapidapi.com",
+        "X-RapidAPI-Key": process.env.RAPID_API_KEY,
+        "X-RapidAPI-Host": process.env.RAPID_API_HOST,
       },
     };
-
     const response = await fetch(
       "https://random-words5.p.rapidapi.com/getRandom?wordLength=5",
       options
