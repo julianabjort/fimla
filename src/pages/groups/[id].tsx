@@ -7,6 +7,7 @@ import WordleStore from "../../stores/WordleStore";
 import { useRouter } from "next/router";
 import { readFileSync } from "fs";
 import { io } from "socket.io-client";
+import { HiRefresh } from "react-icons/hi";
 
 const tournament = () => {
   const { data: session, status } = useSession();
@@ -127,10 +128,10 @@ const tournament = () => {
     <div>
       {tournament ? (
         <>
-          <div className="flex flex-row my-10 justify-center">
+          <div className="flex flex-row justify-center">
             {inTournament === true ? (
               <>
-                <div className="dark:bg-dark m-24 p-5 h-full rounded-md">
+                <div className="dark:bg-dark mx-2 my-20 p-5 h-full rounded-md">
                   <h2 className="heading-2">Participants</h2>
                   {UsersInTournament.map((i, key) => (
                     <p key={key}>{i["userName"]}</p>
@@ -175,37 +176,42 @@ const tournament = () => {
                   )}
                   <Keyboard store={store} />
                 </div>
-                <div className="flex flex-col dark:bg-dark m-24 p-5 h-full rounded-md">
-                  <div className="flex flex-row gap-2">
+                <div className="flex flex-col dark:bg-dark mx-2 my-20 p-5 h-full rounded-md">
+                  <div className="flex flex-row gap-4 justify-center">
                     <h2 className="heading-2">Status</h2>
-                    <button onClick={readUsersInTournaments}>X</button>
+                    <button onClick={readUsersInTournaments}>
+                      <HiRefresh />
+                    </button>
                   </div>
-                  {UsersInTournament.sort(
-                    (prev, next) => next["guesses"] - prev["guesses"]
-                  )
-                    .slice(0, 10)
-                    .map((i, key) => (
-                      <div key={key} className="flex flex-row gap-2">
-                        <p>#</p>
-                        <p>{`${i["userName"]}`.split(" ")[0]}</p>
-                        {/* Total Score */}
-                        <p>{i["guesses"]}</p>
-                        {/* Game played */}
-                        <p>5</p>
-                        {/* Avg. Score */}
-                        <p>{i["guesses"] / 5}</p>
-                      </div>
-                    ))}
-                  <button className="bg-light dark:bg-darker rounded-md p-2 w-full">
-                    Chat
-                  </button>
-                  <div>
-                    <ul id="messages"></ul>
-                    <form id="form" action="">
-                      <input id="input" />
-                      <button>Send</button>
-                    </form>
-                  </div>
+
+                  <table className="">
+                    <tbody>
+                      <tr>
+                        <th className="p-1">#</th>
+                        <th className="p-1">Name</th>
+                        <th className="p-1">Games</th>
+                        <th className="p-1">Avg.Score</th>
+                      </tr>
+                      {UsersInTournament.sort(
+                        (prev, next) => next["guesses"] - prev["guesses"]
+                      )
+                        .slice(0, 10)
+                        .map((i, key) => (
+                          <tr key={key}>
+                            <td className="p-1">#</td>
+                            <td className="p-1">
+                              {`${i["userName"]}`.split(" ")[0]}
+                            </td>
+                            {/* Game played */}
+                            <td className="p-1 text-center">5</td>
+                            {/* Avg. Score */}
+                            <td className="p-1 text-right">
+                              {i["guesses"] / 5}
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
                 </div>
               </>
             ) : (
