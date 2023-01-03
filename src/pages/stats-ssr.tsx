@@ -123,8 +123,8 @@ export const getServerSideProps = async ({ req }) => {
     },
   });
 
-  const wordleSessionStats = wordleData[0];
-  const quordleSessionStats = quordleData[0] || 0;
+  const wordleSessionStats = wordleData[0] || null;
+  const quordleSessionStats = quordleData[0] || null;
 
   return { props: { wordleSessionStats, quordleSessionStats } };
 };
