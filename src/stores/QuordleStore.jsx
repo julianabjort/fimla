@@ -167,7 +167,6 @@ export default {
 
   handleKeyup(e) {
     if (this.roundComplete) {
-      console.log("Finito?");
       return;
     }
 

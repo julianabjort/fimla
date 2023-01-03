@@ -39,8 +39,6 @@ const quordle = () => {
             i.userEmail === userSession?.email
         );
         setQstats(qStats);
-        console.log("my stats: ", qStats);
-        console.log("stats: ", qStats);
         return qStats;
       } catch (error) {
         console.log("error: ", error);
@@ -55,7 +53,6 @@ const quordle = () => {
   }, [session]);
 
   const addQuordleStats = async () => {
-    console.log(qStats);
     readQuordleStats();
     if (session) {
       const user = session?.user?.email;
@@ -65,7 +62,6 @@ const quordle = () => {
       if (qStats[0]) {
         const userStats = qStats[0];
         totalScore = userStats.totalScore + store.totalScore;
-        console.log("store: ", store.totalScore);
         if (store.wonAll) {
           wins = userStats.wins + 1;
         }
@@ -82,7 +78,6 @@ const quordle = () => {
         }
       }
       const body = { user, totalScore, wins, losses };
-      console.log("TOTAL: ", totalScore);
       if (qStats[0]) {
         try {
           const response = await fetch(`/api/quordle-stats`, {
@@ -106,7 +101,11 @@ const quordle = () => {
       }
     }
   };
-
+  useEffect(() => {
+    if (store.roundComplete) {
+      addQuordleStats();
+    }
+  }, [store.roundComplete]);
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">
       <h1 className="heading-1">Quordle</h1>
@@ -175,11 +174,6 @@ const quordle = () => {
               </p>
             </div>
           </div>
-        )}
-        {(store.lost || store.won) && (
-          <>
-            <button onClick={addQuordleStats}>Save your score!</button>
-          </>
         )}
       </div>
       <Keyboard2 store={store} />

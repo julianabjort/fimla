@@ -39,8 +39,6 @@ const wordle = () => {
             i.userEmail === userSession?.email
         );
         setStats(myStats);
-        console.log("my stats: ", myStats);
-        console.log("stats: ", stats);
         return myStats;
       } catch (error) {
         console.log("error: ", error);
@@ -55,22 +53,15 @@ const wordle = () => {
   }, [session]);
 
   const addWordleStats = async () => {
-    console.log(stats);
     readWordleStats();
     if (session) {
       const user = session?.user?.email;
       let wins = 0;
       let losses = 0;
       let totalScore = 0;
-      // let wins = stats.wins;
-      // let losses = stats.losses;
-      // let totalScore = stats.totalScore;
-      // console.log(wins, losses, totalScore, "first");
       if (stats[0]) {
-        console.log(stats);
         const userStats = stats[0];
         totalScore = userStats.totalScore + store.totalScore;
-        console.log("store: ", store.totalScore);
         if (store.won) {
           wins = userStats.wins + 1;
         }
@@ -79,7 +70,6 @@ const wordle = () => {
         }
       } else {
         totalScore = store.totalScore;
-        console.log(store.won, store.won, store.lost);
         if (store.won) {
           wins = 1;
         }
@@ -88,7 +78,6 @@ const wordle = () => {
         }
       }
       const body = { user, totalScore, wins, losses };
-      console.log("TOTAL: ", totalScore);
       if (stats[0]) {
         try {
           const response = await fetch(`/api/wordle-stats`, {
@@ -101,7 +90,6 @@ const wordle = () => {
         }
       } else {
         try {
-          console.log("BODY: ", body);
           const response = await fetch(`/api/wordle-stats`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -113,6 +101,11 @@ const wordle = () => {
       }
     }
   };
+  useEffect(() => {
+    if (store.won || store.lost) {
+      addWordleStats();
+    }
+  }, [store.roundComplete]);
   console.log("the word: ", store.word);
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">
@@ -140,7 +133,7 @@ const wordle = () => {
       {(store.lost || store.won) && (
         <>
           <button onClick={store.startGame}>Play again</button>
-          <button onClick={addWordleStats}>Save your score!</button>
+          {/* <button onClick={addWordleStats}>Save your score!</button> */}
         </>
       )}
       <Keyboard store={store} />
