@@ -232,8 +232,12 @@ export default {
     }
   },
   calculateScore() {
-    const unUsedLetters = (30 - this.allGuessedLetters.length) * 4;
-    this.totalScore = unUsedLetters + this.correctLetters.length * 2;
+    const unUsedLetters = (180 - this.allGuessedLetters.length);
+    this.totalScore = unUsedLetters + this.correctLetters.length / 4;
     this.scorePercentage = (this.totalScore / 110) * 100;
+    console.log("usused letters: ", unUsedLetters)
+    console.log("all guessed letters: ", this.allGuessedLetters.length)
+    console.log("this totalscore: ", this.totalScore)
+    console.log("correct letters: ", this.correctLetters.length)
   },
 };
