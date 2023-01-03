@@ -38,6 +38,6 @@ export const games = [
   },
   {
     name: "Crosswords",
-    path: "/groups",
+    path: "/",
   },
 ];

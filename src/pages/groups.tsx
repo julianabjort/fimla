@@ -119,7 +119,12 @@ const groups = () => {
                   <li className="flex justify-between">
                     <p>{o["tournamentName"]}</p>
 
-                    <Link href={`groups/` + o["tournamentId"]}>
+                    <Link
+                      href={{
+                        pathname: "/groups/[id]",
+                        query: { id: o["tournamentId"] },
+                      }}
+                    >
                       <button>Open</button>
                     </Link>
                   </li>
