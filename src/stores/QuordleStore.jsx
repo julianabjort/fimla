@@ -1,6 +1,7 @@
 import words from "../data/fiveLetterWords.json";
 
 export default {
+  error: "",
   word1: "",
   word2: "",
   word3: "",
@@ -130,8 +131,11 @@ export default {
   },
 
   submitGuess() {
+    this.error = "";
     if (words.includes(this.guesses[this.currentGuess])) {
       this.currentGuess += 1;
+    } else {
+      this.error = "Not a valid word";
     }
     if (words.includes(this.guesses2[this.currentGuess2])) {
       this.currentGuess2 += 1;
@@ -174,6 +178,7 @@ export default {
       return this.submitGuess();
     }
     if (e.key === "Backspace") {
+      this.error = "";
       this.deleteLetter(this.guesses, this.currentGuess);
       this.deleteLetter(this.guesses2, this.currentGuess2);
       this.deleteLetter(this.guesses3, this.currentGuess3);
@@ -190,7 +195,8 @@ export default {
     if (key === "enter") {
       return this.submitGuess();
     }
-    if (key === "delete") {
+    if (key === "delete") {      
+      this.error = "";
       this.deleteLetter(this.guesses, this.currentGuess);
       this.deleteLetter(this.guesses2, this.currentGuess2);
       this.deleteLetter(this.guesses3, this.currentGuess3);

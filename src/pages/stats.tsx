@@ -152,7 +152,7 @@ const stats = () => {
           <h2 className="border-b-[0.5px] pb-1  heading-2">Average Score</h2>
           {wordle ? (
             <h3 className="text-7xl">
-              {stats[0]?.totalScore / wGamesPlayed || "0"}
+              {(stats[0]?.totalScore / wGamesPlayed).toFixed(1) || "0"}
             </h3>
           ) : quordle ? (
             <h3 className="text-7xl">

@@ -110,6 +110,7 @@ const Quordle = () => {
     <div className="flex flex-col items-center my-10 justify-evenly">
       <h1 className="heading-1">Quordle</h1>
       <div className="flex flex-col items-center justify-evenly">
+        <h1 className="h-6 px-2 rounded-md text-error">{store.error}</h1>
         <div className="grid grid-cols-2 gap-4 my-4">
           <div>
             {store.guesses.map((_, i) => (
