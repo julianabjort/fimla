@@ -4,7 +4,7 @@ import SpellingBeeStore from "../../stores/SpellingBeeStore.jsx";
 import SpellingBeeGrid from "../../components/SpellingBeeGrid";
 import { HiRefresh } from "react-icons/hi";
 
-const spellingBee = () => {
+const SpellingBee = () => {
   const store = useLocalObservable(() => SpellingBeeStore);
   const [word, setWord] = useState("");
 
@@ -100,4 +100,4 @@ const spellingBee = () => {
   );
 };
 
-export default observer(spellingBee);
+export default observer(SpellingBee);

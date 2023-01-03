@@ -1,6 +1,7 @@
 import words from "../data/fiveLetterWords.json";
 
 export default {
+  error: "",
   word1: "",
   word2: "",
   word3: "",
@@ -130,8 +131,11 @@ export default {
   },
 
   submitGuess() {
+    this.error = "";
     if (words.includes(this.guesses[this.currentGuess])) {
       this.currentGuess += 1;
+    } else {
+      this.error = "Not a valid word";
     }
     if (words.includes(this.guesses2[this.currentGuess2])) {
       this.currentGuess2 += 1;
@@ -167,7 +171,6 @@ export default {
 
   handleKeyup(e) {
     if (this.roundComplete) {
-      console.log("Finito?");
       return;
     }
 
@@ -175,6 +178,7 @@ export default {
       return this.submitGuess();
     }
     if (e.key === "Backspace") {
+      this.error = "";
       this.deleteLetter(this.guesses, this.currentGuess);
       this.deleteLetter(this.guesses2, this.currentGuess2);
       this.deleteLetter(this.guesses3, this.currentGuess3);
@@ -191,7 +195,8 @@ export default {
     if (key === "enter") {
       return this.submitGuess();
     }
-    if (key === "delete") {
+    if (key === "delete") {      
+      this.error = "";
       this.deleteLetter(this.guesses, this.currentGuess);
       this.deleteLetter(this.guesses2, this.currentGuess2);
       this.deleteLetter(this.guesses3, this.currentGuess3);
@@ -233,8 +238,12 @@ export default {
     }
   },
   calculateScore() {
-    const unUsedLetters = (30 - this.allGuessedLetters.length) * 4;
-    this.totalScore = unUsedLetters + this.correctLetters.length * 2;
+    const unUsedLetters = (180 - this.allGuessedLetters.length);
+    this.totalScore = unUsedLetters + this.correctLetters.length / 4;
     this.scorePercentage = (this.totalScore / 110) * 100;
+    console.log("usused letters: ", unUsedLetters)
+    console.log("all guessed letters: ", this.allGuessedLetters.length)
+    console.log("this totalscore: ", this.totalScore)
+    console.log("correct letters: ", this.correctLetters.length)
   },
 };

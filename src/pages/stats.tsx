@@ -152,7 +152,7 @@ const stats = () => {
           <h2 className="border-b-[0.5px] pb-1  heading-2">Average Score</h2>
           {wordle ? (
             <h3 className="text-7xl">
-              {stats[0]?.totalScore / wGamesPlayed || "0"}
+              {(stats[0]?.totalScore / wGamesPlayed).toFixed(1) || "0"}
             </h3>
           ) : quordle ? (
             <h3 className="text-7xl">
@@ -167,10 +167,20 @@ const stats = () => {
       <section className="flex w-full gap-x-4">
         <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
           <h2 className="border-b-[0.5px] pb-1  heading-2">Win Ratio</h2>
-          {/* <h3 className="text-7xl">{stats.gamesPlayed}</h3> */}
+          {wordle ? (
+            <h3 className="text-7xl">
+              {(stats[0]?.wins / wGamesPlayed) * 100 + "%" || "0"}
+            </h3>
+          ) : quordle ? (
+            <h3 className="text-7xl">
+              {(qStats[0]?.wins / qGamesPlayed) * 100 + "%" || "0"}
+            </h3>
+          ) : (
+            <></>
+          )}{" "}
         </div>
         <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
-          <h2 className="border-b-[0.5px] pb-1  heading-2">Average Turns</h2>
+          <h2 className="border-b-[0.5px] pb-1  heading-2">Total Score</h2>
           {/* <h3 className="text-7xl">{stats.avgTurns}</h3> */}
           {/* showing total score now */}
           {wordle ? (

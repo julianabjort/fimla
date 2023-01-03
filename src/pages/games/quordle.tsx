@@ -6,7 +6,7 @@ import QuordleGrid from "../../components/QuordleGrid";
 import QuordleStore from "../../stores/QuordleStore.jsx";
 import { useSession } from "next-auth/react";
 
-const quordle = () => {
+const Quordle = () => {
   const { data: session } = useSession();
   const [qStats, setQstats] = useState({
     wins: 0,
@@ -39,8 +39,6 @@ const quordle = () => {
             i.userEmail === userSession?.email
         );
         setQstats(qStats);
-        console.log("my stats: ", qStats);
-        console.log("stats: ", qStats);
         return qStats;
       } catch (error) {
         console.log("error: ", error);
@@ -55,7 +53,6 @@ const quordle = () => {
   }, [session]);
 
   const addQuordleStats = async () => {
-    console.log(qStats);
     readQuordleStats();
     if (session) {
       const user = session?.user?.email;
@@ -65,7 +62,6 @@ const quordle = () => {
       if (qStats[0]) {
         const userStats = qStats[0];
         totalScore = userStats.totalScore + store.totalScore;
-        console.log("store: ", store.totalScore);
         if (store.wonAll) {
           wins = userStats.wins + 1;
         }
@@ -82,7 +78,6 @@ const quordle = () => {
         }
       }
       const body = { user, totalScore, wins, losses };
-      console.log("TOTAL: ", totalScore);
       if (qStats[0]) {
         try {
           const response = await fetch(`/api/quordle-stats`, {
@@ -106,11 +101,16 @@ const quordle = () => {
       }
     }
   };
-
+  useEffect(() => {
+    if (store.roundComplete) {
+      addQuordleStats();
+    }
+  }, [store.roundComplete]);
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">
       <h1 className="heading-1">Quordle</h1>
       <div className="flex flex-col items-center justify-evenly">
+        <h1 className="h-6 px-2 rounded-md text-error">{store.error}</h1>
         <div className="grid grid-cols-2 gap-4 my-4">
           <div>
             {store.guesses.map((_, i) => (
@@ -176,11 +176,6 @@ const quordle = () => {
             </div>
           </div>
         )}
-        {(store.lost || store.won) && (
-          <>
-            <button onClick={addQuordleStats}>Save your score!</button>
-          </>
-        )}
       </div>
       <Keyboard2 store={store} />
       {/* <h1>word1: {store.word1}</h1>
@@ -197,4 +192,4 @@ const quordle = () => {
   );
 };
 
-export default observer(quordle);
+export default observer(Quordle);

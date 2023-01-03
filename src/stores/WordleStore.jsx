@@ -6,6 +6,7 @@ export default {
   numberOfGuesses: 0,
   totalScore: 0,
   scorePercentage: 0,
+  apiword: "",
 
   get won() {
     return this.guesses[this.numberOfGuesses - 1] === this.word;
@@ -53,6 +54,7 @@ export default {
   },
 
   startGame() {
+    // this.getWord();
     this.word = words[Math.round(Math.random() * words.length)];
     this.guesses.replace(new Array(6).fill(""));
     this.numberOfGuesses = 0;
@@ -145,5 +147,21 @@ export default {
     this.scorePercentage = (this.totalScore / 110) * 100;
     console.log(this.scorePercentage);
     console.log(Math.round(this.scorePercentage));
+  },
+  async getWord() {
+    const options = {
+      method: "GET",
+      headers: {
+        "X-RapidAPI-Key": process.env.RAPID_API_KEY,
+        "X-RapidAPI-Host": process.env.RAPID_API_HOST,
+      },
+    };
+    const response = await fetch(
+      "https://random-words5.p.rapidapi.com/getRandom?wordLength=5",
+      options
+    );
+    console.log(response);
+    const word = await response.text();
+    this.word = word;
   },
 };
