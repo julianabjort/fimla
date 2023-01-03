@@ -5,7 +5,8 @@ import Keyboard from "../../components/Keyboard";
 import { useSession } from "next-auth/react";
 import WordleStore from "../../stores/WordleStore";
 import { useRouter } from "next/router";
-import ChatBox from "../../components/chat";
+import { readFileSync } from "fs";
+import { io } from "socket.io-client";
 
 const tournament = () => {
   const { data: session, status } = useSession();
@@ -198,7 +199,13 @@ const tournament = () => {
                   <button className="bg-light dark:bg-darker rounded-md p-2 w-full">
                     Chat
                   </button>
-                  <ChatBox />
+                  <div>
+                    <ul id="messages"></ul>
+                    <form id="form" action="">
+                      <input id="input" />
+                      <button>Send</button>
+                    </form>
+                  </div>
                 </div>
               </>
             ) : (
