@@ -6,7 +6,7 @@ import QuordleGrid from "../../components/QuordleGrid";
 import QuordleStore from "../../stores/QuordleStore.jsx";
 import { useSession } from "next-auth/react";
 
-const quordle = () => {
+const Quordle = () => {
   const { data: session } = useSession();
   const [qStats, setQstats] = useState({
     wins: 0,
@@ -191,4 +191,4 @@ const quordle = () => {
   );
 };
 
-export default observer(quordle);
+export default observer(Quordle);

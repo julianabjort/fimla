@@ -6,7 +6,7 @@ import Keyboard from "../../components/Keyboard";
 import WordleStore from "../../stores/WordleStore.jsx";
 import { useSession } from "next-auth/react";
 
-const wordle = () => {
+const Wordle = () => {
   const { data: session } = useSession();
   const [stats, setStats] = useState({
     wins: 0,
@@ -145,4 +145,4 @@ const wordle = () => {
   );
 };
 
-export default observer(wordle);
+export default observer(Wordle);
