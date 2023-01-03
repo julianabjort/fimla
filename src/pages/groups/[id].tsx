@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import { observer, useLocalObservable } from "mobx-react-lite";
 import WordGrid from "../../components/WordGrid";
 import Keyboard from "../../components/Keyboard";
-
 import { useSession } from "next-auth/react";
 import WordleStore from "../../stores/WordleStore";
-
 import { useRouter } from "next/router";
+import ChatBox from "../../components/chat";
 
 const tournament = () => {
   const { data: session, status } = useSession();
@@ -95,7 +94,9 @@ const tournament = () => {
     } else if (store.lost) {
       games = UsersInTournament[0]?.["guesses"] - 1;
     }
-    const body = { userID, tournamentID, games };
+    const totalScore = UsersInTournament[0]?.["guesses"] + store.totalScore;
+    const body = { userID, tournamentID, games, totalScore };
+    console.log(store.totalScore, "total Score!");
     try {
       const response = await fetch(`/api/single-tournament`, {
         method: "PUT",
@@ -120,26 +121,6 @@ const tournament = () => {
   useEffect(() => {}, []);
 
   /**************/
-  // const socket = io();
-
-  // const messages = document.getElementById("messages") as HTMLUListElement;
-  // const form = document.getElementById("form") as HTMLFormElement;
-  // const input = document.getElementById("input") as HTMLInputElement;
-
-  // form.addEventListener("submit", (e) => {
-  //   e.preventDefault();
-  //   if (input.value) {
-  //     socket.emit("chat message", input.value);
-  //     input.value = "";
-  //   }
-  // });
-
-  // socket.on("chat message", (msg: string) => {
-  //   const item = document.createElement("li");
-  //   item.textContent = msg;
-  //   messages.appendChild(item);
-  //   window.scrollTo(0, document.body.scrollHeight);
-  // });
 
   return (
     <div>
@@ -151,7 +132,7 @@ const tournament = () => {
                 <div className="dark:bg-dark m-24 p-5 h-full rounded-md">
                   <h2 className="heading-2">Participants</h2>
                   {UsersInTournament.map((i, key) => (
-                    <p>{i["userName"]}</p>
+                    <p key={key}>{i["userName"]}</p>
                   ))}
                 </div>
 
@@ -186,31 +167,38 @@ const tournament = () => {
                       </div>
                     </div>
                   )}
+                  {(store.lost || store.won) && (
+                    <>
+                      <button onClick={store.startGame}>Play again</button>
+                    </>
+                  )}
                   <Keyboard store={store} />
                 </div>
-                <div className="dark:bg-dark m-24 p-5 h-full rounded-md">
-                  <h2 className="heading-2">Status</h2>
-                  <button onClick={readUsersInTournaments}>Check</button>
+                <div className="flex flex-col dark:bg-dark m-24 p-5 h-full rounded-md">
+                  <div className="flex flex-row gap-2">
+                    <h2 className="heading-2">Status</h2>
+                    <button onClick={readUsersInTournaments}>X</button>
+                  </div>
                   {UsersInTournament.sort(
                     (prev, next) => next["guesses"] - prev["guesses"]
                   )
                     .slice(0, 10)
                     .map((i, key) => (
-                      <>
-                        <p>{i["userName"]}</p>
+                      <div key={key} className="flex flex-row gap-2">
+                        <p>#</p>
+                        <p>{`${i["userName"]}`.split(" ")[0]}</p>
+                        {/* Total Score */}
                         <p>{i["guesses"]}</p>
-                      </>
+                        {/* Game played */}
+                        <p>5</p>
+                        {/* Avg. Score */}
+                        <p>{i["guesses"] / 5}</p>
+                      </div>
                     ))}
                   <button className="bg-light dark:bg-darker rounded-md p-2 w-full">
                     Chat
                   </button>
-                  <div>
-                    <ul id="messages"></ul>
-                    <form id="form" action="">
-                      <input id="input" />
-                      <button>Send</button>
-                    </form>
-                  </div>
+                  <ChatBox />
                 </div>
               </>
             ) : (

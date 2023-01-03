@@ -71,7 +71,7 @@ async function UpdateUsersInTournament(
         },
       },
       data: {
-        guesses: body.games,
+        guesses: body.totalScore,
       },
     });
     return res.status(200).json(tournament);

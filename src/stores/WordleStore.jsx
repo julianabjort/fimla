@@ -11,7 +11,7 @@ export default {
     return this.guesses[this.numberOfGuesses - 1] === this.word;
   },
   get lost() {
-    return this.numberOfGuesses === 6;
+    return this.numberOfGuesses === 6 && this.guesses[this.numberOfGuesses - 1] !== this.word;
   },
   get roundComplete() {
     return (
