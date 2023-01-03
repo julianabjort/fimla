@@ -60,34 +60,33 @@ const leaderboard = () => {
     <div className="flex flex-col gap-y-4">
       <h1 className="my-10 heading-1">Leaderboard</h1>
       <section className="flex w-full p-10 rounded-md bg-lighter dark:bg-darker">
-        <div>
-          <table>
-            <tbody>
-              <tr>
-                <th>Rank</th>
-                <th>Name</th>
-                <th>Location</th>
-                <th>Score</th>
-              </tr>
+        <table className="w-full">
+          <tbody>
+            <tr>
+              <th className="w-1/3 text-left">Rank</th>
+              <th className="w-1/3 text-left">Name</th>
+              <th className="w-1/3 text-left">Score</th>
+            </tr>
 
-              {stats
-                ?.filter((item) => item["totalScore"])
-                .sort((prev, next) => next["totalScore"] - prev["totalScore"])
-                .slice(0, 5)
-                .map((item) => (
-                  <tr key={item["id"]}>
-                    <td>#</td>
-                    <td>{item["userEmail"]}</td>
-                    <td>{item["totalScore"]}</td>
-                  </tr>
-                ))}
-              {/* <td>1</td>
+            {stats
+              ?.filter((item) => item["totalScore"])
+              .sort((prev, next) => next["totalScore"] - prev["totalScore"])
+              .slice(0, 5)
+              .map((item) => (
+                <tr key={item["id"]}>
+                  <td className="w-1/3">#</td>
+                  <td className="w-1/3">
+                    {`${item["userEmail"]}`.split("@")[0]}
+                  </td>
+                  <td className="w-1/3">{item["totalScore"]}</td>
+                </tr>
+              ))}
+            {/* <td>1</td>
                 <td>{wHighScore[0]?.userEmail.split("@")[0] || ""}</td>
                 <td>Blu</td>
                 <td>{wHighScore[0]?.totalScore || ""}</td> */}
-            </tbody>
-          </table>
-        </div>
+          </tbody>
+        </table>
       </section>
     </div>
   );
