@@ -22,9 +22,16 @@ const SpellingBee = () => {
     };
   }, []);
   useEffect(() => {
+    focusInput();
+    window.addEventListener("keydown", focusInput);
+    return () => {
+      window.removeEventListener("keydown", focusInput);
+    };
+  }, []);
+  const focusInput = () => {
     const input = document.getElementById("sbInput");
     if (input) input.focus();
-  }, []);
+  };
 
   useEffect(() => {
     store.word = word;
@@ -127,8 +134,8 @@ const SpellingBee = () => {
       <input
         ref={ref}
         id="sbInput"
-        placeholder="Can you think of a word?"
-        className="w-full h-20 my-10 text-2xl text-center outline-none dark:bg-background"
+        placeholder="Start typing.."
+        className="w-full h-20 my-8 text-2xl text-center outline-none dark:bg-background"
         type="text"
         value={word}
         onChange={(e) => setWord(e.target.value)}
@@ -151,7 +158,7 @@ const SpellingBee = () => {
         <button className="px-4 py-2 border rounded-xl">delete</button>
       </div>
       <div className="flex w-full gap-x-4">
-        <div className="w-full h-56 p-4 rounded-xl bg-lightest dark:bg-dark">
+        <div className="w-full px-10 py-6 h-80 rounded-xl bg-lightest dark:bg-dark">
           <div className="flex justify-between">
             <h1 className="heading-1">Words</h1>
 
@@ -161,7 +168,10 @@ const SpellingBee = () => {
           </div>
           <ProgressBar progressPercentage={store.progressPercentage} />
           {store.allFoundWords.map((word, i) => (
-            <div key={i}>{word}</div>
+            <div className="flex items-center my-1 gap-x-3" key={i}>
+              <div className="w-4 h-4 bg-purple-600 rounded-full"></div>
+              {word}
+            </div>
           ))}
         </div>
       </div>

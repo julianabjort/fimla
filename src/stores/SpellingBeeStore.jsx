@@ -1,6 +1,5 @@
 import fourLetterWords from "../data/fourLetterWords.json";
 import fiveLetterWords from "../data/fiveLetterWords.json";
-import sixLetterWords from "../data/sixLetterWords.json";
 
 export default {
   letters: [],
@@ -27,10 +26,8 @@ export default {
     this.letters = this.randomLetters;
     this.fourLetterWords = [];
     this.fiveLetterWords = [];
-    this.sixLetterWords = [];
     this.error = "";
     console.log(this.allWords);
-    console.log(this.progressPercentage);
   },
 
   submitWord() {

@@ -2,7 +2,7 @@ import React from "react";
 
 const ProgressBar = ({ progressPercentage }) => {
   return (
-    <div className="w-full h-8 my-3 bg-gray-300 rounded-lg">
+    <div className="w-full h-8 my-4 bg-gray-300 rounded-lg">
       <div
         style={{ width: `${progressPercentage}%` }}
         className={`h-full rounded-l-lg ${
