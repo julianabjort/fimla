@@ -2,6 +2,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 import { games } from "../data/paths";
+import Head from "next/head";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -12,12 +13,26 @@ export default function Home() {
 
   return (
     <>
-      <section className="w-full grid grid-cols-2 grid-rows-auto gap-2">
+      <Head>
+        <title>
+          Word games in Icelandic, play wordle, quordle, spelling bee and
+          crosswords for free!
+        </title>
+        <meta name="robots" content="all" />
+        <meta
+          name="description"
+          content="Word games in Icelandic, play wordle, quordle, spelling bee and crosswords for free"
+          key="titleDescription"
+        />
+        <meta name="keywords" content="wordgames" key="titleKeywords" />
+      </Head>
+
+      <section className="grid w-full grid-cols-2 gap-2 grid-rows-auto">
         {React.Children.toArray(
           games.map((link) => (
             <Link href={link.path}>
-              <div className="flex w-full h-64 bg-lighter dark:bg-darker rounded-md items-center justify-center">
-                <div className="flex gap-x-4 p-4 items-center">
+              <div className="flex items-center justify-center w-full h-64 rounded-md bg-lighter dark:bg-darker">
+                <div className="flex items-center p-4 gap-x-4">
                   <div className="w-10 h-10 rounded-md bg-light dark:bg-dark"></div>
                   <h2 className="heading-2">{link.name}</h2>
                 </div>
