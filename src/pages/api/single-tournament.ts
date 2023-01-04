@@ -47,7 +47,6 @@ async function CreateUsersInTournament(
         userName: body.userName,
         tournamentId: body.tournamentID,
         tournamentName: body.tournamentName,
-        guesses: 0,
       },
     });
     return res.status(200).json(tournament);
@@ -71,7 +70,8 @@ async function UpdateUsersInTournament(
         },
       },
       data: {
-        guesses: body.totalScore,
+        totalScore: body.totalScore,
+        gamesPlayed: body.gamesPlayed,
       },
     });
     return res.status(200).json(tournament);
