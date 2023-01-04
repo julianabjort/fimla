@@ -83,13 +83,12 @@ const Header = () => {
               return (
                 <div>
                   {link.dropdown === true ? (
-                    <Link
+                    <div
                       onClick={showDropdown}
-                      className={`${active}`}
-                      href={link.path}
+                      className={`${active} cursor-pointer`}
                     >
                       {link.name}
-                    </Link>
+                    </div>
                   ) : (
                     <Link className={`${active}`} href={link.path}>
                       {link.name}
