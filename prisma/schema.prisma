@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 datasource db {
   provider = "mysql"
@@ -39,17 +40,18 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  userInfo      UserInfo?
-  Tournaments   UsersInTournament[]
-  wordleStats   WordleStats?
-  quordleStats  QuordleStats?
+  id                String    @id @default(cuid())
+  name              String?
+  email             String?   @unique
+  emailVerified     DateTime?
+  image             String?
+  accounts          Account[]
+  sessions          Session[]
+  userInfo          UserInfo?
+  Tournaments       UsersInTournament[]
+  wordleStats       WordleStats?
+  quordleStats      QuordleStats?
+  spellingBeeStats  SpellingBeeStats?
   
 }
 
@@ -74,6 +76,13 @@ model QuordleStats {
   id          String  @id @default(cuid())
   wins        Int     @default(0)
   losses      Int     @default(0)
+  totalScore  Int     @default(0)
+  user        User    @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  userEmail   String  @unique
+}
+
+model SpellingBeeStats {
+  id          String  @id @default(cuid())
   totalScore  Int     @default(0)
   user        User    @relation(fields: [userEmail], references: [email], onDelete: Cascade)
   userEmail   String  @unique
