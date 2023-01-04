@@ -43,7 +43,6 @@ async function CreateTournament(req: NextApiRequest, res: NextApiResponse) {
         userName: body.userName,
         tournamentId: tournament.id,
         tournamentName: body.tournamentName,
-        guesses: 0,
       },
     });
     console.log(response2);

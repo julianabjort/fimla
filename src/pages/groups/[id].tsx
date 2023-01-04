@@ -78,6 +78,7 @@ const tournament = () => {
   };
   const addUserToTournament = async () => {
     const body = { userName, tournamentID, userID, tournamentName };
+    console.log(body);
     try {
       const response = await fetch(`/api/single-tournament`, {
         method: "POST",
@@ -90,14 +91,12 @@ const tournament = () => {
     window.location.reload();
   };
   const updateGuesses = async () => {
-    let games: any;
-    if (store.won) {
-      games = UsersInTournament[0]?.["guesses"] + 1;
-    } else if (store.lost) {
-      games = UsersInTournament[0]?.["guesses"] - 1;
+    let gamesPlayed: any;
+    if (store.won || store.lost) {
+      gamesPlayed = UsersInTournament[0]?.["gamesPlayed"] + 1;
     }
-    const totalScore = UsersInTournament[0]?.["guesses"] + store.totalScore;
-    const body = { userID, tournamentID, games, totalScore };
+    const totalScore = UsersInTournament[0]?.["totalScore"] + store.totalScore;
+    const body = { userID, tournamentID, totalScore, gamesPlayed };
     console.log(store.totalScore, "total Score!");
     try {
       const response = await fetch(`/api/single-tournament`, {
@@ -194,7 +193,7 @@ const tournament = () => {
                         <th className="p-1">Avg.Score</th>
                       </tr>
                       {UsersInTournament.sort(
-                        (prev, next) => next["guesses"] - prev["guesses"]
+                        (prev, next) => next["totalScore"] - prev["totalScore"]
                       )
                         .slice(0, 10)
                         .map((i, key) => (
@@ -204,10 +203,12 @@ const tournament = () => {
                               {`${i["userName"]}`.split(" ")[0]}
                             </td>
                             {/* Game played */}
-                            <td className="p-1 text-center">5</td>
+                            <td className="p-1 text-center">
+                              {i["gamesPlayed"]}
+                            </td>
                             {/* Avg. Score */}
                             <td className="p-1 text-right">
-                              {i["guesses"] / 5}
+                              {i["totalScore"] / i["gamesPlayed"] || 0}
                             </td>
                           </tr>
                         ))}
@@ -217,10 +218,18 @@ const tournament = () => {
               </>
             ) : (
               <>
-                <h2 className="heading-2">
-                  Somebody has invited you to a tournament
-                </h2>
-                <button onClick={addUserToTournament}>JOIN</button>
+                <div className="flex flex-col items-center my-10 justify-evenly">
+                  <h2 className="heading-2 mb-5">
+                    Somebody has invited you the group
+                  </h2>
+                  <h1 className="heading-1 mb-5">{tournament[0]?.["name"]}</h1>
+                  <button
+                    className="w-16 h-10 ml-4 rounded-md bg-light dark:bg-dark"
+                    onClick={addUserToTournament}
+                  >
+                    JOIN
+                  </button>
+                </div>
               </>
             )}
           </div>
