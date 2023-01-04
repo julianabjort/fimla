@@ -1,7 +1,10 @@
 import React from "react";
+import { getSession, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { prisma } from "../../lib/prisma";
 
-const leaderboard = () => {
+const leaderboard = ({ wordleSessionStats, quordleSessionStats }) => {
+  const { data: session } = useSession();
   const [wordle, setWordle] = useState(true);
   const [quordle, setQuordle] = useState(false);
   const [spellingBee, setSpellingBee] = useState(false);
@@ -9,56 +12,102 @@ const leaderboard = () => {
   const [qHighScore, setQhighScore] = useState({});
   const [stats, setStats] = useState([]);
   const [users, setUsers] = useState([]);
-  const readUsers = async () => {
-    try {
-      const response = await fetch(`/api/user`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const allUsers = await response.json();
-      setUsers(allUsers);
-    } catch (error) {
-      console.log("error: ", error);
-    }
+
+  const wordleClick = () => {
+    setWordle(true);
+    setQuordle(false);
   };
-  const wHighScores = async () => {
-    try {
-      const response = await fetch(`/api/wordle-stats`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const allStats = await response.json();
-      setStats(allStats);
-      const highScore = Math.max.apply(
-        Math,
-        allStats.map(function (i) {
-          return i.totalScore;
-        })
-      );
-      const number = allStats.list.map((i) => {
-        return i.totalScore;
-      });
-      const wHighScore = [
-        allStats.find(function (i) {
-          return i.totalScore == highScore;
-        }),
-      ];
-      setWhighScore(wHighScore);
-    } catch (error) {
-      console.log("error: ", error);
-    }
+  const quordleClick = () => {
+    setQuordle(true);
+    setWordle(false);
   };
+  const initLeaderBoardW = () => {
+    setStats(wordleSessionStats);
+    // const highScore = Math.max.apply(
+    //   Math,
+    //   wordleSessionStats.map(function (i) {
+    //     return i.totalScore;
+    //   })
+    // );
+    // console.log("high", highScore);
+    // const number = wordleSessionStats.list.map((i) => {
+    //   return i.totalScore;
+    // });
+    // const wHighScore = [
+    //   wordleSessionStats.find(function (i) {
+    //     return i.totalScore == highScore;
+    //   }),
+    // ];
+    // setWhighScore(wHighScore);
+  };
+  const initLeaderBoardQ = () => {
+    setStats(quordleSessionStats);
+  };
+  // const readUsers = async () => {
+  //   try {
+  //     const response = await fetch(`/api/user`, {
+  //       method: "GET",
+  //       headers: { "Content-Type": "application/json" },
+  //     });
+  //     const allUsers = await response.json();
+  //     setUsers(allUsers);
+  //   } catch (error) {
+  //     console.log("error: ", error);
+  //   }
+  // };
+  // const wHighScores = async () => {
+  //   try {
+  //     const response = await fetch(`/api/wordle-stats`, {
+  //       method: "GET",
+  //       headers: { "Content-Type": "application/json" },
+  //     });
+  //     const allStats = await response.json();
+  //     setStats(allStats);
+  //     const highScore = Math.max.apply(
+  //       Math,
+  //       allStats.map(function (i) {
+  //         return i.totalScore;
+  //       })
+  //     );
+  //     const number = allStats.list.map((i) => {
+  //       return i.totalScore;
+  //     });
+  //     const wHighScore = [
+  //       allStats.find(function (i) {
+  //         return i.totalScore == highScore;
+  //       }),
+  //     ];
+  //     setWhighScore(wHighScore);
+  //   } catch (error) {
+  //     console.log("error: ", error);
+  //   }
+  // };
   useEffect(() => {
-    readUsers();
-    wHighScores();
+    // readUsers();
   }, []);
   useEffect(() => {
-    // console.log(users[0].["wordleStats"]);
-    // console.log(stats?.user);
-  }, [users]);
+    if (quordle) initLeaderBoardQ();
+  }, [quordle]);
+  useEffect(() => {
+    if (wordle) initLeaderBoardW();
+  }, [wordle]);
   return (
     <div className="flex flex-col gap-y-4">
       <h1 className="my-10 heading-1">Leaderboard</h1>
+      <div className="flex mb-3 space-x-4 cursor-pointer">
+        <h3
+          className={`${wordle && "underline underline-offset-4"}`}
+          onClick={wordleClick}
+        >
+          Wordle
+        </h3>
+        <h3
+          className={`${quordle && "underline underline-offset-4"}`}
+          onClick={quordleClick}
+        >
+          Quordle
+        </h3>
+      </div>
       <section className="flex w-full p-10 rounded-md bg-lighter dark:bg-darker">
         <table className="w-full">
           <tbody>
@@ -93,3 +142,13 @@ const leaderboard = () => {
 };
 
 export default leaderboard;
+
+export const getServerSideProps = async () => {
+  const wordleData = await prisma.wordleStats.findMany({});
+  const quordleData = await prisma.quordleStats.findMany({});
+
+  const wordleSessionStats = wordleData || null;
+  const quordleSessionStats = quordleData || null;
+
+  return { props: { wordleSessionStats, quordleSessionStats } };
+};
