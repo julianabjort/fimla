@@ -52,7 +52,7 @@ const SpellingBee = () => {
         </div>
       </div>
       {hints ? (
-        <div className="flex flex-col w-1/2 h-1/2 absolute p-6 rounded-xl bg-lightest dark:bg-dark">
+        <div className="flex flex-col absolute p-10 rounded-xl bg-lightest dark:bg-dark">
           <div className="flex justify-between mb-6 items-baseline">
             <h1></h1>
             <h1 className="heading-1">Today's Hints</h1>
