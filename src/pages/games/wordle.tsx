@@ -5,6 +5,7 @@ import WordGrid from "../../components/WordGrid";
 import Keyboard from "../../components/Keyboard";
 import WordleStore from "../../stores/WordleStore.jsx";
 import { useSession } from "next-auth/react";
+import OnboardingModal from "../../components/OnboardingModal";
 
 const Wordle = () => {
   const { data: session } = useSession();
@@ -16,6 +17,8 @@ const Wordle = () => {
     avgScore: 0,
   });
   const store = useLocalObservable(() => WordleStore);
+  const [onboardingModal, setOnboardingModal] = useState(false);
+  const [wordleVisited, setWordleVisited] = useState(true);
 
   useEffect(() => {
     store.startGame();
@@ -24,6 +27,22 @@ const Wordle = () => {
       window.removeEventListener("keyup", store.handleKeyup);
     };
   }, []);
+
+  useEffect(() => {
+    let wordleVisited = JSON.parse(
+      localStorage.getItem("wordleVisited") || "false"
+    );
+    if (!wordleVisited) {
+      wordleVisited = true;
+      localStorage.setItem("wordleVisited", JSON.stringify(wordleVisited));
+      setWordleVisited(false);
+    }
+  }, []);
+  useEffect(() => {
+    if (!wordleVisited) {
+      setOnboardingModal(true);
+    }
+  }, [wordleVisited]);
 
   const readWordleStats = async () => {
     if (session) {
@@ -106,11 +125,31 @@ const Wordle = () => {
       addWordleStats();
     }
   }, [store.roundComplete]);
-  console.log("the word: ", store.word);
+
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">
-      <h1 className="heading-1">Wordle</h1>
-      <h1 className="h-6 px-2 rounded-md text-error">{store.error}</h1>
+      <div className="flex justify-center">
+        {onboardingModal ? (
+          <OnboardingModal
+            title="How to play Wordle"
+            textOne="Try to guess the word in 6 tries. After each guess, the color of the tiles will change to show how close your guess was to the word."
+            textTwo="The letter H is in the word and in the correct spot. The letter O is in the word but in the wrong spot."
+            image="/how-to-play.png"
+            alt="wordle-letters"
+            onClick={() => setOnboardingModal(false)}
+          />
+        ) : null}
+      </div>
+      <div className="flex items-center justify-between w-full border-b-2">
+        <h1 className="pb-2 heading-1">Wordle</h1>
+        <div className="flex cursor-pointer gap-x-6">
+          <button>Stats</button>
+          <button onClick={() => setOnboardingModal(true)}>How to play</button>
+        </div>
+      </div>
+      <h1 className="flex items-center h-10 px-2 rounded-md text-error">
+        {store.error}
+      </h1>
       {store.guesses.map((_, i) => (
         <WordGrid
           word={store.word}
@@ -132,15 +171,12 @@ const Wordle = () => {
       )}
       {(store.lost || store.won) && (
         <>
-          <button onClick={store.startGame}>Play again</button>
-          {/* <button onClick={addWordleStats}>Save your score!</button> */}
+          <button className="mt-2 btn-primary" onClick={store.startGame}>
+            Play again
+          </button>
         </>
       )}
       <Keyboard store={store} />
-      {/* <button onClick={store.calculateScore}>Save</button> */}
-      {/* <h1>word: {store.word}</h1>
-      <h1>guesses: {JSON.stringify(store.guesses)}</h1>
-      <h1>numberOfGuesses: {store.numberOfGuesses}</h1> */}
     </div>
   );
 };
