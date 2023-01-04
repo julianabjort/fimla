@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { observer, useLocalObservable } from "mobx-react-lite";
 import SpellingBeeStore from "../../stores/SpellingBeeStore.jsx";
 import SpellingBeeGrid from "../../components/SpellingBeeGrid";
-import { HiRefresh } from "react-icons/hi";
+import { HiRefresh, HiX } from "react-icons/hi";
 
 const SpellingBee = () => {
   const store = useLocalObservable(() => SpellingBeeStore);
   const [word, setWord] = useState("");
+  const [hints, setHints] = useState(false);
 
   useEffect(() => {
     store.startGame();
@@ -26,16 +27,62 @@ const SpellingBee = () => {
       store.error = "";
     }
   };
+  const filteredWords4: string[][] = [];
+  const filteredWords5: string[][] = [];
+
+  store.letters.forEach((letter, index) => {
+    filteredWords4[index] = store.allFourLetterWords.filter((f) =>
+      f.toLowerCase().startsWith(letter)
+    );
+    filteredWords5[index] = store.allFiveLetterWords.filter((f) =>
+      f.toLowerCase().startsWith(letter)
+    );
+  });
 
   return (
     <div className="flex flex-col items-center my-20 justify-evenly">
+      {hints ? (
+        <div className="bg-black bg-opacity-75 w-full fixed h-full bottom-0 "></div>
+      ) : null}
       <div className="flex items-center justify-between w-full border-b-2">
         <h1 className="pb-2 heading-1">Spelling Bee</h1>
         <div className="flex cursor-pointer gap-x-8">
-          <p>today's hints</p>
+          <button onClick={() => setHints(true)}>today's hints</button>
           <p>yesterday's answers</p>
         </div>
       </div>
+      {hints ? (
+        <div className="flex flex-col w-1/2 h-1/2 absolute p-6 rounded-xl bg-lightest dark:bg-dark">
+          <div className="flex justify-between mb-6 items-baseline">
+            <h1></h1>
+            <h1 className="heading-1">Today's Hints</h1>
+            <button
+              className="heading-1 text-center mb-5"
+              onClick={() => setHints(false)}
+            >
+              <HiX />
+            </button>
+          </div>
+          <div className="flex gap-10 justify-evenly">
+            <div className="flex flex-col text-center">
+              <h2 className="heading-2">Four Letter Words</h2>
+              {filteredWords4.map((words, index) => (
+                <p key={index}>
+                  {store.letters[index]} - {words.length}
+                </p>
+              ))}
+            </div>
+            <div className="flex flex-col text-center">
+              <h2 className="heading-2">Five Letter Words</h2>
+              {filteredWords5.map((words, index) => (
+                <p key={index}>
+                  {store.letters[index]} - {words.length}
+                </p>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : null}
       <h1 className="h-10 p-2 rounded-md text-error">{store.error}</h1>
       <input
         placeholder="Type or click.."
