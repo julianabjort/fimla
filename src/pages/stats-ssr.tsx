@@ -83,7 +83,7 @@ const StatsSsr = ({ wordleSessionStats, quordleSessionStats }) => {
           <p className="font-bold text-green">{message}</p>
         </div>
 
-        <div className="flex w-full space-x-4">
+        <div className="flex w-full mb-4 space-x-4">
           <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
             <h1 className="border-b-[0.5px] pb-1 heading-2">Wins</h1>
             <h1 className="text-7xl">{stats.wins}</h1>
@@ -98,7 +98,32 @@ const StatsSsr = ({ wordleSessionStats, quordleSessionStats }) => {
           </div>
           <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
             <h1 className="border-b-[0.5px] pb-1 heading-2">Average Score</h1>
-            <h1 className="text-7xl">{stats.avgScore}</h1>
+            <h1 className="text-7xl">
+              {stats.totalScore > 0 ? (
+                <>
+                  {(stats.totalScore / (stats.wins + stats.losses)).toFixed(0)}
+                </>
+              ) : (
+                <>0</>
+              )}
+            </h1>
+          </div>
+        </div>
+        <div className="flex w-full space-x-4">
+          <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+            <h2 className="border-b-[0.5px] pb-1  heading-2">Win Ratio</h2>
+            <h3 className="text-7xl">
+              {stats.wins > 0 || stats.losses > 0 ? (
+                <>{(stats.wins / (stats.wins + stats.losses)) * 100 + "%"}</>
+              ) : (
+                <>0%</>
+              )}
+            </h3>
+          </div>
+          <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+            <h2 className="border-b-[0.5px] pb-1  heading-2">Total Score</h2>
+
+            <h3 className="text-7xl">{stats.totalScore || "0"}</h3>
           </div>
         </div>
       </div>
