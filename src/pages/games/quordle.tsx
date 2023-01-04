@@ -27,6 +27,7 @@ const Quordle = () => {
 
   const readQuordleStats = async () => {
     if (session) {
+      console.log("sess");
       const userSession = session?.user;
       try {
         const response = await fetch(`/api/quordle-stats`, {

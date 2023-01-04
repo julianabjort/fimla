@@ -117,10 +117,11 @@ const tournament = () => {
     console.log(inTournament);
   }, [inTournament]);
   // console.log("the word: ", store.word);
-  if (store.won || store.lost) {
-    updateGuesses();
-  }
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (store.won || store.lost) {
+      updateGuesses();
+    }
+  }, [store.roundComplete]);
 
   /**************/
 
