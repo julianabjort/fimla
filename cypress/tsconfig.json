@@ -1,0 +1,8 @@
+{
+  "include": [
+    "**/*.ts",
+    "component/QuordleGrid.cy.tsx",
+    "component/Footer.cy.tsx"
+  ],
+  "extends": "../tsconfig.json"
+}

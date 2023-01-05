@@ -22,7 +22,9 @@
     "**/*.tsx",
     "src/stores/WordleStore.jsx",
     "src/stores/QuordleStore.jsx",
-    "src/stores/SpellingBeeStore.jsx"
-, "src/pages/chat/chat.js"  ],
+    "src/stores/SpellingBeeStore.jsx",
+    "src/pages/chat/chat.js"
+  ],
+  "types": ["cypress", "cypress-axe", "node"],
   "exclude": ["node_modules"]
 }
