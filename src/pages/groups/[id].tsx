@@ -9,7 +9,7 @@ import WordleStore from "../../stores/WordleStore";
 import { useRouter } from "next/router";
 import { readFileSync } from "fs";
 import { io } from "socket.io-client";
-import { HiRefresh } from "react-icons/hi";
+import { HiRefresh, HiX } from "react-icons/hi";
 
 const tournament = () => {
   const { data: session, status } = useSession();
@@ -243,47 +243,63 @@ const tournament = () => {
                   {modal ? (
                     <div
                       onClick={() => setModal(false)}
-                      className="fixed bottom-0 w-full h-full bg-black bg-opacity-75 "
+                      className="fixed bottom-0 left-0 w-full h-full bg-black bg-opacity-75 "
                     ></div>
                   ) : null}
                   {modal ? (
-                    <div className="flex flex-col absolute bg-white dark:bg-darker p-5 rounded-xl items-center my-10 justify-evenly">
-                      <h1 className="heading-1">{tournament[0]?.["name"]}</h1>
-                      <h1 className="h-6 px-2 rounded-md text-error">
-                        {store.error}
-                      </h1>
-                      {store.guesses.map((_, i) => (
-                        <WordGrid
-                          word={store.word}
-                          guess={store.guesses[i]}
-                          isGuessed={i < store.numberOfGuesses}
-                          key={i}
-                        />
-                      ))}
-
-                      {store.won && (
-                        <h1 className="text-lg font-bold">
-                          You won! You are good!
-                        </h1>
-                      )}
-                      {store.lost && (
-                        <div className="flex items-center my-2 gap-x-8">
-                          <p className="text-lg font-bold">
-                            Almost! The correct word was:
-                          </p>
-                          <div>
-                            <p className="text-lg font-bold text-green">
-                              {store.word}
-                            </p>
+                    <div className=" absolute top-0 left-0.5 right-0.5">
+                      <div className="flex flex-col p-5 rounded-xl items-center my-10 justify-evenly">
+                        <div className="bg-white dark:bg-darker w-2/5 flex flex-col p-5 rounded-xl items-center my-10 justify-evenly">
+                          <div className="flex justify-between items-center">
+                            <h1 className="heading-1">
+                              {tournament[0]?.["name"]}
+                            </h1>
+                            <button
+                              onClick={() => setModal(false)}
+                              className="heading-1"
+                            >
+                              <HiX />
+                            </button>
                           </div>
+                          <h1 className="h-6 px-2 rounded-md text-error">
+                            {store.error}
+                          </h1>
+                          {store.guesses.map((_, i) => (
+                            <WordGrid
+                              word={store.word}
+                              guess={store.guesses[i]}
+                              isGuessed={i < store.numberOfGuesses}
+                              key={i}
+                            />
+                          ))}
+
+                          {store.won && (
+                            <h1 className="text-lg font-bold">
+                              You won! You are good!
+                            </h1>
+                          )}
+                          {store.lost && (
+                            <div className="flex items-center my-2 gap-x-8">
+                              <p className="text-lg font-bold">
+                                Almost! The correct word was:
+                              </p>
+                              <div>
+                                <p className="text-lg font-bold text-green">
+                                  {store.word}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                          {(store.lost || store.won) && (
+                            <>
+                              <button onClick={store.startGame}>
+                                Play again
+                              </button>
+                            </>
+                          )}
+                          <Keyboard store={store} />
                         </div>
-                      )}
-                      {(store.lost || store.won) && (
-                        <>
-                          <button onClick={store.startGame}>Play again</button>
-                        </>
-                      )}
-                      <Keyboard store={store} />
+                      </div>
                     </div>
                   ) : null}
                   <div className="flex flex-col mt-5 gap-4">
