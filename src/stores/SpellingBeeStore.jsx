@@ -1,20 +1,16 @@
 import fourLetterWords from "../data/fourLetterWords.json";
 import fiveLetterWords from "../data/fiveLetterWords.json";
-import sixLetterWords from "../data/sixLetterWords.json";
 
 export default {
   letters: [],
   fourLetterWords: [],
   fiveLetterWords: [],
-  sixLetterWords: [],
-  sevenLetterWords: [],
+  allFoundWords: [],
   word: "",
   numberOfGuesses: 0,
   vowels: "eyuioa",
   consonants: "qwrtpsdfghjklcvbnm",
   error: "",
-
-  // FUNCTIONS
 
   getRandomLetters(arr, num) {
     const letters = [...arr].sort(() => 0.5 - Math.random());
@@ -30,24 +26,23 @@ export default {
     this.letters = this.randomLetters;
     this.fourLetterWords = [];
     this.fiveLetterWords = [];
-    this.sixLetterWords = [];
     this.error = "";
+    console.log(this.allWords);
   },
 
   submitWord() {
     this.error = "";
     if (
       this.fourLetterWords.includes(this.word) ||
-      this.fiveLetterWords.includes(this.word) ||
-      this.sixLetterWords.includes(this.word)
+      this.fiveLetterWords.includes(this.word)
     ) {
       this.error = "Already found";
     } else if (this.allFourLetterWords.includes(this.word)) {
       this.fourLetterWords.push(this.word);
+      this.allFoundWords.push(this.word);
     } else if (this.allFiveLetterWords.includes(this.word)) {
       this.fiveLetterWords.push(this.word);
-      // } else if (this.allSixLetterWords.includes(this.word)) {
-      //   this.sixLetterWords.push(this.word);
+      this.allFoundWords.push(this.word);
     } else {
       this.error = "Invalid word";
     }
@@ -86,10 +81,12 @@ export default {
     );
   },
 
-  get allSixLetterWords() {
-    return this.allLetterCombos(this.letters, 6).filter((combo) =>
-      sixLetterWords.some((word) => combo === word)
-    );
+  get allWords() {
+    return this.allFourLetterWords.concat(this.allFiveLetterWords);
+  },
+
+  get progressPercentage() {
+    return (this.allFoundWords.length / this.allWords.length) * 100;
   },
 
   get randomLetters() {

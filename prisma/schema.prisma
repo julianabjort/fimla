@@ -101,7 +101,8 @@ model UsersInTournament {
   tournament      Tournaments @relation(fields: [tournamentId], references: [id])
   tournamentId    String
   tournamentName  String @default("")
-  guesses         Int
+  gamesPlayed     Int @default(0)
+  totalScore      Int @default(0)
   @@index([userId])
   @@index([tournamentId])
   @@id([userId,   tournamentId])

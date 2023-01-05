@@ -1,15 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { observer, useLocalObservable } from "mobx-react-lite";
 import SpellingBeeStore from "../../stores/SpellingBeeStore.jsx";
 import SpellingBeeGrid from "../../components/SpellingBeeGrid";
+import OnboardingModal from "../../components/OnboardingModal";
 import { HiRefresh, HiX } from "react-icons/hi";
 import { useSession } from "next-auth/react";
+import ProgressBar from "../../components/ProgressBar";
 
 const SpellingBee = () => {
   const { data: session } = useSession();
+  const ref = useRef(null);
   const store = useLocalObservable(() => SpellingBeeStore);
   const [word, setWord] = useState("");
   const [hints, setHints] = useState(false);
+  const [onboardingModal, setOnboardingModal] = useState(false);
+  const [beeVisited, setBeeVisited] = useState(true);
   const [stats, setStats] = useState({
     totalScore: 0,
   });
@@ -21,10 +26,39 @@ const SpellingBee = () => {
       window.removeEventListener("keydown", store.handleKeydown);
     };
   }, []);
+  useEffect(() => {
+    focusInput();
+    window.addEventListener("keydown", focusInput);
+    return () => {
+      window.removeEventListener("keydown", focusInput);
+    };
+  }, []);
+  const focusInput = () => {
+    const input = document.getElementById("sbInput");
+    if (input) input.focus();
+  };
 
   useEffect(() => {
     store.word = word;
   }, [word]);
+
+  useEffect(() => {
+    console.log(store.progressPercentage);
+  }, [store.progressPercentage]);
+
+  useEffect(() => {
+    let beeVisited = JSON.parse(localStorage.getItem("beeVisited") || "false");
+    if (!beeVisited) {
+      beeVisited = true;
+      localStorage.setItem("beeVisited", JSON.stringify(beeVisited));
+      setBeeVisited(false);
+    }
+  }, []);
+  useEffect(() => {
+    if (!beeVisited) {
+      setOnboardingModal(true);
+    }
+  }, [beeVisited]);
 
   const clearInput = (e: { key: string }) => {
     if (e.key === "Enter") {
@@ -113,24 +147,36 @@ const SpellingBee = () => {
   });
 
   return (
-    <div className="flex flex-col items-center my-20 justify-evenly">
-      {hints ? (
-        <div className="bg-black bg-opacity-75 w-full fixed h-full bottom-0 "></div>
+    <div className="flex flex-col items-center my-10 justify-evenly">
+      {hints || onboardingModal ? (
+        <div className="fixed bottom-0 w-full h-full bg-black bg-opacity-75 "></div>
       ) : null}
+      <div className="flex justify-center">
+        {onboardingModal ? (
+          <OnboardingModal
+            title="How to play Spelling Bee"
+            textOne="Find as many words as you can using the 7 letters given. Words must contain at least 4 letters. Letters can be used more than once. Our word list does not include words that are obscure, hyphenated, or proper nouns."
+            textTwo="Points are given for each word, 4 letter words are worth 1 point, 5 letter words are worth 2 points and so on. Create an account to save your stats, it’s free!"
+            image="/how-to-sb.png"
+            alt="spellingbee"
+            onClick={() => setOnboardingModal(false)}
+          />
+        ) : null}
+      </div>
       <div className="flex items-center justify-between w-full border-b-2">
         <h1 className="pb-2 heading-1">Spelling Bee</h1>
-        <div className="flex cursor-pointer gap-x-8">
-          <button onClick={() => setHints(true)}>today's hints</button>
-          <p>yesterday's answers</p>
+        <div className="flex cursor-pointer gap-x-6">
+          <button onClick={() => setHints(true)}>Hints</button>
+          <p>Stats</p>
+          <button onClick={() => setOnboardingModal(true)}>How to play</button>
         </div>
       </div>
       {hints ? (
-        <div className="flex flex-col absolute p-10 rounded-xl bg-lightest dark:bg-dark">
-          <div className="flex justify-between mb-6 items-baseline">
-            <h1></h1>
+        <div className="absolute flex flex-col p-10 rounded-xl bg-lightest dark:bg-dark">
+          <div className="flex items-baseline justify-between mb-6">
             <h1 className="heading-1">Today's Hints</h1>
             <button
-              className="heading-1 text-center mb-5"
+              className="mb-5 text-center heading-1"
               onClick={() => setHints(false)}
             >
               <HiX />
@@ -158,8 +204,10 @@ const SpellingBee = () => {
       ) : null}
       <h1 className="h-10 p-2 rounded-md text-error">{store.error}</h1>
       <input
-        placeholder="Type or click.."
-        className="w-full h-20 my-10 text-2xl text-center outline-none dark:bg-background"
+        ref={ref}
+        id="sbInput"
+        placeholder="Start typing.."
+        className="w-full h-20 my-8 text-2xl text-center outline-none dark:bg-background"
         type="text"
         value={word}
         onChange={(e) => setWord(e.target.value)}
@@ -182,18 +230,23 @@ const SpellingBee = () => {
         <button className="px-4 py-2 border rounded-xl">delete</button>
       </div>
       <div className="flex w-full gap-x-4">
-        <div className="w-full h-56 p-4 rounded-xl bg-lightest dark:bg-dark">
+        <div className="w-full px-10 py-6 h-80 rounded-xl bg-lightest dark:bg-dark">
           <div className="flex justify-between">
-            <h2 className="heading-3">4 letter words</h2>
+            <h1 className="heading-1">Words</h1>
+
             <p>
-              {store.fourLetterWords.length} / {store.allFourLetterWords.length}
+              {store.allFoundWords.length} / {store.allWords.length}
             </p>
           </div>
-          {store.fourLetterWords.map((word, i) => (
-            <div key={i}>{word}</div>
+          <ProgressBar progressPercentage={store.progressPercentage} />
+          {store.allFoundWords.map((word, i) => (
+            <div className="flex items-center my-1 gap-x-3" key={i}>
+              <div className="w-4 h-4 bg-purple-600 rounded-full"></div>
+              {word}
+            </div>
           ))}
         </div>
-        <div className="w-full h-56 p-4 rounded-xl bg-lightest dark:bg-dark">
+        {/* <div className="w-full h-56 p-4 rounded-xl bg-lightest dark:bg-dark">
           <div className="flex justify-between">
             <h2 className="heading-3">5 letter words</h2>
             <p>
@@ -203,7 +256,7 @@ const SpellingBee = () => {
           {store.fiveLetterWords.map((word, i) => (
             <div key={i}>{word}</div>
           ))}
-        </div>
+        </div> */}
 
         {/* <div className="w-full h-56 p-4 rounded-xl bg-dark">
           <div className="flex justify-between">
