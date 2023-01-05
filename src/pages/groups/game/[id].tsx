@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import { observer, useLocalObservable } from "mobx-react-lite";
-import WordGrid from "../../components/WordGrid";
-import Keyboard from "../../components/Keyboard";
+import WordGrid from "../../../components/WordGrid";
+import Keyboard from "../../../components/Keyboard";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { VscCircleLargeFilled, VscCircleFilled } from "react-icons/vsc";
-import WordleStore from "../../stores/WordleStore";
+import WordleStore from "../../../stores/WordleStore";
 import { useRouter } from "next/router";
 import { readFileSync } from "fs";
 import { io } from "socket.io-client";
@@ -39,20 +39,7 @@ const tournament = () => {
     return () => {
       window.removeEventListener("keyup", store.handleKeyup);
     };
-  }, [modal]);
-  // const readAllUsers = async () => {
-  //   try {
-  //     const response = await fetch(`/api/user`, {
-  //       method: "GET",
-  //       headers: { "Content-Type": "application/json" },
-  //     });
-  //     const data = await response.json();
-  //     const thisTournament = data.filter((i) => i.id === tournamentID);
-  //     setTournament(thisTournament);
-  //   } catch (error) {
-  //     console.log("error reading tournaments: ", error);
-  //   }
-  // };
+  }, []);
 
   const readAllTournaments = async () => {
     try {
@@ -192,7 +179,7 @@ const tournament = () => {
               <>
                 <h1 className="heading-1 mt-10">{tournamentName}</h1>
                 <div className="flex flex-row">
-                  <div className="flex flex-col mt-5 gap-4">
+                  {/* <div className="flex flex-col mt-5 gap-4">
                     <div className="dark:bg-dark mx-2 px-5 py-3 rounded-md">
                       <h2 className="heading-2">Members</h2>
                       {UsersInTournament.map((i, key) => (
@@ -239,77 +226,71 @@ const tournament = () => {
                         </button>
                       </div>
                     </div>
-                  </div>
-                  {modal ? (
-                    <div
-                      onClick={() => setModal(false)}
-                      className="fixed bottom-0 left-0 w-full h-full bg-black bg-opacity-75 "
-                    ></div>
-                  ) : null}
-                  {modal ? (
-                    <div className=" absolute top-0 left-0.5 right-0.5">
-                      <div className="flex flex-col p-5 rounded-xl items-center my-10 justify-evenly">
-                        <div className="bg-white dark:bg-darker w-2/5 flex flex-col p-5 rounded-xl items-center my-10 justify-evenly">
-                          <div className="flex justify-between items-center">
-                            <h1 className="heading-1">
-                              {tournament[0]?.["name"]}
-                            </h1>
-                            <button
-                              onClick={() => setModal(false)}
-                              className="heading-1"
-                            >
-                              <HiX />
-                            </button>
-                          </div>
-                          <h1 className="h-6 px-2 rounded-md text-error">
-                            {store.error}
-                          </h1>
-                          {store.guesses.map((_, i) => (
-                            <WordGrid
-                              word={store.word}
-                              guess={store.guesses[i]}
-                              isGuessed={i < store.numberOfGuesses}
-                              key={i}
-                            />
-                          ))}
+                  </div> */}
 
-                          {store.won && (
-                            <h1 className="text-lg font-bold">
-                              You won! You are good!
-                            </h1>
-                          )}
-                          {store.lost && (
-                            <div className="flex items-center my-2 gap-x-8">
-                              <p className="text-lg font-bold">
-                                Almost! The correct word was:
-                              </p>
-                              <div>
-                                <p className="text-lg font-bold text-green">
-                                  {store.word}
-                                </p>
-                              </div>
-                            </div>
-                          )}
-                          {(store.lost || store.won) && (
-                            <>
-                              <button onClick={store.startGame}>
-                                Play again
-                              </button>
-                            </>
-                          )}
-                          <Keyboard store={store} />
+                  <div className=" absolute top-0 left-0.5 right-0.5">
+                    <div className="flex flex-col p-5 rounded-xl items-center my-10 justify-evenly">
+                      <div className="bg-white dark:bg-darker w-2/5 flex flex-col p-5 rounded-xl items-center my-10 justify-evenly">
+                        <div className="flex justify-between items-center">
+                          <h1 className="heading-1">
+                            {tournament[0]?.["name"]}
+                          </h1>
+                          <button
+                            onClick={() => setModal(false)}
+                            className="heading-1"
+                          >
+                            <HiX />
+                          </button>
                         </div>
+                        <h1 className="h-6 px-2 rounded-md text-error">
+                          {store.error}
+                        </h1>
+                        {store.guesses.map((_, i) => (
+                          <WordGrid
+                            word={store.word}
+                            guess={store.guesses[i]}
+                            isGuessed={i < store.numberOfGuesses}
+                            key={i}
+                          />
+                        ))}
+
+                        {store.won && (
+                          <h1 className="text-lg font-bold">
+                            You won! You are good!
+                          </h1>
+                        )}
+                        {store.lost && (
+                          <div className="flex items-center my-2 gap-x-8">
+                            <p className="text-lg font-bold">
+                              Almost! The correct word was:
+                            </p>
+                            <div>
+                              <p className="text-lg font-bold text-green">
+                                {store.word}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                        {(store.lost || store.won) && (
+                          <>
+                            <button onClick={store.startGame}>
+                              Play again
+                            </button>
+                          </>
+                        )}
+                        <Keyboard store={store} />
                       </div>
                     </div>
-                  ) : null}
+                  </div>
+
                   <div className="flex flex-col mt-5 gap-4">
                     <div className="dark:bg-dark mx-2 px-5 py-3 rounded-md">
                       <h2 className="heading-2">Tournaments</h2>
                       <div className="flex p-2 items-center justify-between bg-lightest dark:bg-darker rounded-md my-2">
                         <p className="">Wordle</p>
-                        <Link href={`/groups/game/${tournamentID}`}>
-                          <button className="">Play</button>
-                        </Link>
+                        <button onClick={() => setModal(true)} className="">
+                          Play
+                        </button>
                       </div>
                     </div>
                     <div className="flex flex-col dark:bg-dark mx-2 px-5 py-3 rounded-md">
@@ -350,19 +331,6 @@ const tournament = () => {
                             ))}
                         </tbody>
                       </table>
-                    </div>
-                    <div className="dark:bg-dark mx-2 p-5 rounded-md">
-                      <h2 className="heading-2">Invite Friends</h2>
-                      <button
-                        className="my-2 bg-light dark:bg-darker px-4 py-2 rounded-md"
-                        onClick={() => {
-                          navigator.clipboard.writeText(
-                            `http://localhost:3000/groups/${tournamentID}`
-                          );
-                        }}
-                      >
-                        Copy Link
-                      </button>
                     </div>
                   </div>
                 </div>
