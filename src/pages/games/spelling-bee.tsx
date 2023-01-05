@@ -4,15 +4,20 @@ import SpellingBeeStore from "../../stores/SpellingBeeStore.jsx";
 import SpellingBeeGrid from "../../components/SpellingBeeGrid";
 import OnboardingModal from "../../components/OnboardingModal";
 import { HiRefresh, HiX } from "react-icons/hi";
+import { useSession } from "next-auth/react";
 import ProgressBar from "../../components/ProgressBar";
 
 const SpellingBee = () => {
+  const { data: session } = useSession();
   const ref = useRef(null);
   const store = useLocalObservable(() => SpellingBeeStore);
   const [word, setWord] = useState("");
   const [hints, setHints] = useState(false);
   const [onboardingModal, setOnboardingModal] = useState(false);
   const [beeVisited, setBeeVisited] = useState(true);
+  const [stats, setStats] = useState({
+    totalScore: 0,
+  });
 
   useEffect(() => {
     store.startGame();
@@ -59,6 +64,73 @@ const SpellingBee = () => {
     if (e.key === "Enter") {
       setWord("");
       store.error = "";
+    }
+  };
+  const readBeeStats = async () => {
+    if (session) {
+      const userSession = session?.user;
+      try {
+        const response = await fetch(`/api/bee-stats`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+        const allStats = await response.json();
+        const myStats = allStats.filter(
+          (i: { userEmail: string | null | undefined }) =>
+            i.userEmail === userSession?.email
+        );
+        setStats(myStats);
+        return myStats;
+      } catch (error) {
+        console.log("error: ", error);
+      }
+    } else {
+      console.log("no session");
+    }
+  };
+  useEffect(() => {
+    readBeeStats();
+  }, [session]);
+
+  const addBeeStats = async () => {
+    readBeeStats();
+    if (session) {
+      const user = session?.user?.email;
+      let totalScore = 0;
+      if (stats[0]) {
+        const userStats = stats[0];
+        totalScore =
+          userStats.totalScore +
+          store.fourLetterWords.length +
+          store.fiveLetterWords.length * 2;
+      } else {
+        totalScore =
+          store.fourLetterWords.length + store.fiveLetterWords.length * 2;
+      }
+      const body = { user, totalScore };
+      if (stats[0]) {
+        try {
+          const response = await fetch(`/api/bee-stats`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+        } catch (error) {
+          console.log("error: ", error);
+        }
+      } else {
+        try {
+          const response = await fetch(`/api/bee-stats`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+        } catch (error) {
+          console.log("error: ", error);
+        }
+      }
+    } else {
+      console.log("no session");
     }
   };
 
@@ -174,7 +246,31 @@ const SpellingBee = () => {
             </div>
           ))}
         </div>
+        {/* <div className="w-full h-56 p-4 rounded-xl bg-lightest dark:bg-dark">
+          <div className="flex justify-between">
+            <h2 className="heading-3">5 letter words</h2>
+            <p>
+              {store.fiveLetterWords.length} / {store.allFiveLetterWords.length}
+            </p>
+          </div>
+          {store.fiveLetterWords.map((word, i) => (
+            <div key={i}>{word}</div>
+          ))}
+        </div> */}
+
+        {/* <div className="w-full h-56 p-4 rounded-xl bg-dark">
+          <div className="flex justify-between">
+            <h2 className="heading-3">6 letter words</h2>
+            <p>
+              {store.sixLetterWords.length} / {store.allSixLetterWords.length}
+            </p>
+          </div>
+          {store.sixLetterWords.map((word, i) => (
+            <div key={i}>{word}</div>
+          ))}
+        </div> */}
       </div>
+      <button onClick={addBeeStats}>Click</button>
     </div>
   );
 };
