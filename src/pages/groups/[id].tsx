@@ -3,6 +3,8 @@ import { observer, useLocalObservable } from "mobx-react-lite";
 import WordGrid from "../../components/WordGrid";
 import Keyboard from "../../components/Keyboard";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+
 import WordleStore from "../../stores/WordleStore";
 import { useRouter } from "next/router";
 import { readFileSync } from "fs";
@@ -131,11 +133,29 @@ const tournament = () => {
           <div className="flex flex-row justify-center">
             {inTournament === true ? (
               <>
-                <div className="dark:bg-dark mx-2 my-20 p-5 h-full rounded-md">
-                  <h2 className="heading-2">Participants</h2>
-                  {UsersInTournament.map((i, key) => (
-                    <p key={key}>{i["userName"]}</p>
-                  ))}
+                <div className="flex flex-col gap-4 mt-20">
+                  <div className="dark:bg-dark mx-2 p-5 rounded-md">
+                    <h2 className="heading-2">Participants</h2>
+                    {UsersInTournament.map((i, key) => (
+                      <p key={key}>{i["userName"]}</p>
+                    ))}
+                  </div>
+                  <div className="dark:bg-dark mx-2 p-5 rounded-md">
+                    <h2 className="heading-2">Invite Friends</h2>
+                    <button
+                      className="my-2 bg-light px-4 py-2 rounded-md"
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          `http://localhost:3000/groups/${tournamentID}`
+                        );
+                      }}
+                    >
+                      Copy Link
+                    </button>
+                  </div>
+                  <div className="dark:bg-dark mx-2 p-5 rounded-md">
+                    <h2 className="heading-2">Discussion</h2>
+                  </div>
                 </div>
 
                 <div className="flex flex-col items-center my-10 justify-evenly">
@@ -223,12 +243,23 @@ const tournament = () => {
                     Somebody has invited you the group
                   </h2>
                   <h1 className="heading-1 mb-5">{tournament[0]?.["name"]}</h1>
-                  <button
-                    className="w-16 h-10 ml-4 rounded-md bg-light dark:bg-dark"
-                    onClick={addUserToTournament}
-                  >
-                    JOIN
-                  </button>
+                  {session ? (
+                    <button
+                      className="w-16 h-10 ml-4 rounded-md bg-light dark:bg-dark"
+                      onClick={addUserToTournament}
+                    >
+                      JOIN
+                    </button>
+                  ) : (
+                    <>
+                      <p>You need to have an account to join this group</p>
+                      <Link href="/api/auth/signin">
+                        <button className="w-16 h-10 ml-4 rounded-md bg-light dark:bg-dark">
+                          Sign in
+                        </button>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </>
             )}
