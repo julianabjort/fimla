@@ -331,7 +331,7 @@ const tournament = () => {
                                 key={key}
                                 className="flex p-2 items-center justify-between gap-2 bg-lightest dark:bg-darker rounded-md my-2"
                               >
-                                <td className="p-1">#</td>
+                                <td className="p-1">{key + 1}</td>
                                 <td className="p-1">
                                   {`${i["userName"]}`.split(" ")[0]}
                                 </td>
