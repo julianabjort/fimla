@@ -1,216 +1,222 @@
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import React from "react";
 import { useEffect, useState } from "react";
+import { prisma } from "../../lib/prisma";
 
-const stats = () => {
+const StatsSsr = ({
+  wordleSessionStats,
+  quordleSessionStats,
+  beeSessionStats,
+}) => {
   const { data: session } = useSession();
-  const [stats, setStats] = useState({});
-  const [qStats, setQstats] = useState({});
+  const [message, setMessage] = useState("");
+  const noStats = {
+    wins: 0,
+    losses: 0,
+    gamesPlayed: 0,
+    totalScore: 0,
+    avgScore: 0,
+  };
+  const [stats, setStats] = useState(noStats);
+  const [beeStats, setBeeStats] = useState(noStats);
   const [wordle, setWordle] = useState(true);
   const [quordle, setQuordle] = useState(false);
-  const [wHighScore, setWhighScore] = useState({});
-  const [qHighScore, setQhighScore] = useState({});
+  const [bee, setBee] = useState(false);
 
-  let wGamesPlayed = stats[0]?.wins + stats[0]?.losses || 0;
-  let qGamesPlayed = qStats[0]?.wins + qStats[0]?.losses || 0;
   const wordleClick = () => {
     setWordle(true);
     setQuordle(false);
+    setBee(false);
+    setMessage("");
   };
   const quordleClick = () => {
     setQuordle(true);
     setWordle(false);
+    setBee(false);
   };
-  const WordleStats = async () => {
-    if (session) {
-      console.log("SESSION");
-      const userSession = session?.user;
-      try {
-        const response = await fetch(`/api/wordle-stats`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-        const allStats = await response.json();
-        const myStats = allStats.filter(
-          (i) => i.userEmail === userSession?.email
-        );
-        // const highScore = Math.max(...allStats.map(i => i.totalScore))
-        const highScore = Math.max.apply(
-          Math,
-          allStats.map(function (i) {
-            return i.totalScore;
-          })
-        );
-        const wHighScore = [
-          allStats.find(function (i) {
-            return i.totalScore == highScore;
-          }),
-        ];
-        setStats(myStats);
-        setWhighScore(wHighScore);
-      } catch (error) {
-        console.log("error: ", error);
-      }
-      try {
-        const response = await fetch(`/api/quordle-stats`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-        const allStats = await response.json();
-        const qStats = allStats.filter(
-          (i) => i.userEmail === userSession?.email
-        );
-        const highScore = Math.max.apply(
-          Math,
-          allStats.map(function (i) {
-            return i.totalScore;
-          })
-        );
-        const qHighScore = [
-          allStats.find(function (i) {
-            return i.totalScore == highScore;
-          }),
-        ];
-        setQstats(qStats);
-        setQhighScore(qHighScore);
-      } catch (error) {
-        console.log("error: ", error);
-      }
-    } else {
-      console.log("no session");
-      let stats = [JSON.parse(localStorage.getItem("stats")!)];
-      // let stats: { [key: string]: any }[] = [JSON.parse(localStorage.getItem("stats")!)];
+  const beeClick = () => {
+    setBee(true);
+    setQuordle(false);
+    setWordle(false);
+  };
 
-      if (stats !== null) setStats(stats);
-      console.log(stats);
-    }
-  };
+  const initWordleStats = () => {
+      if (session && !wordleSessionStats) {
+        setStats(noStats);
+      }
+      if (session) {
+        setStats(wordleSessionStats);
+      } else if (typeof window !== undefined) {
+        let data = [JSON.parse(localStorage.getItem("stats")!)];
+        const wordleLocalStats = data[0];
+        if (stats !== null) setStats(wordleLocalStats);
+      }
+    },
+    initQuordleStats = () => {
+      if (session && !quordleSessionStats) {
+        setStats(noStats);
+      } else if (session) {
+        setStats(quordleSessionStats);
+      } else if (quordle === true) {
+        setStats(noStats);
+        setMessage(
+          "Create an account to see Quordle stats (it takes 2 minutes & it's free!)"
+        );
+      }
+    },
+    initBeeStats = () => {
+      if (session && !beeSessionStats) {
+        setBeeStats(noStats);
+      } else if (session) {
+        setBeeStats(beeSessionStats);
+      } else if (bee === true) {
+        setBeeStats(noStats);
+        setMessage(
+          "Create an account to see Spelling Bee stats (it takes 2 minutes & it's free!)"
+        );
+      }
+    };
 
   useEffect(() => {
-    WordleStats();
-    // console.log(gamesPlayed)
+    initWordleStats();
   }, [session]);
+  useEffect(() => {
+    if (quordle) initQuordleStats();
+  }, [quordle]);
+  useEffect(() => {
+    if (wordle) initWordleStats();
+  }, [wordle]);
+  useEffect(() => {
+    if (bee) initBeeStats();
+  }, [bee]);
 
-  return (
-    <div className="flex flex-col gap-y-4">
-      <h1 className="my-10 heading-1">Game Stats</h1>
-      <div className="flex flex-row">
-        <button onClick={wordleClick} className={`p-4 pl-0 mr-2 rounded-md `}>
-          <h4
-            className={`border-b-2 ${
-              wordle ? "border-black dark:border-white" : "border-transparent"
-            }`}
+  if (stats) {
+    return (
+      <div>
+        <h1 className="my-10 heading-1">Game Stats</h1>
+
+        <div className="flex mb-3 space-x-4 cursor-pointer">
+          <h3
+            className={`${wordle && "underline underline-offset-4"}`}
+            onClick={wordleClick}
           >
             Wordle
-          </h4>
-        </button>
-        <button onClick={quordleClick} className={`p-4  mr-2 rounded-md `}>
-          <h4
-            className={`border-b-2 ${
-              quordle ? "border-black dark:border-white" : "border-transparent"
-            }`}
+          </h3>
+          <h3
+            className={`${quordle && "underline underline-offset-4"}`}
+            onClick={quordleClick}
           >
             Quordle
-          </h4>
-        </button>
-      </div>
-      <section className="flex w-full gap-x-4">
-        <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
-          <h2 className="border-b-[0.5px] pb-1 heading-2">Wins</h2>
-          {wordle ? (
-            <h3 className="text-7xl">{stats[0]?.wins || 0}</h3>
-          ) : quordle ? (
-            <h3 className="text-7xl">{qStats[0]?.wins || 0}</h3>
-          ) : (
-            <></>
-          )}
-          {/* <h3 className="text-7xl">{stats[0]?.wins}</h3> */}
+          </h3>
+          <h3
+            className={`${bee && "underline underline-offset-4"}`}
+            onClick={beeClick}
+          >
+            Spelling Bee
+          </h3>
+          <p className="font-bold text-green">{message}</p>
         </div>
-        <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
-          <h2 className="border-b-[0.5px] pb-1 heading-2">Losses</h2>
-          {wordle ? (
-            <h3 className="text-7xl">{stats[0]?.losses || "0"}</h3>
-          ) : quordle ? (
-            <h3 className="text-7xl">{qStats[0]?.losses || "0"}</h3>
-          ) : (
-            <></>
-          )}
-          {/* <h3 className="text-7xl">{stats[0]?.losses}</h3> */}
-        </div>
-        <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
-          <h2 className="border-b-[0.5px] pb-1  heading-2">Games Played</h2>
-          {wordle ? (
-            <h3 className="text-7xl">{wGamesPlayed || "0"}</h3>
-          ) : quordle ? (
-            <h3 className="text-7xl">{qGamesPlayed || "0"}</h3>
-          ) : (
-            <></>
-          )}
-          {/* <h3 className="text-7xl">{gamesPlayed || ""}</h3> */}
-        </div>
-        <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
-          <h2 className="border-b-[0.5px] pb-1  heading-2">Average Score</h2>
-          {wordle ? (
-            <h3 className="text-7xl">
-              {(stats[0]?.totalScore / wGamesPlayed).toFixed(1) || "0"}
-            </h3>
-          ) : quordle ? (
-            <h3 className="text-7xl">
-              {qStats[0]?.totalScore / qGamesPlayed || "0"}
-            </h3>
-          ) : (
-            <></>
-          )}
-          {/* <h3 className="text-7xl">{stats[0]?.totalScore/gamesPlayed || ""}</h3> */}
-        </div>
-      </section>
-      <section className="flex w-full gap-x-4">
-        <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
-          <h2 className="border-b-[0.5px] pb-1  heading-2">Win Ratio</h2>
-          {wordle ? (
-            <h3 className="text-7xl">
-              {(stats[0]?.wins / wGamesPlayed) * 100 + "%" || "0"}
-            </h3>
-          ) : quordle ? (
-            <h3 className="text-7xl">
-              {(qStats[0]?.wins / qGamesPlayed) * 100 + "%" || "0"}
-            </h3>
-          ) : (
-            <></>
-          )}{" "}
-        </div>
-        <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
-          <h2 className="border-b-[0.5px] pb-1  heading-2">Total Score</h2>
-          {/* <h3 className="text-7xl">{stats.avgTurns}</h3> */}
-          {/* showing total score now */}
-          {wordle ? (
-            <h3 className="text-7xl">{stats[0]?.totalScore || "0"}</h3>
-          ) : quordle ? (
-            <h3 className="text-7xl">{qStats[0]?.totalScore || "0"}</h3>
-          ) : (
-            <></>
-          )}
-          {/* <h3 className="text-7xl">{stats[0]?.totalScore || ""}</h3> */}
-        </div>
-      </section>
-      <div className="flex flex-col justify-between w-full p-6 rounded-md bg-lighter dark:bg-darker">
-        <h2 className="border-b-[0.5px] pb-1  heading-2">Record holders</h2>
-        {wordle ? (
-          <div className="grid grid-flow-col mt-4">
-            <p>{wHighScore[0]?.userEmail.split("@")[0] || ""}</p>
-            <p className="">{wHighScore[0]?.totalScore || ""}</p>{" "}
-          </div>
-        ) : quordle ? (
-          <div className="grid grid-flow-col mt-4">
-            <p>{qHighScore[0]?.userEmail.split("@")[0] || ""}</p>
-            <p className="">{qHighScore[0]?.totalScore || ""}</p>{" "}
-          </div>
+        {!bee ? (
+          <>
+            <div className="flex w-full mb-4 space-x-4">
+              <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <h1 className="border-b-[0.5px] pb-1 heading-2">Wins</h1>
+                <h1 className="text-7xl">{stats.wins}</h1>
+              </div>
+              <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <h1 className="border-b-[0.5px] pb-1 heading-2">Losses</h1>
+                <h1 className="text-7xl">{stats.losses}</h1>
+              </div>
+              <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <h1 className="border-b-[0.5px] pb-1 heading-2">
+                  Games Played
+                </h1>
+                <h1 className="text-7xl">{stats.wins + stats.losses}</h1>
+              </div>
+              <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <h1 className="border-b-[0.5px] pb-1 heading-2">
+                  Average Score
+                </h1>
+                <h1 className="text-7xl">
+                  {stats.totalScore > 0 ? (
+                    <>
+                      {(stats.totalScore / (stats.wins + stats.losses)).toFixed(
+                        0
+                      )}
+                    </>
+                  ) : (
+                    <>0</>
+                  )}
+                </h1>
+              </div>
+            </div>
+            <div className="flex w-full space-x-4">
+              <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <h2 className="border-b-[0.5px] pb-1  heading-2">Win Ratio</h2>
+                <h3 className="text-7xl">
+                  {stats.wins > 0 || stats.losses > 0 ? (
+                    <>
+                      {(stats.wins / (stats.wins + stats.losses)) * 100 + "%"}
+                    </>
+                  ) : (
+                    <>0%</>
+                  )}
+                </h3>
+              </div>
+              <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <h2 className="border-b-[0.5px] pb-1  heading-2">
+                  Total Score
+                </h2>
+
+                <h3 className="text-7xl">{stats.totalScore || "0"}</h3>
+              </div>
+            </div>
+          </>
         ) : (
-          <div></div>
+          <>
+            <div className="flex w-full space-x-4">
+              <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <h2 className="border-b-[0.5px] pb-1  heading-2">
+                  Total Score
+                </h2>
+
+                <h3 className="text-7xl">{beeStats.totalScore || "0"}</h3>
+              </div>
+            </div>
+          </>
         )}
       </div>
-    </div>
-  );
+    );
+  }
 };
 
-export default stats;
+export default StatsSsr;
+
+export const getServerSideProps = async ({ req }) => {
+  const session = await getSession({ req });
+  const getEmail = session?.user?.email;
+  const userEmail = getEmail?.toString();
+
+  const wordleData = await prisma.wordleStats.findMany({
+    where: {
+      userEmail: userEmail,
+    },
+  });
+  const quordleData = await prisma.quordleStats.findMany({
+    where: {
+      userEmail: userEmail,
+    },
+  });
+  const beeData = await prisma.spellingBeeStats.findMany({
+    where: {
+      userEmail: userEmail,
+    },
+  });
+  const wordleSessionStats = wordleData[0] || null;
+  const quordleSessionStats = quordleData[0] || null;
+  const beeSessionStats = beeData[0] || null;
+
+  return {
+    props: { wordleSessionStats, quordleSessionStats, beeSessionStats },
+  };
+};
