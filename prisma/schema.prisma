@@ -92,6 +92,7 @@ model Tournaments {
   id          String  @id @default(cuid())
   name        String
   users       UsersInTournament[]
+  comments    Comment[]
 }
 
 model UsersInTournament {
@@ -115,4 +116,16 @@ model UserInfo {
   userLocation  String?
   user          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String?   @unique
+}
+
+model Comment {
+  id            Int       @id @default(autoincrement())
+  time          DateTime?
+  text          String
+  userName      String
+  tournamentId  String
+  userId        String
+
+  tournament Tournaments @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  @@index([tournamentId])
 }
