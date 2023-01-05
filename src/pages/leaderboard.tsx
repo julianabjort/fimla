@@ -121,9 +121,9 @@ const leaderboard = ({ wordleSessionStats, quordleSessionStats }) => {
               ?.filter((item) => item["totalScore"])
               .sort((prev, next) => next["totalScore"] - prev["totalScore"])
               .slice(0, 5)
-              .map((item) => (
+              .map((item, i) => (
                 <tr key={item["id"]}>
-                  <td className="w-1/3">#</td>
+                  <td className="w-1/3">{i + 1}</td>
                   <td className="w-1/3">
                     {`${item["userEmail"]}`.split("@")[0]}
                   </td>
