@@ -36,7 +36,7 @@ async function CreateTournament(req: NextApiRequest, res: NextApiResponse) {
         text: body.comment,
         userName: body.userName,
         tournamentId: body.tournamentID,
-        userId: body.userID,
+        userEmail: body.userEmail,
       },
     });
     return res.status(200).json(comment);
