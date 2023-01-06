@@ -3,7 +3,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { prisma } from "../../lib/prisma";
 
-const StatsSsr = ({
+const Stats = ({
   wordleSessionStats,
   quordleSessionStats,
   beeSessionStats,
@@ -195,7 +195,7 @@ const StatsSsr = ({
   );
 };
 
-export default StatsSsr;
+export default Stats;
 
 export const getServerSideProps = async ({ req }) => {
   const session = await getSession({ req });

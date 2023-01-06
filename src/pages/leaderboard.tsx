@@ -23,65 +23,10 @@ const leaderboard = ({ wordleSessionStats, quordleSessionStats }) => {
   };
   const initLeaderBoardW = () => {
     setStats(wordleSessionStats);
-    // const highScore = Math.max.apply(
-    //   Math,
-    //   wordleSessionStats.map(function (i) {
-    //     return i.totalScore;
-    //   })
-    // );
-    // console.log("high", highScore);
-    // const number = wordleSessionStats.list.map((i) => {
-    //   return i.totalScore;
-    // });
-    // const wHighScore = [
-    //   wordleSessionStats.find(function (i) {
-    //     return i.totalScore == highScore;
-    //   }),
-    // ];
-    // setWhighScore(wHighScore);
   };
   const initLeaderBoardQ = () => {
     setStats(quordleSessionStats);
   };
-  // const readUsers = async () => {
-  //   try {
-  //     const response = await fetch(`/api/user`, {
-  //       method: "GET",
-  //       headers: { "Content-Type": "application/json" },
-  //     });
-  //     const allUsers = await response.json();
-  //     setUsers(allUsers);
-  //   } catch (error) {
-  //     console.log("error: ", error);
-  //   }
-  // };
-  // const wHighScores = async () => {
-  //   try {
-  //     const response = await fetch(`/api/wordle-stats`, {
-  //       method: "GET",
-  //       headers: { "Content-Type": "application/json" },
-  //     });
-  //     const allStats = await response.json();
-  //     setStats(allStats);
-  //     const highScore = Math.max.apply(
-  //       Math,
-  //       allStats.map(function (i) {
-  //         return i.totalScore;
-  //       })
-  //     );
-  //     const number = allStats.list.map((i) => {
-  //       return i.totalScore;
-  //     });
-  //     const wHighScore = [
-  //       allStats.find(function (i) {
-  //         return i.totalScore == highScore;
-  //       }),
-  //     ];
-  //     setWhighScore(wHighScore);
-  //   } catch (error) {
-  //     console.log("error: ", error);
-  //   }
-  // };
   useEffect(() => {
     // readUsers();
   }, []);
@@ -130,10 +75,6 @@ const leaderboard = ({ wordleSessionStats, quordleSessionStats }) => {
                   <td className="w-1/3">{item["totalScore"]}</td>
                 </tr>
               ))}
-            {/* <td>1</td>
-                <td>{wHighScore[0]?.userEmail.split("@")[0] || ""}</td>
-                <td>Blu</td>
-                <td>{wHighScore[0]?.totalScore || ""}</td> */}
           </tbody>
         </table>
       </section>

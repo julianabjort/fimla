@@ -101,10 +101,7 @@ const settings = () => {
       console.log("There was an error in deleting from the DB", error);
     }
   };
-  useEffect(() => {
-    // console.log(userId);
-    // console.log(session);
-  }, [session]);
+  useEffect(() => {}, [session]);
   return (
     <div className="flex flex-col gap-y-4">
       <h1 className="my-10 heading-1">Settings</h1>

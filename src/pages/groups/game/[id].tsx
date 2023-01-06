@@ -116,14 +116,11 @@ const tournament = () => {
   useEffect(() => {
     console.log(inTournament);
   }, [inTournament]);
-  // console.log("the word: ", store.word);
   useEffect(() => {
     if (store.won || store.lost) {
       updateGuesses();
     }
   }, [store.roundComplete]);
-
-  /**************/
 
   return (
     <div>

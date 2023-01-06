@@ -246,29 +246,6 @@ const SpellingBee = () => {
             </div>
           ))}
         </div>
-        {/* <div className="w-full h-56 p-4 rounded-xl bg-lightest dark:bg-dark">
-          <div className="flex justify-between">
-            <h2 className="heading-3">5 letter words</h2>
-            <p>
-              {store.fiveLetterWords.length} / {store.allFiveLetterWords.length}
-            </p>
-          </div>
-          {store.fiveLetterWords.map((word, i) => (
-            <div key={i}>{word}</div>
-          ))}
-        </div> */}
-
-        {/* <div className="w-full h-56 p-4 rounded-xl bg-dark">
-          <div className="flex justify-between">
-            <h2 className="heading-3">6 letter words</h2>
-            <p>
-              {store.sixLetterWords.length} / {store.allSixLetterWords.length}
-            </p>
-          </div>
-          {store.sixLetterWords.map((word, i) => (
-            <div key={i}>{word}</div>
-          ))}
-        </div> */}
       </div>
       <button onClick={addBeeStats}>Click</button>
     </div>

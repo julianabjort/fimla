@@ -21,8 +21,6 @@ const groups = () => {
         (i: { userEmail: any }) => i.userEmail === session?.user?.["email"]
       );
       setUsersInTournament(userInTournament);
-      // console.log("data: ", data);
-      // console.log("users in tournaments: ", UsersInTournament);
     } catch (error) {
       console.log("error reading tournaments: ", error);
     }
@@ -41,7 +39,6 @@ const groups = () => {
       data.includes();
       setTournaments(data);
       console.log("data: ", data);
-      // console.log("tournaments: ", tournaments);
     } catch (error) {
       console.log("error reading tournaments: ", error);
     }
@@ -65,20 +62,7 @@ const groups = () => {
       console.log("error: ", error);
     }
   };
-  // const addUserToTournament = async () => {
-  //   const tournamentName = tournament[0]?.['name'];
-  //   const body = { userName, tournamentID, userID, tournamentName };
-  //   console.log(body);
-  //   try {
-  //     const response = await fetch(`/api/single-tournament`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(body),
-  //     });
-  //   } catch (error) {
-  //     console.log("error: ", error);
-  //   }
-  // };
+
   useEffect(() => {
     findUsersInTournaments();
   }, [session]);

@@ -41,19 +41,6 @@ const tournament = () => {
       window.removeEventListener("keyup", store.handleKeyup);
     };
   }, [modal]);
-  // const readAllUsers = async () => {
-  //   try {
-  //     const response = await fetch(`/api/user`, {
-  //       method: "GET",
-  //       headers: { "Content-Type": "application/json" },
-  //     });
-  //     const data = await response.json();
-  //     const thisTournament = data.filter((i) => i.id === tournamentID);
-  //     setTournament(thisTournament);
-  //   } catch (error) {
-  //     console.log("error reading tournaments: ", error);
-  //   }
-  // };
 
   const readAllTournaments = async () => {
     try {
@@ -171,7 +158,6 @@ const tournament = () => {
   useEffect(() => {
     console.log(inTournament);
   }, [inTournament]);
-  // console.log("the word: ", store.word);
   useEffect(() => {
     if (store.won || store.lost) {
       updateGuesses();
