@@ -31,7 +31,7 @@ async function addUserInfo(req: NextApiRequest, res: NextApiResponse) {
   try {
     const userInfo = await prisma.userInfo.create({
       data: {
-        userId: body.userId,
+        userEmail: body.userEmail,
         username: body.userName,
         userDob: body.userDob,
         userLocation: body.userLocation,
@@ -50,7 +50,7 @@ async function updateUserInfo(req: NextApiRequest, res: NextApiResponse) {
   try {
     const userInfo = await prisma.userInfo.update({
       where: {
-        userId: body.userId,
+        userEmail: body.userEmail,
       },
       data: {
         username: body.userName,

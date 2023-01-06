@@ -34,7 +34,9 @@ const settings = () => {
         headers: { "Content-Type": "application/json" },
       });
       const allUserInfo = await response.json();
-      const info = allUserInfo.filter((i: number) => i["userId"] === userId);
+      const info = allUserInfo.filter(
+        (i: number) => i["userEmail"] === userEmail
+      );
       setUserInfo(info);
       return info;
     } catch (error) {
@@ -43,7 +45,7 @@ const settings = () => {
   };
   const updateUserInfo = async (e: any): Promise<any> => {
     e.preventDefault();
-    const body = { userId, userName, userDob, userLocation };
+    const body = { userEmail, userName, userDob, userLocation };
     if (userInfo[0]) {
       try {
         const response = fetch(`/api/userinfo`, {
@@ -100,7 +102,7 @@ const settings = () => {
     }
   };
   useEffect(() => {
-    console.log(userId);
+    // console.log(userId);
     // console.log(session);
   }, [session]);
   return (

@@ -90,104 +90,109 @@ const StatsSsr = ({
     if (bee) initBeeStats();
   }, [bee]);
 
-  if (stats) {
-    return (
-      <div>
-        <h1 className="my-10 heading-1">Game Stats</h1>
+  return (
+    <div>
+      <h1 className="my-10 heading-1">Game Stats</h1>
 
-        <div className="flex mb-3 space-x-4 cursor-pointer">
-          <h3
-            className={`${wordle && "underline underline-offset-4"}`}
-            onClick={wordleClick}
-          >
-            Wordle
-          </h3>
-          <h3
-            className={`${quordle && "underline underline-offset-4"}`}
-            onClick={quordleClick}
-          >
-            Quordle
-          </h3>
-          <h3
-            className={`${bee && "underline underline-offset-4"}`}
-            onClick={beeClick}
-          >
-            Spelling Bee
-          </h3>
-          <p className="font-bold text-green">{message}</p>
-        </div>
-        {!bee ? (
-          <>
-            <div className="flex w-full mb-4 space-x-4">
-              <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
-                <h1 className="border-b-[0.5px] pb-1 heading-2">Wins</h1>
-                <h1 className="text-7xl">{stats.wins}</h1>
-              </div>
-              <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
-                <h1 className="border-b-[0.5px] pb-1 heading-2">Losses</h1>
-                <h1 className="text-7xl">{stats.losses}</h1>
-              </div>
-              <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
-                <h1 className="border-b-[0.5px] pb-1 heading-2">
-                  Games Played
-                </h1>
-                <h1 className="text-7xl">{stats.wins + stats.losses}</h1>
-              </div>
-              <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
-                <h1 className="border-b-[0.5px] pb-1 heading-2">
-                  Average Score
-                </h1>
-                <h1 className="text-7xl">
-                  {stats.totalScore > 0 ? (
-                    <>
-                      {(stats.totalScore / (stats.wins + stats.losses)).toFixed(
-                        0
-                      )}
-                    </>
-                  ) : (
-                    <>0</>
-                  )}
-                </h1>
-              </div>
-            </div>
-            <div className="flex w-full space-x-4">
-              <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
-                <h2 className="border-b-[0.5px] pb-1  heading-2">Win Ratio</h2>
-                <h3 className="text-7xl">
-                  {stats.wins > 0 || stats.losses > 0 ? (
-                    <>
-                      {(stats.wins / (stats.wins + stats.losses)) * 100 + "%"}
-                    </>
-                  ) : (
-                    <>0%</>
-                  )}
-                </h3>
-              </div>
-              <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
-                <h2 className="border-b-[0.5px] pb-1  heading-2">
-                  Total Score
-                </h2>
-
-                <h3 className="text-7xl">{stats.totalScore || "0"}</h3>
-              </div>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="flex w-full space-x-4">
-              <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
-                <h2 className="border-b-[0.5px] pb-1  heading-2">
-                  Total Score
-                </h2>
-
-                <h3 className="text-7xl">{beeStats.totalScore || "0"}</h3>
-              </div>
-            </div>
-          </>
-        )}
+      <div className="flex mb-3 space-x-4 cursor-pointer">
+        <h3
+          className={`${wordle && "underline underline-offset-4"}`}
+          onClick={wordleClick}
+        >
+          Wordle
+        </h3>
+        <h3
+          className={`${quordle && "underline underline-offset-4"}`}
+          onClick={quordleClick}
+        >
+          Quordle
+        </h3>
+        <h3
+          className={`${bee && "underline underline-offset-4"}`}
+          onClick={beeClick}
+        >
+          Spelling Bee
+        </h3>
+        <p className="font-bold text-green">{message}</p>
       </div>
-    );
-  }
+      {stats ? (
+        <>
+          {!bee ? (
+            <>
+              <div className="flex w-full mb-4 space-x-4">
+                <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                  <h1 className="border-b-[0.5px] pb-1 heading-2">Wins</h1>
+                  <h1 className="text-7xl">{stats.wins}</h1>
+                </div>
+                <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                  <h1 className="border-b-[0.5px] pb-1 heading-2">Losses</h1>
+                  <h1 className="text-7xl">{stats.losses}</h1>
+                </div>
+                <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                  <h1 className="border-b-[0.5px] pb-1 heading-2">
+                    Games Played
+                  </h1>
+                  <h1 className="text-7xl">{stats.wins + stats.losses}</h1>
+                </div>
+                <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                  <h1 className="border-b-[0.5px] pb-1 heading-2">
+                    Average Score
+                  </h1>
+                  <h1 className="text-7xl">
+                    {stats.totalScore > 0 ? (
+                      <>
+                        {(
+                          stats.totalScore /
+                          (stats.wins + stats.losses)
+                        ).toFixed(0)}
+                      </>
+                    ) : (
+                      <>0</>
+                    )}
+                  </h1>
+                </div>
+              </div>
+              <div className="flex w-full space-x-4">
+                <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                  <h2 className="border-b-[0.5px] pb-1  heading-2">
+                    Win Ratio
+                  </h2>
+                  <h3 className="text-7xl">
+                    {stats.wins > 0 || stats.losses > 0 ? (
+                      <>
+                        {(stats.wins / (stats.wins + stats.losses)) * 100 + "%"}
+                      </>
+                    ) : (
+                      <>0%</>
+                    )}
+                  </h3>
+                </div>
+                <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                  <h2 className="border-b-[0.5px] pb-1  heading-2">
+                    Total Score
+                  </h2>
+
+                  <h3 className="text-7xl">{stats.totalScore || "0"}</h3>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex w-full space-x-4">
+                <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                  <h2 className="border-b-[0.5px] pb-1  heading-2">
+                    Total Score
+                  </h2>
+
+                  <h3 className="text-7xl">{beeStats.totalScore || "0"}</h3>
+                </div>
+              </div>
+            </>
+          )}
+        </>
+      ) : null}
+    </div>
+  );
 };
 
 export default StatsSsr;

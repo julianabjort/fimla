@@ -27,6 +27,7 @@ const tournament = () => {
   const userSession = session?.user;
   const userName = session?.user?.["name"];
   const userID = userSession?.["id"];
+  const userEmail = userSession?.["email"];
   const store = useLocalObservable(() => WordleStore);
   const divRef = useRef<HTMLDivElement>(null);
 
@@ -78,7 +79,7 @@ const tournament = () => {
         (i) => i.tournamentId === tournamentID
       );
       setUsersInTournament(thisTournament);
-      const check = thisTournament.filter((i) => i.userId === userID);
+      const check = thisTournament.filter((i) => i.userEmail === userEmail);
       if (check.length === 1) {
         setInTournament(true);
       } else {
@@ -110,7 +111,7 @@ const tournament = () => {
     }
   };
   const addComment = async () => {
-    const body = { userName, tournamentID, userID, comment };
+    const body = { userName, tournamentID, userEmail, comment };
     try {
       const response = await fetch(`/api/comment`, {
         method: "POST",
@@ -124,7 +125,7 @@ const tournament = () => {
     readComments();
   };
   const addUserToTournament = async () => {
-    const body = { userName, tournamentID, userID, tournamentName };
+    const body = { userName, tournamentID, userEmail, tournamentName };
     console.log(body);
     try {
       const response = await fetch(`/api/single-tournament`, {
@@ -143,7 +144,7 @@ const tournament = () => {
       gamesPlayed = UsersInTournament[0]?.["gamesPlayed"] + 1;
     }
     const totalScore = UsersInTournament[0]?.["totalScore"] + store.totalScore;
-    const body = { userID, tournamentID, totalScore, gamesPlayed };
+    const body = { userEmail, tournamentID, totalScore, gamesPlayed };
     console.log(store.totalScore, "total Score!");
     try {
       const response = await fetch(`/api/single-tournament`, {
@@ -196,9 +197,12 @@ const tournament = () => {
                     <div className="dark:bg-dark mx-2 px-5 py-3 rounded-md">
                       <h2 className="heading-2">Members</h2>
                       {UsersInTournament.map((i, key) => (
-                        <div className="flex p-2 items-center gap-2 bg-lightest dark:bg-darker rounded-md my-2">
+                        <div
+                          key={key}
+                          className="flex p-2 items-center gap-2 bg-lightest dark:bg-darker rounded-md my-2"
+                        >
                           <VscCircleLargeFilled />
-                          <p key={key}>{i["userName"]}</p>
+                          <p>{i["userName"]}</p>
                           <VscCircleFilled />
                         </div>
                       ))}

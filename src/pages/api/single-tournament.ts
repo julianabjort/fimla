@@ -43,7 +43,7 @@ async function CreateUsersInTournament(
   try {
     const tournament = await prisma.usersInTournament.create({
       data: {
-        userId: body.userID,
+        userEmail: body.userEmail,
         userName: body.userName,
         tournamentId: body.tournamentID,
         tournamentName: body.tournamentName,
@@ -64,8 +64,8 @@ async function UpdateUsersInTournament(
   try {
     const tournament = await prisma.usersInTournament.update({
       where: {
-        userId_tournamentId: {
-          userId: body.userID,
+        userEmail_tournamentId: {
+          userEmail: body.userEmail,
           tournamentId: body.tournamentID,
         },
       },

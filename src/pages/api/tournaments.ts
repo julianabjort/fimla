@@ -39,7 +39,7 @@ async function CreateTournament(req: NextApiRequest, res: NextApiResponse) {
     console.log("Created new tournament: ", tournament);
     const response2 = await prisma.usersInTournament.create({
       data: {
-        userId: body.userID,
+        userEmail: body.userEmail,
         userName: body.userName,
         tournamentId: tournament.id,
         tournamentName: body.tournamentName,

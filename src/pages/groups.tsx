@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 const groups = () => {
   const { data: session } = useSession();
   const userID = session?.user?.["id"];
+  const userEmail = session?.user?.["email"];
   const userName = session?.user?.["name"];
   const [tournamentName, setName] = useState("");
   const [tournaments, setTournaments] = useState([]);
@@ -17,7 +18,7 @@ const groups = () => {
       });
       const data = await response.json();
       const userInTournament = data.filter(
-        (i: { userId: any }) => i.userId === session?.user?.["id"]
+        (i: { userEmail: any }) => i.userEmail === session?.user?.["email"]
       );
       setUsersInTournament(userInTournament);
       // console.log("data: ", data);
@@ -52,7 +53,7 @@ const groups = () => {
     );
   };
   const createTournament = async () => {
-    const body = { tournamentName, userName, userID };
+    const body = { tournamentName, userName, userEmail };
     console.log(body);
     try {
       const response = await fetch(`/api/tournaments`, {
