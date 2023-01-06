@@ -229,7 +229,7 @@ const SpellingBee = () => {
         </button>
         <button className="px-4 py-2 border rounded-xl">delete</button>
       </div>
-      <div className="flex w-full gap-x-4">
+      <div className="flex w-full md:w-3/4 gap-x-4">
         <div className="w-full px-10 py-6 h-80 rounded-xl bg-lightest dark:bg-dark">
           <div className="flex justify-between">
             <h1 className="heading-1">Words</h1>
