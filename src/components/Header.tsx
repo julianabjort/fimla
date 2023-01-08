@@ -61,13 +61,13 @@ const Header = () => {
 
   return (
     <div>
-      <nav className="sticky top-0 z-50 flex items-center justify-between py-8 dark:bg-background">
+      <nav className="sticky top-0 z-50 flex items-center justify-between py-8">
         <div className="w-1/5">
           <Link href="/">
             {theme === "light" ? (
-              <img src="/logo-light.png" alt="logo" className="w-20" />
+              <img src="/logo-light.png" alt="logo-light" className="w-20" />
             ) : (
-              <img src="/logo-dark.png" alt="logo" className="w-20" />
+              <img src="/logo-dark.png" alt="logo-dark" className="w-20" />
             )}
           </Link>
         </div>
