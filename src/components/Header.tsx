@@ -65,9 +65,9 @@ const Header = () => {
         <div className="w-1/5">
           <Link href="/">
             {theme === "light" ? (
-              <img src="/logo-light.png" className="w-20" />
+              <img src="/logo-light.png" alt="logo" className="w-20" />
             ) : (
-              <img src="/logo-dark.png" className="w-20" />
+              <img src="/logo-dark.png" alt="logo" className="w-20" />
             )}
           </Link>
         </div>

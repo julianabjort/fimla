@@ -182,13 +182,13 @@ const Tournament = () => {
                   <div className="flex flex-col gap-4 mt-5">
                     <div className="px-5 py-3 mx-2 rounded-md dark:bg-dark">
                       <h2 className="heading-2">Members</h2>
-                      {UsersInTournament.map((i, key) => (
+                      {UsersInTournament.map((user, i) => (
                         <div
-                          key={key}
+                          key={i}
                           className="flex items-center gap-2 p-2 my-2 rounded-md bg-lightest dark:bg-darker"
                         >
                           <VscCircleLargeFilled />
-                          <p>{i["userName"]}</p>
+                          <p>{user["userName"]}</p>
                           <VscCircleFilled />
                         </div>
                       ))}
@@ -199,16 +199,16 @@ const Tournament = () => {
                         ref={divRef}
                         className={`flex flex-col bg-lightest dark:bg-darker rounded-t-md p-5 items-end overflow-x-hidden h-48 overflow-y-auto`}
                       >
-                        {comments.map((i, key) => (
+                        {comments.map((user, i) => (
                           <div>
                             <p className="pl-1 text-xs">
                               {`${i["userName"]}`.split(" ")[0]}
                             </p>
                             <div
-                              key={key}
+                              key={i}
                               className="flex flex-col p-2 my-1 rounded-md bg-lighter dark:bg-dark w-fit"
                             >
-                              <p className="text-s">{i["text"]}</p>
+                              <p className="text-s">{user["text"]}</p>
                             </div>
                           </div>
                         ))}
@@ -316,23 +316,24 @@ const Tournament = () => {
                               next["totalScore"] - prev["totalScore"]
                           )
                             .slice(0, 10)
-                            .map((i, key) => (
+                            .map((user, i) => (
                               <tr
-                                key={key}
+                                key={i}
                                 className="flex items-center justify-between gap-2 p-2 my-2 rounded-md bg-lightest dark:bg-darker"
                               >
-                                <td className="p-1">{key + 1}</td>
+                                <td className="p-1">{i + 1}</td>
                                 <td className="p-1">
-                                  {`${i["userName"]}`.split(" ")[0]}
+                                  {`${user["userName"]}`.split(" ")[0]}
                                 </td>
                                 {/* Game played */}
                                 <td className="p-1 text-center">
-                                  {i["gamesPlayed"]}
+                                  {user["gamesPlayed"]}
                                 </td>
                                 {/* Avg. Score */}
                                 <td className="flex items-baseline p-1 text-right">
                                   <p>
-                                    {i["totalScore"] / i["gamesPlayed"] || 0}
+                                    {user["totalScore"] / user["gamesPlayed"] ||
+                                      0}
                                   </p>
                                   <p className="text-xs">pts</p>
                                 </td>
