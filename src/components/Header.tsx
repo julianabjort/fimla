@@ -61,7 +61,7 @@ const Header = () => {
 
   return (
     <div>
-      <nav className="sticky top-0 z-50 flex items-center justify-between py-8">
+      <nav className="sticky top-0 z-50 flex items-center justify-between py-8 bg-red-500">
         <div className="w-1/5">
           <Link href="/">
             {theme === "light" ? (
