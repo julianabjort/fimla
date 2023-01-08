@@ -24,7 +24,7 @@ const QuordleGrid = ({
         return (
           <div
             key={i}
-            className={`${height} flex w-12 mx-1 my-1 items-center justify-center rounded-md uppercase aspect-square ${bgColor}`}
+            className={`${height} flex w-7 md:w-12 m-0.5 md:m-1  items-center justify-center rounded-md uppercase aspect-square ${bgColor}`}
           >
             {guess[i]}
           </div>

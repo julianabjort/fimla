@@ -28,6 +28,7 @@ export default NextAuth({
       clientSecret: <string>process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async session({ session, token }) {
       if (session?.user) {
@@ -39,5 +40,4 @@ export default NextAuth({
   session: {
     strategy: "jwt",
   },
-  secret: process.env.SECRET,
 });

@@ -40,13 +40,23 @@ const Keyboard2 = ({ store }) => {
               <div
                 onClick={() => store.handleKeyClick(key)}
                 key={i}
-                className={`grid grid-cols-2 w-12 h-12 mx-1 cursor-pointer capitalize rounded-md  text-background`}
+                className={`grid grid-cols-2 w-8 h-10 md:w-10 md:h-12 mx-0.5 md:mx-1 cursor-pointer capitalize rounded-md  text-background`}
               >
-                <span className="absolute px-5 py-3">{key}</span>
-                <div className={`${bgColor1} w-6 h-6 rounded-tl-md`}></div>
-                <div className={`${bgColor2} w-6 h-6 rounded-tr-md`}></div>
-                <div className={`${bgColor3} w-6 h-6 rounded-bl-md`}></div>
-                <div className={`${bgColor4} w-6 h-6 rounded-br-md`}></div>
+                <span className="absolute px-2.5 py-2 md:px-3.5 md:py-3">
+                  {key}
+                </span>
+                <div
+                  className={`${bgColor1} w-4 h-5 md:w-5 md:h-6 rounded-tl-md`}
+                ></div>
+                <div
+                  className={`${bgColor2} w-4 h-5 md:w-5 md:h-6 rounded-tr-md`}
+                ></div>
+                <div
+                  className={`${bgColor3} w-4 h-5 md:w-5 md:h-6 rounded-bl-md`}
+                ></div>
+                <div
+                  className={`${bgColor4} w-4 h-5 md:w-5 md:h-6 rounded-br-md`}
+                ></div>
               </div>
             );
           })}

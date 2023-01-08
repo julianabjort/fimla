@@ -66,7 +66,7 @@ const Header = () => {
             <Link
               onClick={() => setDropdownOpen(false)}
               href={link.path}
-              className="p-3 hover:bg-medium border-y border-lightest dark:border-dark hover:rounded-xl hover:dark:bg-darker"
+              className="p-3 hover:bg-medium hover:first:rounded-t-xl hover:last:rounded-b-xl hover:dark:bg-darker"
             >
               <div onClick={() => setMobileMenuOpen(false)}>{link.name}</div>
             </Link>
@@ -103,9 +103,10 @@ const Header = () => {
                 router.pathname === link.path
                   ? "bg-black dark:bg-white"
                   : "bg-transparent";
-              const playActive = router.pathname.includes("/games")
-                ? "bg-black dark:bg-white"
-                : "bg-transparent";
+              const playActive =
+                router.pathname.includes("/games") || dropdownOpen
+                  ? "bg-black dark:bg-white"
+                  : "bg-transparent";
               return (
                 <div>
                   {link.dropdown === true ? (

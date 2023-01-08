@@ -15,8 +15,8 @@ export default function Home() {
     <>
       <Head>
         <title>
-          FIMLA - Word games in Icelandic, play wordle, quordle, spelling bee
-          and crosswords for free!
+          Fimla - Íslenskir orðaleikir - Word games in Icelandic, play wordle,
+          quordle, spelling bee and crosswords for free!
         </title>
         <meta name="robots" content="all" />
         <meta
@@ -27,11 +27,11 @@ export default function Home() {
         <meta name="keywords" content="wordgames" key="titleKeywords" />
       </Head>
 
-      <section className="grid w-full grid-cols-2 gap-2 grid-rows-auto">
+      <section className="grid w-full gap-2 md:mt-12 md:grid-cols-2 grid-rows-auto">
         {React.Children.toArray(
           games.map((link) => (
             <Link href={link.path}>
-              <div className="flex items-center justify-center w-full h-64 rounded-md bg-lighter dark:bg-darker">
+              <div className="flex items-center justify-center w-full h-48 rounded-md md:h-64 bg-lighter dark:bg-darker">
                 <div className="flex items-center p-4 gap-x-4">
                   <div className="w-10 h-10 rounded-md bg-light dark:bg-dark"></div>
                   <h2 className="heading-2">{link.name}</h2>
@@ -41,12 +41,9 @@ export default function Home() {
           ))
         )}
       </section>
-
-      {session ? (
-        <p>Signed in as {session.user?.name}</p>
-      ) : (
-        <p>Not signed in</p>
-      )}
+      <div className="mt-6">
+        {session && <p>Signed in as {session.user?.name}</p>}
+      </div>
     </>
   );
 }

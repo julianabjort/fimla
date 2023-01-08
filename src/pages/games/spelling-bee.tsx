@@ -164,8 +164,10 @@ const SpellingBee = () => {
           />
         ) : null}
       </div>
-      <div className="flex items-center justify-between w-full border-b-2">
-        <h1 className="pb-2 heading-1">Spelling Bee</h1>
+      <div className="flex flex-col justify-between w-full sm:items-center sm:border-b-2 sm:flex-row">
+        <h1 className="pb-2 border-b-2 sm:border-b-0 heading-1">
+          Spelling Bee
+        </h1>
         <div className="flex cursor-pointer gap-x-6">
           <button onClick={() => setHints(true)}>Hints</button>
           <Link href="/stats">Stats</Link>
@@ -233,7 +235,7 @@ const SpellingBee = () => {
       <div className="flex w-full md:w-3/4 gap-x-4">
         <div className="w-full px-10 py-6 h-80 rounded-xl bg-lightest dark:bg-dark">
           <div className="flex justify-between">
-            <h1 className="heading-1">Words</h1>
+            <h1 className="heading-2 md:heading-1">Words</h1>
 
             <p>
               {store.allFoundWords.length} / {store.allWords.length}
@@ -248,7 +250,6 @@ const SpellingBee = () => {
           ))}
         </div>
       </div>
-      <button onClick={addBeeStats}>Click</button>
     </div>
   );
 };
