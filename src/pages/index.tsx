@@ -15,8 +15,8 @@ export default function Home() {
     <>
       <Head>
         <title>
-          Word games in Icelandic, play wordle, quordle, spelling bee and
-          crosswords for free!
+          FIMLA - Word games in Icelandic, play wordle, quordle, spelling bee
+          and crosswords for free!
         </title>
         <meta name="robots" content="all" />
         <meta

@@ -6,6 +6,7 @@ import QuordleGrid from "../../components/QuordleGrid";
 import QuordleStore from "../../stores/QuordleStore.jsx";
 import OnboardingModal from "../../components/OnboardingModal";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const Quordle = () => {
   const { data: session } = useSession();
@@ -141,7 +142,7 @@ const Quordle = () => {
       <div className="flex items-center justify-between w-full border-b-2">
         <h1 className="pb-2 heading-1">Quordle</h1>
         <div className="flex cursor-pointer gap-x-6">
-          <button>Stats</button>
+          <Link href="/stats">Stats</Link>
           <button onClick={() => setOnboardingModal(true)}>How to play</button>
         </div>
       </div>

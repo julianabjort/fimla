@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 
-const settings = () => {
+const Settings = () => {
   const { data: session } = useSession();
   const [userInfo, setUserInfo] = useState([]);
   const [userName, setUserName] = useState("");
@@ -201,4 +201,4 @@ const settings = () => {
   );
 };
 
-export default settings;
+export default Settings;

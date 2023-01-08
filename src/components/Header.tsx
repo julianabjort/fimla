@@ -45,7 +45,7 @@ const Header = () => {
             <Link
               onClick={() => setDropdownOpen(false)}
               href={link.path}
-              className="p-3 hover:bg-medium hover:dark:bg-darker"
+              className="p-3 hover:bg-medium hover:rounded-xl hover:dark:bg-darker"
             >
               {link.name}
             </Link>
@@ -79,19 +79,30 @@ const Header = () => {
           {React.Children.toArray(
             navLinks.map((link) => {
               const active =
-                router.pathname === link.path ? "border-b border-black" : "";
+                router.pathname === link.path
+                  ? "bg-black dark:bg-white"
+                  : "bg-transparent";
+              const playActive = router.pathname.includes("/games")
+                ? "bg-black dark:bg-white"
+                : "bg-transparent";
               return (
                 <div>
                   {link.dropdown === true ? (
                     <div
                       onClick={showDropdown}
-                      className={`${active} cursor-pointer`}
+                      className="flex space-x-3 cursor-pointer center"
                     >
-                      {link.name}
+                      <div
+                        className={`${playActive} w-6 h-6 border border-black rounded-full dark:border-white`}
+                      ></div>
+                      <div>{link.name}</div>
                     </div>
                   ) : (
-                    <Link className={`${active}`} href={link.path}>
-                      {link.name}
+                    <Link className="flex space-x-3 center" href={link.path}>
+                      <div
+                        className={`${active} w-6 h-6 border border-black rounded-full dark:border-white`}
+                      ></div>
+                      <div>{link.name}</div>
                     </Link>
                   )}
                 </div>

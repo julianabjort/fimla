@@ -6,6 +6,7 @@ import OnboardingModal from "../../components/OnboardingModal";
 import { HiRefresh, HiX } from "react-icons/hi";
 import { useSession } from "next-auth/react";
 import ProgressBar from "../../components/ProgressBar";
+import Link from "next/link";
 
 const SpellingBee = () => {
   const { data: session } = useSession();
@@ -167,7 +168,7 @@ const SpellingBee = () => {
         <h1 className="pb-2 heading-1">Spelling Bee</h1>
         <div className="flex cursor-pointer gap-x-6">
           <button onClick={() => setHints(true)}>Hints</button>
-          <p>Stats</p>
+          <Link href="/stats">Stats</Link>
           <button onClick={() => setOnboardingModal(true)}>How to play</button>
         </div>
       </div>

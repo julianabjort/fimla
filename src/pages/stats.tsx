@@ -2,12 +2,14 @@ import { getSession, useSession } from "next-auth/react";
 import React from "react";
 import { useEffect, useState } from "react";
 import { prisma } from "../../lib/prisma";
+import { useRouter } from "next/router";
 
 const Stats = ({
   wordleSessionStats,
   quordleSessionStats,
   beeSessionStats,
 }) => {
+  const router = useRouter();
   const { data: session } = useSession();
   const [message, setMessage] = useState("");
   const noStats = {
@@ -89,6 +91,10 @@ const Stats = ({
   useEffect(() => {
     if (bee) initBeeStats();
   }, [bee]);
+
+  useEffect(() => {
+    console.log(router["components"]);
+  });
 
   return (
     <div>

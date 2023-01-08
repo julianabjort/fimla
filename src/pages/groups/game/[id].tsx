@@ -10,7 +10,7 @@ import { io } from "socket.io-client";
 import Link from "next/link";
 import { HiRefresh, HiArrowNarrowLeft } from "react-icons/hi";
 
-const tournament = () => {
+const Tournament = () => {
   const { data: session, status } = useSession();
   const [tournament, setTournament] = useState([]);
   const tournamentName = tournament[0]?.["name"];
@@ -129,7 +129,7 @@ const tournament = () => {
           <div className="flex flex-row justify-center">
             {inTournament === true ? (
               <>
-                <button className="heading-2 mx-2 my-8 p-5 h-full">
+                <button className="h-full p-5 mx-2 my-8 heading-2">
                   <Link href={`/groups/${tournamentID}`}>
                     <HiArrowNarrowLeft />
                   </Link>
@@ -173,8 +173,8 @@ const tournament = () => {
                   )}
                   <Keyboard store={store} />
                 </div>
-                <div className="flex flex-col dark:bg-dark mx-2 my-20 p-5 h-full rounded-md">
-                  <div className="flex flex-row gap-4 justify-center">
+                <div className="flex flex-col h-full p-5 mx-2 my-20 rounded-md dark:bg-dark">
+                  <div className="flex flex-row justify-center gap-4">
                     <h2 className="heading-2">Status</h2>
                     <button onClick={readUsersInTournaments}>
                       <HiRefresh />
@@ -190,7 +190,7 @@ const tournament = () => {
                         .map((i, key) => (
                           <tr
                             key={key}
-                            className="flex p-2 items-center justify-between gap-2 bg-lightest dark:bg-darker rounded-md my-2"
+                            className="flex items-center justify-between gap-2 p-2 my-2 rounded-md bg-lightest dark:bg-darker"
                           >
                             <td className="p-1">{key + 1}</td>
                             <td className="p-1">
@@ -201,7 +201,7 @@ const tournament = () => {
                               {i["gamesPlayed"]}
                             </td>
                             {/* Avg. Score */}
-                            <td className="p-1 flex items-baseline text-right">
+                            <td className="flex items-baseline p-1 text-right">
                               <p>{i["totalScore"] / i["gamesPlayed"] || 0}</p>
                               <p className="text-xs">pts</p>
                             </td>
@@ -214,10 +214,10 @@ const tournament = () => {
             ) : (
               <>
                 <div className="flex flex-col items-center my-10 justify-evenly">
-                  <h2 className="heading-2 mb-5">
+                  <h2 className="mb-5 heading-2">
                     Somebody has invited you the group
                   </h2>
-                  <h1 className="heading-1 mb-5">{tournament[0]?.["name"]}</h1>
+                  <h1 className="mb-5 heading-1">{tournament[0]?.["name"]}</h1>
                   <button
                     className="w-16 h-10 ml-4 rounded-md bg-light dark:bg-dark"
                     onClick={addUserToTournament}
@@ -236,4 +236,4 @@ const tournament = () => {
   );
 };
 
-export default observer(tournament);
+export default observer(Tournament);

@@ -11,7 +11,7 @@ import { readFileSync } from "fs";
 import { io } from "socket.io-client";
 import { HiRefresh, HiX } from "react-icons/hi";
 
-const tournament = () => {
+const Tournament = () => {
   const { data: session, status } = useSession();
 
   const [tournament, setTournament] = useState([]);
@@ -177,15 +177,15 @@ const tournament = () => {
           <div className="flex flex-col">
             {inTournament === true ? (
               <>
-                <h1 className="heading-1 mt-10">{tournamentName}</h1>
+                <h1 className="mt-10 heading-1">{tournamentName}</h1>
                 <div className="flex flex-row">
-                  <div className="flex flex-col mt-5 gap-4">
-                    <div className="dark:bg-dark mx-2 px-5 py-3 rounded-md">
+                  <div className="flex flex-col gap-4 mt-5">
+                    <div className="px-5 py-3 mx-2 rounded-md dark:bg-dark">
                       <h2 className="heading-2">Members</h2>
                       {UsersInTournament.map((i, key) => (
                         <div
                           key={key}
-                          className="flex p-2 items-center gap-2 bg-lightest dark:bg-darker rounded-md my-2"
+                          className="flex items-center gap-2 p-2 my-2 rounded-md bg-lightest dark:bg-darker"
                         >
                           <VscCircleLargeFilled />
                           <p>{i["userName"]}</p>
@@ -193,27 +193,27 @@ const tournament = () => {
                         </div>
                       ))}
                     </div>
-                    <div className="dark:bg-dark mx-2 px-5 py-3 rounded-md">
-                      <h2 className="heading-2 pb-2">Discussion</h2>
+                    <div className="px-5 py-3 mx-2 rounded-md dark:bg-dark">
+                      <h2 className="pb-2 heading-2">Discussion</h2>
                       <div
                         ref={divRef}
                         className={`flex flex-col bg-lightest dark:bg-darker rounded-t-md p-5 items-end overflow-x-hidden h-48 overflow-y-auto`}
                       >
                         {comments.map((i, key) => (
                           <div>
-                            <p className="text-xs pl-1">
+                            <p className="pl-1 text-xs">
                               {`${i["userName"]}`.split(" ")[0]}
                             </p>
                             <div
                               key={key}
-                              className="flex flex-col my-1 rounded-md bg-lighter dark:bg-dark w-fit p-2"
+                              className="flex flex-col p-2 my-1 rounded-md bg-lighter dark:bg-dark w-fit"
                             >
                               <p className="text-s">{i["text"]}</p>
                             </div>
                           </div>
                         ))}
                       </div>
-                      <div className="flex bg-lightest dark:bg-darker rounded-b-md p-5 mb-1">
+                      <div className="flex p-5 mb-1 bg-lightest dark:bg-darker rounded-b-md">
                         <input
                           type="text"
                           className="p-1 rounded-md dark:bg-dark"
@@ -238,9 +238,9 @@ const tournament = () => {
                   ) : null}
                   {modal ? (
                     <div className=" absolute top-0 left-0.5 right-0.5">
-                      <div className="flex flex-col p-5 rounded-xl items-center my-10 justify-evenly">
-                        <div className="bg-white dark:bg-darker w-2/5 flex flex-col p-5 rounded-xl items-center my-10 justify-evenly">
-                          <div className="flex justify-between items-center">
+                      <div className="flex flex-col items-center p-5 my-10 rounded-xl justify-evenly">
+                        <div className="flex flex-col items-center w-2/5 p-5 my-10 bg-white dark:bg-darker rounded-xl justify-evenly">
+                          <div className="flex items-center justify-between">
                             <h1 className="heading-1">
                               {tournament[0]?.["name"]}
                             </h1>
@@ -292,17 +292,17 @@ const tournament = () => {
                       </div>
                     </div>
                   ) : null}
-                  <div className="flex flex-col mt-5 gap-4">
-                    <div className="dark:bg-dark mx-2 px-5 py-3 rounded-md">
+                  <div className="flex flex-col gap-4 mt-5">
+                    <div className="px-5 py-3 mx-2 rounded-md dark:bg-dark">
                       <h2 className="heading-2">Tournaments</h2>
-                      <div className="flex p-2 items-center justify-between bg-lightest dark:bg-darker rounded-md my-2">
+                      <div className="flex items-center justify-between p-2 my-2 rounded-md bg-lightest dark:bg-darker">
                         <p className="">Wordle</p>
                         <Link href={`/groups/game/${tournamentID}`}>
                           <button className="">Play</button>
                         </Link>
                       </div>
                     </div>
-                    <div className="flex flex-col dark:bg-dark mx-2 px-5 py-3 rounded-md">
+                    <div className="flex flex-col px-5 py-3 mx-2 rounded-md dark:bg-dark">
                       <div className="flex justify-between">
                         <h2 className="heading-2">Leaderboard</h2>
                         <button onClick={readUsersInTournaments}>
@@ -319,7 +319,7 @@ const tournament = () => {
                             .map((i, key) => (
                               <tr
                                 key={key}
-                                className="flex p-2 items-center justify-between gap-2 bg-lightest dark:bg-darker rounded-md my-2"
+                                className="flex items-center justify-between gap-2 p-2 my-2 rounded-md bg-lightest dark:bg-darker"
                               >
                                 <td className="p-1">{key + 1}</td>
                                 <td className="p-1">
@@ -330,7 +330,7 @@ const tournament = () => {
                                   {i["gamesPlayed"]}
                                 </td>
                                 {/* Avg. Score */}
-                                <td className="p-1 flex items-baseline text-right">
+                                <td className="flex items-baseline p-1 text-right">
                                   <p>
                                     {i["totalScore"] / i["gamesPlayed"] || 0}
                                   </p>
@@ -341,10 +341,10 @@ const tournament = () => {
                         </tbody>
                       </table>
                     </div>
-                    <div className="dark:bg-dark mx-2 p-5 rounded-md">
+                    <div className="p-5 mx-2 rounded-md dark:bg-dark">
                       <h2 className="heading-2">Invite Friends</h2>
                       <button
-                        className="my-2 bg-light dark:bg-darker px-4 py-2 rounded-md"
+                        className="px-4 py-2 my-2 rounded-md bg-light dark:bg-darker"
                         onClick={() => {
                           navigator.clipboard.writeText(
                             `http://localhost:3000/groups/${tournamentID}`
@@ -360,10 +360,10 @@ const tournament = () => {
             ) : (
               <>
                 <div className="flex flex-col items-center my-10 justify-evenly">
-                  <h2 className="heading-2 mb-5">
+                  <h2 className="mb-5 heading-2">
                     Somebody has invited you the group
                   </h2>
-                  <h1 className="heading-1 mb-5">{tournament[0]?.["name"]}</h1>
+                  <h1 className="mb-5 heading-1">{tournament[0]?.["name"]}</h1>
                   {session ? (
                     <button
                       className="w-16 h-10 ml-4 rounded-md bg-light dark:bg-dark"
@@ -393,4 +393,4 @@ const tournament = () => {
   );
 };
 
-export default observer(tournament);
+export default observer(Tournament);

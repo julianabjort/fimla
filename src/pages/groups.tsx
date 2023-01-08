@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 
-const groups = () => {
+const Groups = () => {
   const { data: session } = useSession();
   const userID = session?.user?.["id"];
   const userEmail = session?.user?.["email"];
@@ -136,4 +136,4 @@ const groups = () => {
   );
 };
 
-export default groups;
+export default Groups;

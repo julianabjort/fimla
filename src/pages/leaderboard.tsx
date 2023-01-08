@@ -3,7 +3,7 @@ import { getSession, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { prisma } from "../../lib/prisma";
 
-const leaderboard = ({ wordleSessionStats, quordleSessionStats }) => {
+const Leaderboard = ({ wordleSessionStats, quordleSessionStats }) => {
   const { data: session } = useSession();
   const [wordle, setWordle] = useState(true);
   const [quordle, setQuordle] = useState(false);
@@ -82,7 +82,7 @@ const leaderboard = ({ wordleSessionStats, quordleSessionStats }) => {
   );
 };
 
-export default leaderboard;
+export default Leaderboard;
 
 export const getServerSideProps = async () => {
   const wordleData = await prisma.wordleStats.findMany({});

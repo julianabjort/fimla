@@ -6,6 +6,7 @@ import Keyboard from "../../components/Keyboard";
 import WordleStore from "../../stores/WordleStore.jsx";
 import { useSession } from "next-auth/react";
 import OnboardingModal from "../../components/OnboardingModal";
+import Link from "next/link";
 
 const Wordle = () => {
   const { data: session } = useSession();
@@ -143,7 +144,7 @@ const Wordle = () => {
       <div className="flex items-center justify-between w-full border-b-2">
         <h1 className="pb-2 heading-1">Wordle</h1>
         <div className="flex cursor-pointer gap-x-6">
-          <button>Stats</button>
+          <Link href="/stats">Stats</Link>
           <button onClick={() => setOnboardingModal(true)}>How to play</button>
         </div>
       </div>

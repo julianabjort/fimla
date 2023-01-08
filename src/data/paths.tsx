@@ -18,7 +18,6 @@ export const navLinks = [
   },
   {
     name: "Settings",
-    // icon: "/settings-icon.png",
     path: "/user/settings",
   },
 ];

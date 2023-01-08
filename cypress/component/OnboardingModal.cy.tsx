@@ -1,6 +1,4 @@
 /// <reference types="cypress" />
-
-import React from "react";
 import OnboardingModal from "../../src/components/OnboardingModal";
 
 describe("<OnboardingModal />", () => {
