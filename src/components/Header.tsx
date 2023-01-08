@@ -19,12 +19,32 @@ const Header = () => {
   };
   const mobileMenu = () => {
     return (
-      <div className="flex flex-col w-full text-center md:hidden">
+      <div className="flex flex-col w-full text-center lg:hidden">
         {React.Children.toArray(
           navLinks.map((link) => (
-            <Link href={link.path} className="py-6 text-xl border-y">
-              {link.name}
-            </Link>
+            <>
+              {link.dropdown === true ? (
+                <>
+                  <div
+                    onClick={showDropdown}
+                    className="flex space-x-3 cursor-pointer center py-6 text-xl border-y"
+                  >
+                    <div>{link.name}</div>
+                  </div>
+                  {dropdownOpen ? dropdown() : ""}
+                </>
+              ) : (
+                <>
+                  <Link
+                    onClick={() => setMobileMenuOpen(false)}
+                    href={link.path}
+                    className="py-6 text-xl border-y"
+                  >
+                    {link.name}
+                  </Link>
+                </>
+              )}
+            </>
           ))
         )}
       </div>
@@ -34,20 +54,21 @@ const Header = () => {
   // Dropdown
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const showDropdown = () => {
+    console.log(dropdownOpen);
     dropdownOpen ? setDropdownOpen(false) : setDropdownOpen(true);
   };
 
   const dropdown = () => {
     return (
-      <div className="flex flex-col w-36 rounded-xl bg-light dark:bg-dark">
+      <div className="flex flex-col lg:w-36 lg:rounded-xl lg:bg-light lg:dark:bg-dark">
         {React.Children.toArray(
           games.map((link) => (
             <Link
               onClick={() => setDropdownOpen(false)}
               href={link.path}
-              className="p-3 hover:bg-medium hover:rounded-xl hover:dark:bg-darker"
+              className="p-3 hover:bg-medium border-y border-lightest dark:border-dark hover:rounded-xl hover:dark:bg-darker"
             >
-              {link.name}
+              <div onClick={() => setMobileMenuOpen(false)}>{link.name}</div>
             </Link>
           ))
         )}
@@ -72,7 +93,7 @@ const Header = () => {
           </Link>
         </div>
 
-        <div className="relative items-center hidden w-3/5 justify-evenly md:flex">
+        <div className="relative items-center hidden w-3/5 justify-evenly lg:flex">
           <div className="absolute top-8 left-12">
             {dropdownOpen ? dropdown() : ""}
           </div>
@@ -129,7 +150,7 @@ const Header = () => {
             onClick={() => {
               showMobileMenu();
             }}
-            className="col-span-2 text-xl text-center md:hidden"
+            className="col-span-2 text-xl text-center lg:hidden"
           >
             {mobileMenuOpen ? <HiX /> : <HiMenu />}
           </button>
