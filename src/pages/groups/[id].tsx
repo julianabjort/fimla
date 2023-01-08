@@ -200,7 +200,7 @@ const Tournament = () => {
                         className={`flex flex-col bg-lightest dark:bg-darker rounded-t-md p-5 items-end overflow-x-hidden h-48 overflow-y-auto`}
                       >
                         {comments.map((user, i) => (
-                          <div>
+                          <div key={i}>
                             <p className="pl-1 text-xs">
                               {`${i["userName"]}`.split(" ")[0]}
                             </p>
