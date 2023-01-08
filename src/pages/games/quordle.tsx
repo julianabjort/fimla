@@ -139,7 +139,7 @@ const Quordle = () => {
           />
         ) : null}
       </div>
-      <div className="flex items-center justify-between w-full border-b border-b-black dark:border-b-white">
+      <div className="flex items-center justify-between w-full border-b-2">
         <h1 className="pb-2 heading-1">Quordle</h1>
         <div className="flex cursor-pointer gap-x-6">
           <Link href="/stats">Stats</Link>
