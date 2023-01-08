@@ -27,7 +27,7 @@ const Header = () => {
                 <>
                   <div
                     onClick={showDropdown}
-                    className="flex space-x-3 cursor-pointer center py-6 text-xl border-y"
+                    className="flex space-x-3 cursor-pointer center py-6 text-xl border-t"
                   >
                     <div>{link.name}</div>
                   </div>
@@ -38,7 +38,7 @@ const Header = () => {
                   <Link
                     onClick={() => setMobileMenuOpen(false)}
                     href={link.path}
-                    className="py-6 text-xl border-y"
+                    className="py-6 text-xl border-t"
                   >
                     {link.name}
                   </Link>
@@ -46,6 +46,21 @@ const Header = () => {
               )}
             </>
           ))
+        )}
+        {session ? (
+          <button
+            className="flex text-gray-400 space-x-3 cursor-pointer center py-6 text-xl border-y"
+            onClick={() => signOut()}
+          >
+            Sign out
+          </button>
+        ) : (
+          <button
+            className="flex text-gray-400 space-x-3 cursor-pointer center py-6 text-xl border-y"
+            onClick={() => signIn()}
+          >
+            Sign in
+          </button>
         )}
       </div>
     );
