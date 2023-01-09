@@ -45,13 +45,19 @@ const Stats = ({
   const initWordleStats = () => {
       if (session && !wordleSessionStats) {
         setStats(noStats);
-      }
-      if (session) {
+      } else if (session) {
         setStats(wordleSessionStats);
       } else if (typeof window !== undefined) {
-        let data = [JSON.parse(localStorage.getItem("stats")!)];
-        const wordleLocalStats = data[0];
-        if (stats !== null) setStats(wordleLocalStats);
+        if (stats !== null) {
+          let data = [JSON.parse(localStorage.getItem("stats")!)];
+          const wordleLocalStats = data[0];
+          console.log("here", wordleLocalStats);
+          if (wordleLocalStats === null) {
+            setStats(noStats);
+          } else {
+            setStats(wordleLocalStats);
+          }
+        }
       }
     },
     initQuordleStats = () => {
@@ -125,26 +131,28 @@ const Stats = ({
         <>
           {!bee ? (
             <>
-              <div className="flex w-full mb-4 space-x-4">
-                <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div className="flex flex-col justify-between w-full h-36 lg:h-56 p-6 rounded-md bg-lighter dark:bg-darker">
                   <h1 className="border-b-[0.5px] pb-1 heading-2">Wins</h1>
-                  <h1 className="text-7xl">{stats.wins}</h1>
+                  <h1 className="text-4xl lg:text-7xl">{stats.wins}</h1>
                 </div>
-                <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <div className="flex flex-col justify-between w-full h-36 lg:h-56 p-6 rounded-md bg-lighter dark:bg-darker">
                   <h1 className="border-b-[0.5px] pb-1 heading-2">Losses</h1>
-                  <h1 className="text-7xl">{stats.losses}</h1>
+                  <h1 className="text-4xl lg:text-7xl">{stats.losses}</h1>
                 </div>
-                <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <div className="flex flex-col justify-between w-full h-36 lg:h-56 p-6 rounded-md bg-lighter dark:bg-darker">
                   <h1 className="border-b-[0.5px] pb-1 heading-2">
                     Games Played
                   </h1>
-                  <h1 className="text-7xl">{stats.wins + stats.losses}</h1>
+                  <h1 className="text-4xl lg:text-7xl">
+                    {stats.wins + stats.losses}
+                  </h1>
                 </div>
-                <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <div className="flex flex-col justify-between w-full h-36 lg:h-56 p-6 rounded-md bg-lighter dark:bg-darker">
                   <h1 className="border-b-[0.5px] pb-1 heading-2">
                     Average Score
                   </h1>
-                  <h1 className="text-7xl">
+                  <h1 className="text-4xl lg:text-7xl">
                     {stats.totalScore > 0 ? (
                       <>
                         {(
@@ -158,39 +166,46 @@ const Stats = ({
                   </h1>
                 </div>
               </div>
-              <div className="flex w-full space-x-4">
-                <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col justify-between w-full h-36 lg:h-56 p-6 rounded-md bg-lighter dark:bg-darker">
                   <h2 className="border-b-[0.5px] pb-1  heading-2">
                     Win Ratio
                   </h2>
-                  <h3 className="text-7xl">
+                  <h3 className="text-4xl lg:text-7xl">
                     {stats.wins > 0 || stats.losses > 0 ? (
                       <>
-                        {(stats.wins / (stats.wins + stats.losses)) * 100 + "%"}
+                        {(
+                          (stats.wins / (stats.wins + stats.losses)) *
+                          100
+                        ).toFixed(0) + "%"}
                       </>
                     ) : (
                       <>0%</>
                     )}
                   </h3>
                 </div>
-                <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <div className="flex flex-col justify-between w-full h-36 lg:h-56 p-6 rounded-md bg-lighter dark:bg-darker">
                   <h2 className="border-b-[0.5px] pb-1  heading-2">
                     Total Score
                   </h2>
 
-                  <h3 className="text-7xl">{stats.totalScore || "0"}</h3>
+                  <h3 className="text-4xl lg:text-7xl">
+                    {stats.totalScore || "0"}
+                  </h3>
                 </div>
               </div>
             </>
           ) : (
             <>
               <div className="flex w-full space-x-4">
-                <div className="flex flex-col justify-between w-full h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <div className="flex flex-col justify-between w-full h-36 lg:h-56 p-6 rounded-md bg-lighter dark:bg-darker">
                   <h2 className="border-b-[0.5px] pb-1  heading-2">
                     Total Score
                   </h2>
 
-                  <h3 className="text-7xl">{beeStats.totalScore || "0"}</h3>
+                  <h3 className="text-4xl lg:text-7xl">
+                    {beeStats.totalScore || "0"}
+                  </h3>
                 </div>
               </div>
             </>
