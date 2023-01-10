@@ -1,21 +1,28 @@
 import { useEffect, useState, useRef } from "react";
+import { HiRefresh, HiX } from "react-icons/hi";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { observer, useLocalObservable } from "mobx-react-lite";
 import SpellingBeeStore from "../../stores/SpellingBeeStore.jsx";
 import SpellingBeeGrid from "../../components/SpellingBeeGrid";
 import OnboardingModal from "../../components/OnboardingModal";
-import { HiRefresh, HiX } from "react-icons/hi";
-import { useSession } from "next-auth/react";
 import ProgressBar from "../../components/ProgressBar";
-import Link from "next/link";
+import getUserStats from "../../../lib/getUserStats";
+import updateData from "../../../lib/updateData";
+import createData from "../../../lib/createData";
 
 const SpellingBee = () => {
   const { data: session } = useSession();
+  const userEmail = session?.user?.email;
+  const userSession = session?.user;
   const ref = useRef(null);
   const store = useLocalObservable(() => SpellingBeeStore);
   const [word, setWord] = useState("");
   const [hints, setHints] = useState(false);
   const [onboardingModal, setOnboardingModal] = useState(false);
   const [beeVisited, setBeeVisited] = useState(true);
+  const [body, setBody] = useState({});
+  const [totalScore, setTotalScore] = useState(0);
   const [stats, setStats] = useState({
     totalScore: 0,
   });
@@ -44,10 +51,6 @@ const SpellingBee = () => {
   }, [word]);
 
   useEffect(() => {
-    console.log(store.progressPercentage);
-  }, [store.progressPercentage]);
-
-  useEffect(() => {
     let beeVisited = JSON.parse(localStorage.getItem("beeVisited") || "false");
     if (!beeVisited) {
       beeVisited = true;
@@ -67,71 +70,52 @@ const SpellingBee = () => {
       store.error = "";
     }
   };
-  const readBeeStats = async () => {
-    if (session) {
-      const userSession = session?.user;
+
+  useEffect(() => {
+    const stats = async () =>
+      getUserStats("bee-stats", userSession).then((result) =>
+        setStats(result[0])
+      );
+    stats();
+  }, [session]);
+
+  const calculateScore = () => {
+    if (stats) {
+      setTotalScore(
+        stats.totalScore +
+          store.fourLetterWords.length +
+          store.fiveLetterWords.length * 2
+      );
+    } else {
+      setTotalScore(
+        store.fourLetterWords.length + store.fiveLetterWords.length * 2
+      );
+    }
+    setBody({ userEmail, totalScore });
+    console.log(body);
+  };
+  const addBeeStats = async () => {
+    calculateScore();
+    if (session && body) {
       try {
         const response = await fetch(`/api/bee-stats`, {
-          method: "GET",
+          method: "PUT",
           headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
         });
-        const allStats = await response.json();
-        const myStats = allStats.filter(
-          (i: { userEmail: string | null | undefined }) =>
-            i.userEmail === userSession?.email
-        );
-        setStats(myStats);
-        return myStats;
       } catch (error) {
         console.log("error: ", error);
       }
     } else {
-      console.log("no session");
-    }
-  };
-  useEffect(() => {
-    readBeeStats();
-  }, [session]);
-
-  const addBeeStats = async () => {
-    readBeeStats();
-    if (session) {
-      const user = session?.user?.email;
-      let totalScore = 0;
-      if (stats[0]) {
-        const userStats = stats[0];
-        totalScore =
-          userStats.totalScore +
-          store.fourLetterWords.length +
-          store.fiveLetterWords.length * 2;
-      } else {
-        totalScore =
-          store.fourLetterWords.length + store.fiveLetterWords.length * 2;
+      try {
+        const response = await fetch(`/api/bee-stats`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+      } catch (error) {
+        console.log("error: ", error);
       }
-      const body = { user, totalScore };
-      if (stats[0]) {
-        try {
-          const response = await fetch(`/api/bee-stats`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-          });
-        } catch (error) {
-          console.log("error: ", error);
-        }
-      } else {
-        try {
-          const response = await fetch(`/api/bee-stats`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-          });
-        } catch (error) {
-          console.log("error: ", error);
-        }
-      }
-    } else {
-      console.log("no session");
     }
   };
 
@@ -250,6 +234,7 @@ const SpellingBee = () => {
           ))}
         </div>
       </div>
+      <button onClick={addBeeStats}>click</button>
     </div>
   );
 };
