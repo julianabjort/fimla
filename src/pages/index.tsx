@@ -18,6 +18,7 @@ export default function Home() {
           Fimla - Íslenskir orðaleikir - Word games in Icelandic, play wordle,
           quordle, spelling bee and crosswords for free!
         </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="all" />
         <meta
           name="description"

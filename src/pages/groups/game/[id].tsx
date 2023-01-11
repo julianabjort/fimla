@@ -19,6 +19,7 @@ const Tournament = () => {
   const userSession = session?.user;
   const userName = session?.user?.["name"];
   const userID = userSession?.["id"];
+  const userEmail = userSession?.["email"];
   const [inTournament, setInTournament] = useState(false);
   const [UsersInTournament, setUsersInTournament] = useState([]);
   const store = useLocalObservable(() => WordleStore);
@@ -97,7 +98,7 @@ const Tournament = () => {
       gamesPlayed = UsersInTournament[0]?.["gamesPlayed"] + 1;
     }
     const totalScore = UsersInTournament[0]?.["totalScore"] + store.totalScore;
-    const body = { userID, tournamentID, totalScore, gamesPlayed };
+    const body = { userEmail, tournamentID, totalScore, gamesPlayed };
     console.log(store.totalScore, "total Score!");
     try {
       const response = await fetch(`/api/single-tournament`, {
