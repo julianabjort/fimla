@@ -79,14 +79,17 @@ const Wordle = () => {
       let wins = 0;
       let losses = 0;
       let totalScore = 0;
+
       if (stats[0]) {
         const userStats = stats[0];
         totalScore = userStats.totalScore + store.totalScore;
         if (store.won) {
           wins = userStats.wins + 1;
+          losses = userStats.losses;
         }
         if (store.lost) {
           losses = userStats.losses + 1;
+          wins = userStats.wins;
         }
       } else {
         totalScore = store.totalScore;
