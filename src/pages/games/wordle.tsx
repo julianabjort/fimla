@@ -7,6 +7,7 @@ import WordleStore from "../../stores/WordleStore.jsx";
 import { useSession } from "next-auth/react";
 import OnboardingModal from "../../components/OnboardingModal";
 import Link from "next/link";
+import getUserStats from "../../../lib/getUserStats";
 
 const Wordle = () => {
   const { data: session } = useSession();
@@ -20,6 +21,7 @@ const Wordle = () => {
   const store = useLocalObservable(() => WordleStore);
   const [onboardingModal, setOnboardingModal] = useState(false);
   const [wordleVisited, setWordleVisited] = useState(true);
+  const [test, setTest] = useState();
 
   useEffect(() => {
     store.startGame();
@@ -67,6 +69,20 @@ const Wordle = () => {
       console.log("no session");
     }
   };
+
+  useEffect(() => {
+    const userSession = session?.user;
+    const stats = async () =>
+      getUserStats("wordle-stats", userSession).then((result) =>
+        setTest(result)
+      );
+
+    stats();
+  }, []);
+
+  useEffect(() => {
+    console.log("TEST", test);
+  }, [test]);
 
   useEffect(() => {
     readWordleStats();

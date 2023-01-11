@@ -5,6 +5,8 @@ export default {
   letters: [],
   fourLetterWords: [],
   fiveLetterWords: [],
+  fourLetterHints: [],
+  fiveLetterHints: [],
   allFoundWords: [],
   word: "",
   numberOfGuesses: 0,
@@ -27,6 +29,7 @@ export default {
     this.fourLetterWords = [];
     this.fiveLetterWords = [];
     this.error = "";
+    this.getHints();
     console.log(this.allWords);
   },
 
@@ -66,6 +69,16 @@ export default {
     if (e.key === "Enter") {
       return this.submitWord();
     }
+  },
+  getHints() {
+    this.letters.forEach((letter, index) => {
+      this.fourLetterHints[index] = this.allFourLetterWords.filter((f) =>
+        f.toLowerCase().startsWith(letter)
+      );
+      this.fiveLetterHints[index] = this.allFiveLetterWords.filter((f) =>
+        f.toLowerCase().startsWith(letter)
+      );
+    });
   },
   // COMPUTED PROPERTIES
 

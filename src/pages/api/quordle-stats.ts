@@ -19,7 +19,7 @@ export default async function handler(
       try {
         const stats = await prisma.quordleStats.create({
           data: {
-            userEmail: body.user,
+            userEmail: body.userEmail,
             wins: body.wins,
             losses: body.losses,
             totalScore: body.totalScore,
@@ -33,7 +33,7 @@ export default async function handler(
     case "PUT":
       try {
         const stats = await prisma.quordleStats.update({
-          where: { userEmail: body.user },
+          where: { userEmail: body.userEmail },
           data: {
             wins: body.wins,
             losses: body.losses,
