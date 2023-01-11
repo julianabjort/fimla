@@ -7,6 +7,8 @@ export default async function handler(
 ) {
   if (req.method == "GET") {
     return await readUsers(req, res);
+  } else if (req.method === "PUT") {
+    return await updateUser(req, res);
   } else if (req.method === "DELETE") {
     return await deleteUser(req, res);
   } else {
@@ -40,5 +42,25 @@ async function deleteUser(req: NextApiRequest, res: NextApiResponse) {
     res
       .status(500)
       .json({ error: "Error deleting from database", success: false });
+  }
+}
+async function updateUser(req: NextApiRequest, res: NextApiResponse) {
+  const body = req.body;
+  try {
+    const updateUser = await prisma.user.update({
+      where: {
+        email: body.email,
+      },
+      data: {
+        name: body.name,
+      },
+    });
+    console.log(updateUser);
+    return res.status(200).json(updateUser);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "Error updating in database", success: false });
   }
 }
