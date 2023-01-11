@@ -1,7 +1,7 @@
-export default async function updateData(apiRoute, body) {
+export default async function updateData(apiRoute, method, body) {
   try {
     const response = await fetch(`/api/${apiRoute}`, {
-      method: "PUT",
+      method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
