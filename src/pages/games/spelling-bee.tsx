@@ -73,14 +73,13 @@ const SpellingBee = () => {
     getUserStats("bee-stats", userSession).then((result) =>
       setStats(result[0])
     );
-
   useEffect(() => {
     getStats();
   }, [session]);
 
   const addBeeStats = async () => {
     let totalScore = {};
-    if (stats) {
+    if (session) {
       totalScore =
         stats.totalScore +
         store.fourLetterWords.length +
@@ -91,7 +90,7 @@ const SpellingBee = () => {
     }
     const body = { user, totalScore };
 
-    if (session) {
+    if (stats) {
       updateData("bee-stats", "PUT", body);
     } else {
       updateData("bee-stats", "POST", body);
