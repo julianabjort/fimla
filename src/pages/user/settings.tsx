@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
+import Image from "next/image";
+import { render } from "react-dom";
+import { AnyRecord } from "dns";
+import { profile } from "console";
 
 const Settings = () => {
   const { data: session } = useSession();
@@ -8,10 +12,50 @@ const Settings = () => {
   const [userLocation, setUserLocation] = useState("");
   const [userDob, setUserDob] = useState("");
 
+  const [imageSrc, setImageSrc] = useState();
+  const [uploadData, setUploadData] = useState();
+
   const userSession = session?.user;
   const userId = session?.user?.["id"];
   const userEmail = session?.user?.["email"];
   const user = session?.user;
+  const profilePic = session?.user?.["image"];
+
+  /* UPLOAD IMAGES TO CLOUDINARY */
+  const handleOnChange = (changeEvent: any) => {
+    const reader = new FileReader();
+    reader.onload = function (onLoadEvent: any) {
+      setImageSrc(onLoadEvent.target?.result);
+      setUploadData(undefined);
+    };
+    reader.readAsDataURL(changeEvent.target.files?.[0]);
+  };
+
+  const handleOnSubmit = async (event: any) => {
+    event.preventDefault();
+    // const form = document.getElementById("formId") as HTMLFormElement;
+    const form = event.currentTarget;
+    const fileInput: any = Array.from(form.elements).find(
+      ({ name }: any) => name === "file"
+    );
+
+    const formData = new FormData();
+
+    for (const file of fileInput.files) {
+      formData.append("file", file);
+    }
+    formData.append("upload_preset", "figma-profile-pics");
+    const data = await fetch(
+      "https://api.cloudinary.com/v1_1/diczrtchl/image/upload",
+      { method: "POST", body: formData }
+    ).then((response) => response.json());
+
+    setImageSrc(data.secure_url);
+    setUploadData(data);
+  };
+
+  /*******************************/
+
   useEffect(() => {
     readUserInfo();
   }, [session]);
@@ -41,6 +85,20 @@ const Settings = () => {
       return info;
     } catch (error) {
       console.log("There was an error reading from the DB", error);
+    }
+  };
+  const updateProfilePic = async () => {
+    const body = { userEmail, imageSrc };
+    console.log(body);
+    try {
+      const response = fetch(`/api/profile-pic`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      console.log(response);
+    } catch (error) {
+      console.log("There was an error deleting from the DB ", error);
     }
   };
   const updateUserInfo = async (e: any): Promise<any> => {
@@ -116,6 +174,10 @@ const Settings = () => {
     }
   };
   useEffect(() => {}, [session]);
+  useEffect(() => {
+    console.log("hey", profilePic);
+  }, [profilePic]);
+
   return (
     <div className="flex flex-col gap-y-4">
       <h1 className="my-10 heading-1">Settings</h1>
@@ -123,9 +185,15 @@ const Settings = () => {
         {session ? (
           <>
             <h1 className="mb-10 heading-1">Hey {session.user?.name}</h1>
+            {profilePic ? (
+              <div className="bg-black rounded-full h-24 w-24 overflow-hidden">
+                <Image width={100} height={100} alt="img" src={profilePic} />
+              </div>
+            ) : null}
             <h2 className="border-b-[0.5px] pb-1 heading-2">
               User Information
             </h2>
+
             <div className="flex mb-4">
               <form
                 className="flex flex-col mb-4"
@@ -196,6 +264,37 @@ const Settings = () => {
                 Delete Account
               </button>
             </div>
+            <h2 className="border-b-[0.5px] pb-1 mt-2 heading-2">
+              Upload your profile image
+            </h2>
+            {/* <div className="bg-black rounded-full h-24 w-24 overflow-hidden">
+              <Image
+                width={100}
+                height={100}
+                alt="img"
+                src="https://res.cloudinary.com/diczrtchl/image/upload/v1673553566/figma-profile-pics/s40sicdv5cn00hwuncsi.jpg"
+              />
+            </div> */}
+            <form
+              id="formId"
+              action="#"
+              method="POST"
+              onChange={handleOnChange}
+              onSubmit={handleOnSubmit}
+            >
+              <input type="file" name="file" />
+              {imageSrc && !uploadData && <button>Upload</button>}
+              {imageSrc && uploadData && (
+                <>
+                  <div className="bg-black rounded-full h-24 w-24 overflow-hidden">
+                    <Image width={100} height={100} alt="img" src={imageSrc} />
+                  </div>
+                  <button onClick={() => updateProfilePic()}>
+                    Upload Profile Picture
+                  </button>
+                </>
+              )}
+            </form>
           </>
         ) : (
           <>

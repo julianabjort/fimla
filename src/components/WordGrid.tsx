@@ -20,7 +20,7 @@ const WordGrid = ({
         return (
           <div
             key={i}
-            className={`flex w-12 mx-1 my-1 text-4xl capitalize rounded-md aspect-square ${bgColor} center`}
+            className={`flex w-12 mx-1 my-1 text-4xl capitalize transition duration-300 delay-delay${i} rounded-md aspect-square ${bgColor} center`}
           >
             {guess[i]}
           </div>
