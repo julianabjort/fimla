@@ -71,6 +71,7 @@ const Wordle = () => {
   };
 
   useEffect(() => {
+    console.log(store.word);
     const userSession = session?.user;
     const stats = async () =>
       getUserStats("wordle-stats", userSession).then((result) =>
@@ -172,6 +173,7 @@ const Wordle = () => {
           word={store.word}
           guess={store.guesses[i]}
           isGuessed={i < store.numberOfGuesses}
+          i={store.numberOfGuesses}
           key={i}
         />
       ))}

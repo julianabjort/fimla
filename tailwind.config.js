@@ -22,6 +22,13 @@ module.exports = {
         green: "#17b787",
         yellow: "#efc64a",
       },
+      transitionDelay: {
+        delay0: "500ms",
+        delay1: "1000ms",
+        delay2: "1500ms",
+        delay3: "2000ms",
+        delay4: "2500ms",
+      },
     },
   },
   plugins: [],

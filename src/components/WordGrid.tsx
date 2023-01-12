@@ -1,3 +1,6 @@
+import { motion } from "framer-motion";
+import { useState } from "react";
+
 const WordGrid = ({
   word,
   guess,
@@ -7,6 +10,7 @@ const WordGrid = ({
   guess: string;
   isGuessed: boolean;
 }) => {
+  const [animate, setAnimate] = useState(false);
   return (
     <div className="grid w-auto grid-cols-5">
       {new Array(5).fill(0).map((_, i) => {
@@ -18,12 +22,14 @@ const WordGrid = ({
           ? "bg-yellow"
           : "bg-lighter dark:bg-dark";
         return (
-          <div
+          <motion.div
+            animate={{ scaleY: isGuessed ? [1, 0, 1] : 1 }}
+            transition={{ type: "tween", duration: 0.5, delay: 0.5 }}
             key={i}
-            className={`flex w-12 mx-1 my-1 text-4xl capitalize rounded-md aspect-square ${bgColor} center`}
+            className={`flex w-12 mx-1 my-1 text-4xl capitalize rounded-md aspect-square transition duration-200 delay-delay${i} ${bgColor} center`}
           >
             {guess[i]}
-          </div>
+          </motion.div>
         );
       })}
     </div>

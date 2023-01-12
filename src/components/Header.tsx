@@ -27,7 +27,7 @@ const Header = () => {
                 <>
                   <div
                     onClick={showDropdown}
-                    className="flex space-x-3 cursor-pointer center py-6 text-xl border-t"
+                    className="flex py-6 space-x-3 text-xl border-t cursor-pointer center"
                   >
                     <div>{link.name}</div>
                   </div>
@@ -49,14 +49,14 @@ const Header = () => {
         )}
         {session ? (
           <button
-            className="flex text-gray-400 space-x-3 cursor-pointer center py-6 text-xl border-y"
+            className="flex py-6 space-x-3 text-xl text-gray-400 cursor-pointer center border-y"
             onClick={() => signOut()}
           >
             Sign out
           </button>
         ) : (
           <button
-            className="flex text-gray-400 space-x-3 cursor-pointer center py-6 text-xl border-y"
+            className="flex py-6 space-x-3 text-xl text-gray-400 cursor-pointer center border-y"
             onClick={() => signIn()}
           >
             Sign in
@@ -157,12 +157,14 @@ const Header = () => {
             )}
           </div>
           <button
+            aria-label="dark-mode"
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
           >
             {theme === "light" ? <HiMoon /> : <HiSun />}
           </button>
 
           <button
+            aria-label="navigation-menu"
             onClick={() => {
               showMobileMenu();
             }}

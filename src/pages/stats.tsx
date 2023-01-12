@@ -107,40 +107,40 @@ const Stats = ({
       <h1 className="my-10 heading-1">Game Stats</h1>
 
       <div className="flex mb-3 space-x-4 cursor-pointer">
-        <h3
+        <h2
           className={`${wordle && "underline underline-offset-4"}`}
           onClick={wordleClick}
         >
           Wordle
-        </h3>
-        <h3
+        </h2>
+        <h2
           className={`${quordle && "underline underline-offset-4"}`}
           onClick={quordleClick}
         >
           Quordle
-        </h3>
-        <h3
+        </h2>
+        <h2
           className={`${bee && "underline underline-offset-4"}`}
           onClick={beeClick}
         >
           Spelling Bee
-        </h3>
+        </h2>
         <p className="font-bold text-green">{message}</p>
       </div>
       {stats ? (
         <>
           {!bee ? (
             <>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <div className="flex flex-col justify-between w-full h-36 lg:h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+              <div className="grid grid-cols-2 gap-4 mb-4 lg:grid-cols-4">
+                <div className="flex flex-col justify-between w-full p-6 rounded-md h-36 lg:h-56 bg-lighter dark:bg-darker">
                   <h1 className="border-b-[0.5px] pb-1 heading-2">Wins</h1>
                   <h1 className="text-4xl lg:text-7xl">{stats.wins}</h1>
                 </div>
-                <div className="flex flex-col justify-between w-full h-36 lg:h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <div className="flex flex-col justify-between w-full p-6 rounded-md h-36 lg:h-56 bg-lighter dark:bg-darker">
                   <h1 className="border-b-[0.5px] pb-1 heading-2">Losses</h1>
                   <h1 className="text-4xl lg:text-7xl">{stats.losses}</h1>
                 </div>
-                <div className="flex flex-col justify-between w-full h-36 lg:h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <div className="flex flex-col justify-between w-full p-6 rounded-md h-36 lg:h-56 bg-lighter dark:bg-darker">
                   <h1 className="border-b-[0.5px] pb-1 heading-2">
                     Games Played
                   </h1>
@@ -148,7 +148,7 @@ const Stats = ({
                     {stats.wins + stats.losses}
                   </h1>
                 </div>
-                <div className="flex flex-col justify-between w-full h-36 lg:h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <div className="flex flex-col justify-between w-full p-6 rounded-md h-36 lg:h-56 bg-lighter dark:bg-darker">
                   <h1 className="border-b-[0.5px] pb-1 heading-2">
                     Average Score
                   </h1>
@@ -167,7 +167,7 @@ const Stats = ({
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col justify-between w-full h-36 lg:h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <div className="flex flex-col justify-between w-full p-6 rounded-md h-36 lg:h-56 bg-lighter dark:bg-darker">
                   <h2 className="border-b-[0.5px] pb-1  heading-2">
                     Win Ratio
                   </h2>
@@ -184,7 +184,7 @@ const Stats = ({
                     )}
                   </h3>
                 </div>
-                <div className="flex flex-col justify-between w-full h-36 lg:h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <div className="flex flex-col justify-between w-full p-6 rounded-md h-36 lg:h-56 bg-lighter dark:bg-darker">
                   <h2 className="border-b-[0.5px] pb-1  heading-2">
                     Total Score
                   </h2>
@@ -198,7 +198,7 @@ const Stats = ({
           ) : (
             <>
               <div className="flex w-full space-x-4">
-                <div className="flex flex-col justify-between w-full h-36 lg:h-56 p-6 rounded-md bg-lighter dark:bg-darker">
+                <div className="flex flex-col justify-between w-full p-6 rounded-md h-36 lg:h-56 bg-lighter dark:bg-darker">
                   <h2 className="border-b-[0.5px] pb-1  heading-2">
                     Total Score
                   </h2>
