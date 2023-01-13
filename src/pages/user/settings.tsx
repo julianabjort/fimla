@@ -85,6 +85,20 @@ const Settings = () => {
     }
   };
 
+  const deleteUserint = async () => {
+    console.log("here");
+    try {
+      const response = await fetch(`/api/single-tournament`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      // Redirect to home page ? //
+      console.log(await response.json());
+    } catch (error) {
+      console.log("There was an error deleting from the DB ", error);
+    }
+  };
+
   const deleteStats = async (e: any) => {
     try {
       const response = await fetch(`/api/wordle-stats`, {
@@ -176,7 +190,8 @@ const Settings = () => {
               </p>
               <button
                 className="w-32 h-10 rounded-md bg-light"
-                onClick={() => deleteUser(userEmail)}
+                // onClick={() => deleteUser(userEmail)}
+                onClick={() => deleteUserint()}
               >
                 Delete Account
               </button>

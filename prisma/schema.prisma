@@ -96,10 +96,10 @@ model Tournaments {
 }
 
 model UsersInTournament {
-  user            User @relation(fields: [userEmail], references: [email])
+  user            User @relation(fields: [userEmail], references: [email], onDelete: Cascade)
   userEmail       String 
   userName        String @default("")
-  tournament      Tournaments @relation(fields: [tournamentId], references: [id])
+  tournament      Tournaments @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
   tournamentId    String
   tournamentName  String @default("")
   gamesPlayed     Int @default(0)
