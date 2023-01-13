@@ -82,10 +82,6 @@ const Wordle = () => {
   }, []);
 
   useEffect(() => {
-    console.log("TEST", test);
-  }, [test]);
-
-  useEffect(() => {
     readWordleStats();
   }, [session]);
 

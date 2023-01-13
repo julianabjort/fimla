@@ -10,12 +10,6 @@ const WordGrid = ({
   guess: string;
   isGuessed: boolean;
 }) => {
-  const [animate, setAnimate] = useState(false);
-
-  useEffect(() => {
-    console.log(animate);
-  }, [animate]);
-
   return (
     <div className="grid w-auto grid-cols-5">
       {new Array(5).fill(0).map((_, i) => {
@@ -29,7 +23,7 @@ const WordGrid = ({
         return (
           <motion.div
             animate={{ scaleY: isGuessed ? [1, 0, 1] : 1 }}
-            transition={{ type: "tween", duration: 0.5, delay: i + 0.4 }}
+            transition={{ type: "tween", duration: 0.5, delay: i / 2.2 }}
             key={i}
           >
             <div

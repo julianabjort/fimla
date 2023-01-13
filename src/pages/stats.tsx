@@ -3,6 +3,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { prisma } from "../../lib/prisma";
 import { useRouter } from "next/router";
+import LoadingIcon from "../components/LoadingIcon";
 
 const Stats = ({
   wordleSessionStats,
@@ -10,8 +11,9 @@ const Stats = ({
   beeSessionStats,
 }) => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [message, setMessage] = useState("");
+
   const noStats = {
     wins: 0,
     losses: 0,
@@ -101,7 +103,7 @@ const Stats = ({
   useEffect(() => {
     console.log(router["components"]);
   });
-
+  if (status === "loading") return <LoadingIcon />;
   return (
     <div>
       <h1 className="my-10 heading-1">Game Stats</h1>
