@@ -1,20 +1,24 @@
-import { HiX } from "react-icons/hi";
+import { HiX, HiOutlineDocumentAdd } from "react-icons/hi";
 import Image from "next/image";
 import { getSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 
-const ProfilePicModal = () => {
+const ProfilePicModal = ({ onClick }) => {
   const [session, setSession] = useState();
   const [name, setName] = useState("");
   const [userEmail, setEmail] = useState("");
-  const [imageSrc, setImageSrc] = useState("");
+  const [imageSrc, setImageSrc] = useState(
+    "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png"
+  );
   const [uploadData, setUploadData] = useState();
 
   /* Session */
   const readUser = async () => {
     const session = await getSession();
     const email = session?.user?.email || "";
-    const image = session?.user?.image || "";
+    const image =
+      session?.user?.image ||
+      "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
     setEmail(email);
     setImageSrc(image);
   };
@@ -64,6 +68,7 @@ const ProfilePicModal = () => {
     } catch (error) {
       console.log("There was an error deleting from the DB ", error);
     }
+    onClick;
   };
   /*******************************/
 
@@ -73,8 +78,12 @@ const ProfilePicModal = () => {
   return (
     <div className="absolute left-0 right-0 m-auto mt-20 flex flex-col w-2/3 p-8 space-y-4 justify-evenly items-center md:w-1/2 rounded-xl bg-lightest dark:bg-dark">
       <div className="flex justify-between">
-        <h1 className="heading-1">Upload your profile image!</h1>
+        <h1 className="heading-1">Profile Picture</h1>
+        <button className="heading-1" onClick={onClick}>
+          <HiX />
+        </button>
       </div>
+      <p>Update your profile picture here!</p>
 
       <div className="bg-black rounded-full h-24 w-24 overflow-hidden">
         <Image width={100} height={100} alt="img" src={imageSrc} />
@@ -87,57 +96,28 @@ const ProfilePicModal = () => {
         onChange={handleOnChange}
         // onChange={handleOnSubmit}
         onSubmit={handleOnSubmit}
+        className="flex items-center gap-4"
       >
-        <input type="file" name="file" />
-        {imageSrc && !uploadData && <button>Upload</button>}
+        <label htmlFor="file">
+          <input type="file" name="file" id="file" hidden />
+          <HiOutlineDocumentAdd className="text-4xl" />
+        </label>
+        {imageSrc && !uploadData && (
+          <button className="btn-secondary">Choose</button>
+        )}
+        {imageSrc && uploadData ? (
+          <button
+            className="btn-primary"
+            onClick={() => {
+              updateProfilePic();
+            }}
+          >
+            Upload Profile Picture
+          </button>
+        ) : null}
       </form>
-      {imageSrc && uploadData && (
-        <button className="btn-primary" onClick={() => updateProfilePic()}>
-          Upload Profile Picture
-        </button>
-      )}
     </div>
   );
 };
 
 export default ProfilePicModal;
-{
-  /* <div className="absolute bg-red-500">
-              <h2 className="border-b-[0.5px] pb-1 mt-2 heading-2">
-                Upload your profile image
-              </h2>
-              <div className="bg-black rounded-full h-24 w-24 overflow-hidden">
-                <Image
-                  width={100}
-                  height={100}
-                  alt="img"
-                  src="https://res.cloudinary.com/diczrtchl/image/upload/v1673553566/figma-profile-pics/s40sicdv5cn00hwuncsi.jpg"
-                />
-              </div>
-              <form
-                id="formId"
-                action="#"
-                method="POST"
-                onChange={handleOnChange}
-                onSubmit={handleOnSubmit}
-              >
-                <input type="file" name="file" />
-                {imageSrc && !uploadData && <button>Upload</button>}
-                {imageSrc && uploadData && (
-                  <>
-                    <div className="bg-black rounded-full h-24 w-24 overflow-hidden">
-                      <Image
-                        width={100}
-                        height={100}
-                        alt="img"
-                        src={imageSrc}
-                      />
-                    </div>
-                    <button onClick={() => updateProfilePic()}>
-                      Upload Profile Picture
-                    </button>
-                  </>
-                )}
-              </form>
-            </div> */
-}

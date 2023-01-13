@@ -5,6 +5,7 @@ import { render } from "react-dom";
 import { AnyRecord } from "dns";
 import { profile } from "console";
 import ProfilePicModal from "../../components/ProfilePicModal";
+import UserInfoModal from "../../components/userInfoModal";
 
 const Settings = () => {
   const { data: session } = useSession();
@@ -13,59 +14,36 @@ const Settings = () => {
   const [userLocation, setUserLocation] = useState("");
   const [userDob, setUserDob] = useState("");
   const [myUser, setMyUser] = useState([]);
-  const [imageSrc, setImageSrc] = useState();
-  const [uploadData, setUploadData] = useState();
   const [changeProfilePic, showProfileModal] = useState(false);
+  const [changeInfo, showInfoModal] = useState(false);
+  const [pPic, setProfilePic] = useState(
+    "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png"
+  );
 
   const nameUser = myUser[0]?.["name"];
-  const imageUser = myUser[0]?.["image"];
+  const imageUser =
+    myUser[0]?.["image"] ||
+    "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
   const userSession = session?.user;
   const userId = session?.user?.["id"];
   const userEmail = session?.user?.["email"];
+
   const user = session?.user;
   const profilePic = session?.user?.["image"];
   const noUserPic =
     "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
 
-  /* UPLOAD IMAGES TO CLOUDINARY */
-  const handleOnChange = (changeEvent: any) => {
-    const reader = new FileReader();
-    reader.onload = function (onLoadEvent: any) {
-      setImageSrc(onLoadEvent.target?.result);
-      setUploadData(undefined);
-    };
-    reader.readAsDataURL(changeEvent.target.files?.[0]);
-  };
-
-  const handleOnSubmit = async (event: any) => {
-    event.preventDefault();
-    // const form = document.getElementById("formId") as HTMLFormElement;
-    const form = event.currentTarget;
-    const fileInput: any = Array.from(form.elements).find(
-      ({ name }: any) => name === "file"
-    );
-
-    const formData = new FormData();
-
-    for (const file of fileInput.files) {
-      formData.append("file", file);
-    }
-    formData.append("upload_preset", "figma-profile-pics");
-    const data = await fetch(
-      "https://api.cloudinary.com/v1_1/diczrtchl/image/upload",
-      { method: "POST", body: formData }
-    ).then((response) => response.json());
-
-    setImageSrc(data.secure_url);
-    setUploadData(data);
-  };
-
-  /*******************************/
-
   useEffect(() => {
     readUserInfo();
     readUser();
   }, [session]);
+  useEffect(() => {
+    if (imageUser !== null) {
+      setProfilePic(imageUser);
+    } else {
+      setProfilePic(noUserPic);
+    }
+  }, [myUser]);
   useEffect(() => {
     if (userLocation === "") {
       setUserLocation(userInfo[0]?.["userLocation"]);
@@ -76,9 +54,7 @@ const Settings = () => {
     if (userDob === "") {
       setUserDob(userInfo[0]?.["userDob"]);
     }
-
-    // console.log(imageUser);
-  }, [userInfo, myUser]);
+  }, [userInfo]);
 
   const readUserInfo = async () => {
     try {
@@ -109,46 +85,6 @@ const Settings = () => {
     } catch (error) {
       console.log("There was an error reading from the DB", error);
     }
-  };
-  const updateProfilePic = async () => {
-    const body = { userEmail, imageSrc };
-    // console.log(body);
-    try {
-      const response = fetch(`/api/profile-pic`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      // console.log(response);
-    } catch (error) {
-      console.log("There was an error deleting from the DB ", error);
-    }
-  };
-  const updateUserInfo = async (e: any): Promise<any> => {
-    e.preventDefault();
-    const body = { userEmail, userName, userDob, userLocation };
-    if (userInfo[0]) {
-      try {
-        const response = fetch(`/api/userinfo`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-      } catch (error) {
-        console.log("There was an error deleting from the DB ", error);
-      }
-    } else {
-      try {
-        const response = fetch(`/api/userinfo`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-      } catch (error) {
-        console.log("There was an error deleting from the DB ", error);
-      }
-    }
-    window.location.reload();
   };
 
   const deleteUser = async (e: any) => {
@@ -196,12 +132,6 @@ const Settings = () => {
       console.log("There was an error in deleting from the DB", error);
     }
   };
-  useEffect(() => {
-    console.log(session);
-  }, [session]);
-  useEffect(() => {
-    // console.log("hey", profilePic);
-  }, [profilePic]);
 
   return (
     <div className="flex flex-col gap-y-4">
@@ -209,7 +139,15 @@ const Settings = () => {
       <div className="flex flex-col md:grid md:grid-cols-2 gap-6 w-full p-6 rounded-md bg-lighter dark:bg-darker">
         {session ? (
           <>
-            {changeProfilePic && <ProfilePicModal />}
+            {changeProfilePic && (
+              <ProfilePicModal onClick={() => showProfileModal(false)} />
+            )}
+            {changeInfo && (
+              <UserInfoModal
+                onClick={() => showInfoModal(false)}
+                userInfo={userInfo}
+              />
+            )}
             <div className="col-span-2">
               <h1 className="mb-10 heading-1 text-center">
                 Hey {session.user?.name}
@@ -218,11 +156,13 @@ const Settings = () => {
             <div className="grid col-start-2 row-start-2 justify-center">
               <div className="flex flex-col gap-6">
                 <div className=" rounded-full h-56 w-56  overflow-hidden">
-                  {/* {imageUser ? (
-                    <Image width={390} height={390} alt="img" src={imageUser} />
-                  ) : (
-                    <Image width={400} height={400} alt="img" src={noUserPic} />
-                  )} */}
+                  <Image
+                    src={pPic}
+                    width={400}
+                    height={400}
+                    alt="image"
+                    priority
+                  />
                 </div>
                 <button
                   className="btn-primary"
@@ -238,62 +178,24 @@ const Settings = () => {
               </h2>
               <div className="flex flex-col self-end">
                 <p className="text-xs ml-1 mt-2">Name</p>
-                <p className="bg-gray-100 p-2 mb-1 rounded-md ">
-                  {userInfo[0]?.["username"]}Lubba
+                <p className="bg-gray-100 p-2 mb-1 h-10 rounded-md ">
+                  {userInfo[0]?.["username"]}
                 </p>
                 <p className="text-xs ml-1">Location</p>
-                <p className="bg-gray-100 p-2 mb-1 rounded-md ">
-                  {userInfo[0]?.["userLocation"]}Copenhagen
+                <p className="bg-gray-100 p-2 mb-1 h-10 rounded-md ">
+                  {userInfo[0]?.["userLocation"]}
                 </p>
                 <p className="text-xs ml-1">Date of Birth</p>
-                <p className="bg-gray-100 p-2 mb-1 rounded-md ">
-                  {userInfo[0]?.["userDob"]}23.05.1995
+                <p className="bg-gray-100 p-2 mb-1 h-10 rounded-md ">
+                  {userInfo[0]?.["userDob"]}
                 </p>
-                <button className="btn-primary mt-3">Edit</button>
-              </div>
-              {/* <div className="flex mb-4">
-                <form
-                  className="flex flex-col mb-4"
-                  action="#"
-                  method="POST"
-                  onSubmit={(e) => updateUserInfo(e)}
+                <button
+                  className="btn-primary mt-3"
+                  onClick={() => showInfoModal(true)}
                 >
-                  <label htmlFor="username">
-                    What is your favourite nickname? {userInfo[0]?.["username"]}
-                  </label>
-                  <input
-                    onChange={(e) => setUserName(e.target.value)}
-                    name="username"
-                    id="username"
-                    type="text"
-                    className="p-1 mb-5 rounded-md"
-                  />
-                  <label htmlFor="userLocation">
-                    Tell us where you are in the world!{" "}
-                    {userInfo[0]?.["userLocation"]}
-                  </label>
-                  <input
-                    onChange={(e) => setUserLocation(e.target.value)}
-                    name="userLocation"
-                    id="userLocation"
-                    type="text"
-                    className="p-1 mb-5 rounded-md"
-                  />
-                  <label htmlFor="userDob">
-                    Date of birth! {userInfo[0]?.["userDob"]}
-                  </label>
-                  <input
-                    onChange={(e) => setUserDob(e.target.value)}
-                    name="userDob"
-                    id="userDob"
-                    type="date"
-                    className="p-1 mb-5 rounded-md"
-                  />
-                  <button className="w-16 h-10 ml-4 rounded-md bg-light dark:bg-dark">
-                    Update
-                  </button>
-                </form>
-              </div> */}
+                  Edit
+                </button>
+              </div>
             </div>
             <div>
               <h2 className="border-b-[0.5px] pb-1 mt-2 heading-2">
@@ -302,7 +204,7 @@ const Settings = () => {
               <div className="flex flex-col gap-2 mb-4">
                 <p className="text-sm">Clear your stats and game history</p>
                 <button
-                  className="btn-primary w-2/3"
+                  className="btn-secondary w-2/3"
                   onClick={() => deleteStats(userEmail)}
                 >
                   Reset Stats
@@ -317,9 +219,8 @@ const Settings = () => {
                 <p className="text-sm">Want to delete your account?</p>
                 <p className="text-xs"> Note: This action can not be redone</p>
                 <button
-                  className="btn-primary w-2/3 mt-2"
-                  // onClick={() => deleteUser(userEmail)}
-                  onClick={() => deleteUserint()}
+                  className="btn-secondary w-2/3 mt-2"
+                  onClick={() => deleteUser(userEmail)}
                 >
                   Delete Account
                 </button>
