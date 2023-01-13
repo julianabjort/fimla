@@ -25,16 +25,15 @@ const Layout = ({ children }: any) => {
 
   return (
     <div className="mx-6 md:mx-20">
-      <div className="sticky top-0 z-10">
-        <Header />
-      </div>
+      <Header />
+
       {user ? (
         <>
           <div className="absolute top-0 bottom-0 left-0 right-0 bg-black bg-opacity-50"></div>
           <UserNameModal />
         </>
       ) : null}
-      <div className="relative flex flex-col justify-around md:mx-20 lg:mx-36">
+      <div className="flex flex-col justify-around md:mx-20 lg:mx-36">
         {children}
         <Footer />
       </div>

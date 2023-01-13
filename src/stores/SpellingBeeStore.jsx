@@ -28,13 +28,11 @@ export default {
     this.letters = this.randomLetters;
     this.fourLetterWords = [];
     this.fiveLetterWords = [];
-    this.error = "";
     this.getHints();
     console.log(this.allWords);
   },
 
   submitWord() {
-    this.error = "";
     if (
       this.fourLetterWords.includes(this.word) ||
       this.fiveLetterWords.includes(this.word)
@@ -61,9 +59,7 @@ export default {
   },
 
   handleKeydown(e) {
-    if (e.key === "Backspace") {
-      this.error = "";
-    } else if (!this.letters.includes(e.key)) {
+    if (e.key.match(/^[a-z]$/) && !this.letters.includes(e.key)) {
       this.error = "bad letter";
     }
     if (e.key === "Enter") {

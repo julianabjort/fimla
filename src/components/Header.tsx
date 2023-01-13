@@ -110,7 +110,7 @@ const Header = () => {
         </div>
 
         <div className="relative items-center hidden w-3/5 justify-evenly lg:flex">
-          <div className="absolute top-8 left-12">
+          <div className="absolute z-10 top-8 left-12">
             {dropdownOpen ? dropdown() : ""}
           </div>
           {React.Children.toArray(

@@ -32,15 +32,15 @@ export default NextAuth({
   //   signIn: "/auth/signin",
   // },
   secret: process.env.NEXTAUTH_SECRET,
-  callbacks: {
-    async session({ session, token }) {
-      if (session?.user) {
-        session.user["id"] = token.uid;
-      }
-      return session;
-    },
-  },
-  session: {
-    strategy: "jwt",
-  },
+  // callbacks: {
+  //   async session({ session, token }) {
+  //     if (session?.user) {
+  //       session.user["id"] = token.uid;
+  //     }
+  //     return session;
+  //   },
+  // },
+  // session: {
+  //   strategy: "jwt",
+  // },
 });

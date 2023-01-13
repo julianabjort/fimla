@@ -67,9 +67,15 @@ const SpellingBee = () => {
   const clearInput = (e: { key: string }) => {
     if (e.key === "Enter") {
       setWord("");
-      store.error = "";
     }
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      store.error = "";
+    }, 2000);
+  }, [store.error]);
+
   const getStats = async () =>
     getUserStats("bee-stats", userSession).then((result) =>
       setStats(result[0])
@@ -185,7 +191,7 @@ const SpellingBee = () => {
         <button className="btn-secondary">delete</button>
       </div>
       <div className="flex w-full md:w-3/4 gap-x-4">
-        <div className="w-full px-10 py-6 h-80 rounded-xl bg-lightest dark:bg-dark">
+        <div className="w-full px-10 py-6 h-96 rounded-xl bg-lightest dark:bg-dark">
           <div className="flex justify-between">
             <h1 className="heading-2 md:heading-1">Words</h1>
 
@@ -194,12 +200,14 @@ const SpellingBee = () => {
             </p>
           </div>
           <ProgressBar progressPercentage={store.progressPercentage} />
-          {store.allFoundWords.map((word, i) => (
-            <div className="flex items-center my-1 gap-x-3" key={i}>
-              <div className="w-4 h-4 bg-purple-600 rounded-full"></div>
-              {word}
-            </div>
-          ))}
+          <div className="flex flex-col flex-wrap w-full h-56">
+            {store.allFoundWords.map((word, i) => (
+              <div className="flex items-center my-1 gap-x-2" key={i}>
+                <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
+                {word}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       <button onClick={addBeeStats}>Save score & quit</button>

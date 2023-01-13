@@ -1,14 +1,14 @@
-import React from "react";
+import { useState } from "react";
+import { motion } from "framer-motion";
 
 const ProgressBar = ({ progressPercentage }) => {
   return (
     <div className="w-full h-8 my-4 bg-white rounded-lg dark:bg-light">
-      <div
-        style={{ width: `${progressPercentage}%` }}
-        className={`h-full rounded-l-lg ${
-          progressPercentage < 70 ? "bg-purple-400" : "bg-green-400"
-        }`}
-      ></div>
+      <motion.div
+        animate={{ width: `${progressPercentage}%` }}
+        transition={{ type: "tween", duration: 0.5 }}
+        className="h-full bg-purple-400 rounded-l-lg"
+      ></motion.div>
     </div>
   );
 };
