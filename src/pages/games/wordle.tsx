@@ -176,7 +176,6 @@ const Wordle = () => {
           word={store.word}
           guess={store.guesses[i]}
           isGuessed={i < store.numberOfGuesses}
-          i={store.numberOfGuesses}
           key={i}
         />
       ))}
