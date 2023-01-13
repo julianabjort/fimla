@@ -19,7 +19,7 @@ const Keyboard = ({ store }: any) => {
               <div
                 onClick={() => store.handleKeyClick(key)}
                 key={i}
-                className={`flex w-8 md:w-10 h-10 md:h-12 mx-0.5 md:mx-1 cursor-pointer capitalize rounded-md center ${bgColor} text-background`}
+                className={`flex w-8 md:w-10 h-10 md:h-12 mx-0.5 md:mx-1 cursor-pointer capitalize rounded-md center transition delay-delay4 ${bgColor} text-background`}
               >
                 {key}
               </div>

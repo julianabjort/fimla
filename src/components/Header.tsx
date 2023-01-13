@@ -27,7 +27,7 @@ const Header = () => {
                 <>
                   <div
                     onClick={showDropdown}
-                    className="flex space-x-3 cursor-pointer center py-6 text-xl border-t"
+                    className="flex py-6 space-x-3 text-xl border-t cursor-pointer center"
                   >
                     <div>{link.name}</div>
                   </div>
@@ -49,14 +49,14 @@ const Header = () => {
         )}
         {session ? (
           <button
-            className="flex text-gray-400 space-x-3 cursor-pointer center py-6 text-xl border-y"
+            className="flex py-6 space-x-3 text-xl text-gray-400 cursor-pointer center border-y"
             onClick={() => signOut()}
           >
             Sign out
           </button>
         ) : (
           <button
-            className="flex text-gray-400 space-x-3 cursor-pointer center py-6 text-xl border-y"
+            className="flex py-6 space-x-3 text-xl text-gray-400 cursor-pointer center border-y"
             onClick={() => signIn()}
           >
             Sign in
@@ -75,13 +75,14 @@ const Header = () => {
 
   const dropdown = () => {
     return (
-      <div className="flex flex-col lg:w-36 lg:rounded-xl lg:bg-light lg:dark:bg-dark">
+      <div className="flex flex-col border bg-white/80 dark:bg-dark/80 lg:w-36 lg:rounded-xl">
         {React.Children.toArray(
           games.map((link) => (
             <Link
               onClick={() => setDropdownOpen(false)}
+              onMouseEnter={() => setDropdownOpen(true)}
               href={link.path}
-              className="p-3 hover:bg-medium hover:first:rounded-t-xl hover:last:rounded-b-xl hover:dark:bg-darker"
+              className="p-3 border-b hover:bg-lightest/60 last:border-b-0 hover:first:rounded-t-xl hover:last:rounded-b-xl hover:dark:bg-darker"
             >
               <div onClick={() => setMobileMenuOpen(false)}>{link.name}</div>
             </Link>
@@ -97,7 +98,7 @@ const Header = () => {
 
   return (
     <div>
-      <nav className="sticky top-0 z-50 flex items-center justify-between py-8">
+      <nav className="flex items-center justify-between py-8">
         <div className="w-1/5">
           <Link href="/">
             {theme === "light" ? (
@@ -126,7 +127,8 @@ const Header = () => {
                 <div>
                   {link.dropdown === true ? (
                     <div
-                      onClick={showDropdown}
+                      onClick={() => setDropdownOpen(!dropdownOpen)}
+                      onMouseEnter={() => setDropdownOpen(true)}
                       className="flex space-x-3 cursor-pointer center"
                     >
                       <div
@@ -157,12 +159,14 @@ const Header = () => {
             )}
           </div>
           <button
+            aria-label="dark-mode"
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
           >
             {theme === "light" ? <HiMoon /> : <HiSun />}
           </button>
 
           <button
+            aria-label="navigation-menu"
             onClick={() => {
               showMobileMenu();
             }}

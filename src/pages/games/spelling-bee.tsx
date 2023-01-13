@@ -10,9 +10,10 @@ import OnboardingModal from "../../components/OnboardingModal";
 import ProgressBar from "../../components/ProgressBar";
 import getUserStats from "../../../lib/getUserStats";
 import updateData from "../../../lib/updateData";
+import LoadingIcon from "../../components/LoadingIcon";
 
 const SpellingBee = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const user = session?.user?.email;
   const userSession = session?.user;
   const ref = useRef(null);
@@ -96,6 +97,7 @@ const SpellingBee = () => {
       updateData("bee-stats", "POST", body);
     }
   };
+  if (!store.letters.length || status === "loading") return <LoadingIcon />;
 
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">
@@ -171,19 +173,16 @@ const SpellingBee = () => {
       />
       <SpellingBeeGrid store={store} />
       <div className="flex my-10 gap-x-6">
-        <button
-          onClick={store.submitWord}
-          className="px-4 py-2 border rounded-xl"
-        >
+        <button onClick={store.submitWord} className="btn-secondary">
           enter
         </button>
         <button
-          className="px-3 py-2 border rounded-full"
+          className="px-3 py-2 text-2xl rounded-full"
           onClick={() => store.shuffle(store.letters)}
         >
           <HiRefresh />
         </button>
-        <button className="px-4 py-2 border rounded-xl">delete</button>
+        <button className="btn-secondary">delete</button>
       </div>
       <div className="flex w-full md:w-3/4 gap-x-4">
         <div className="w-full px-10 py-6 h-80 rounded-xl bg-lightest dark:bg-dark">
