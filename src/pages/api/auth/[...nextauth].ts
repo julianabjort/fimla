@@ -33,14 +33,14 @@ export default NextAuth({
   // },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async session({ session, token }) {
-      if (session?.user) {
-        session.user["id"] = token.uid;
-      }
-      return session;
-    },
+    // async session({ session, token }) {
+    //   if (session?.user) {
+    //     session.user["id"] = token.uid;
+    //   }
+    //   return session;
+    // },
   },
-  session: {
-    strategy: "jwt",
-  },
+  // session: {
+  //   strategy: "jwt",
+  // },
 });

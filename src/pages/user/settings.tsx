@@ -77,7 +77,7 @@ const Settings = () => {
       setUserDob(userInfo[0]?.["userDob"]);
     }
 
-    console.log(imageUser);
+    // console.log(imageUser);
   }, [userInfo, myUser]);
 
   const readUserInfo = async () => {
@@ -112,14 +112,14 @@ const Settings = () => {
   };
   const updateProfilePic = async () => {
     const body = { userEmail, imageSrc };
-    console.log(body);
+    // console.log(body);
     try {
       const response = fetch(`/api/profile-pic`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      console.log(response);
+      // console.log(response);
     } catch (error) {
       console.log("There was an error deleting from the DB ", error);
     }
@@ -167,7 +167,7 @@ const Settings = () => {
   };
 
   const deleteUserint = async () => {
-    console.log("here");
+    // console.log("here");
     try {
       const response = await fetch(`/api/single-tournament`, {
         method: "GET",
@@ -196,9 +196,11 @@ const Settings = () => {
       console.log("There was an error in deleting from the DB", error);
     }
   };
-  useEffect(() => {}, [session]);
   useEffect(() => {
-    console.log("hey", profilePic);
+    console.log(session);
+  }, [session]);
+  useEffect(() => {
+    // console.log("hey", profilePic);
   }, [profilePic]);
 
   return (
@@ -216,11 +218,11 @@ const Settings = () => {
             <div className="grid col-start-2 row-start-2 justify-center">
               <div className="flex flex-col gap-6">
                 <div className=" rounded-full h-56 w-56  overflow-hidden">
-                  {imageUser ? (
+                  {/* {imageUser ? (
                     <Image width={390} height={390} alt="img" src={imageUser} />
                   ) : (
                     <Image width={400} height={400} alt="img" src={noUserPic} />
-                  )}
+                  )} */}
                 </div>
                 <button
                   className="btn-primary"
