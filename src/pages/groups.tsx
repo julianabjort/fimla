@@ -74,7 +74,7 @@ const Groups = () => {
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">
       <h1 className="mb-5 heading-1">Create a group</h1>
-      <div className="flex flex-col justify-center w-4/5 lg:w-3/4 p-6 lg:p-10 rounded-md bg-lighter dark:bg-darker">
+      <div className="flex flex-col justify-center w-4/5 lg:w-3/4 p-6 lg:p-10 rounded-md bg-lightest dark:bg-darker">
         {session ? (
           <>
             <form action="" method="POST" className="flex flex-col">

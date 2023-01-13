@@ -136,7 +136,7 @@ const Settings = () => {
   return (
     <div className="flex flex-col gap-y-4">
       <h1 className="my-10 heading-1">Settings</h1>
-      <div className="flex flex-col md:grid md:grid-cols-2 gap-6 w-full p-6 rounded-md bg-lighter dark:bg-darker">
+      <div className="flex flex-col md:grid md:grid-cols-2 gap-6 w-full p-6 rounded-md bg-lightest dark:bg-darker">
         {session ? (
           <>
             {changeProfilePic && (
