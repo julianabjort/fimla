@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 const ProfilePicModal = ({ onClick }) => {
   const [session, setSession] = useState();
   const [name, setName] = useState("");
+  const [isFile, setFile] = useState(false);
   const [userEmail, setEmail] = useState("");
   const [imageSrc, setImageSrc] = useState(
     "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png"
@@ -68,7 +69,6 @@ const ProfilePicModal = ({ onClick }) => {
     } catch (error) {
       console.log("There was an error deleting from the DB ", error);
     }
-    onClick;
   };
   /*******************************/
 
@@ -76,7 +76,7 @@ const ProfilePicModal = ({ onClick }) => {
     readUser();
   }, []);
   return (
-    <div className="absolute left-0 right-0 m-auto mt-20 flex flex-col w-2/3 p-8 space-y-4 justify-evenly items-center md:w-1/2 rounded-xl bg-lightest dark:bg-dark">
+    <div className="absolute left-0 shadow-xl right-0 m-auto flex flex-col w-4/5 p-8 space-y-4 justify-evenly items-center lg:w-2/3 rounded-xl bg-lightest dark:bg-dark">
       <div className="flex justify-between">
         <h1 className="heading-1">Profile Picture</h1>
         <button className="heading-1" onClick={onClick}>
@@ -96,14 +96,30 @@ const ProfilePicModal = ({ onClick }) => {
         onChange={handleOnChange}
         // onChange={handleOnSubmit}
         onSubmit={handleOnSubmit}
-        className="flex items-center gap-4"
+        className="flex flex-col items-center gap-4"
       >
         <label htmlFor="file">
-          <input type="file" name="file" id="file" hidden />
-          <HiOutlineDocumentAdd className="text-4xl" />
+          <input
+            type="file"
+            name="file"
+            id="file"
+            hidden
+            value=""
+            onChange={(e) => {
+              const { target } = e;
+              if (target.value.length > 0) {
+                setFile(true);
+              } else {
+                setFile(false);
+              }
+            }}
+          />
+          <HiOutlineDocumentAdd className="text-4xl cursor-pointer" />
         </label>
-        {imageSrc && !uploadData && (
+        {isFile ? (
           <button className="btn-secondary">Choose</button>
+        ) : (
+          <button className="btn-secondary-dis">Choose</button>
         )}
         {imageSrc && uploadData ? (
           <button
@@ -114,7 +130,11 @@ const ProfilePicModal = ({ onClick }) => {
           >
             Upload Profile Picture
           </button>
-        ) : null}
+        ) : (
+          <button className="btn-primary-dis" disabled>
+            Upload Profile Picture
+          </button>
+        )}
       </form>
     </div>
   );

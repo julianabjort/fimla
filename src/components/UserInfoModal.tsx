@@ -1,5 +1,4 @@
 import { HiX } from "react-icons/hi";
-import Image from "next/image";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 
@@ -40,7 +39,7 @@ const UserInfoModal = ({ onClick, userInfo }) => {
   };
 
   return (
-    <div className="absolute flex flex-col w-2/3 p-8 space-y-4 justify-evenly md:w-1/2 rounded-xl bg-lightest dark:bg-dark">
+    <div className="absolute flex flex-col w-2/3 shadow-xl left-0 right-0 m-auto p-8 space-y-4 justify-evenly md:w-1/2 rounded-xl bg-lightest dark:bg-dark">
       <div className="flex justify-between">
         <h1 className="heading-1">Information</h1>
         <button className="heading-1" onClick={onClick}>
