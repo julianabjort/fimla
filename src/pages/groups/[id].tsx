@@ -33,7 +33,7 @@ const Tournament = () => {
   const userEmail = userSession?.["email"];
   const store = useLocalObservable(() => WordleStore);
   const divRef = useRef<HTMLDivElement>(null);
-  const imageUser = myUser[0]?.["image"];
+  const imageUser = myUser[0]?.["image"] || null;
   const noUserPic =
     "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
 
@@ -181,10 +181,11 @@ const Tournament = () => {
     }
   }, [store.roundComplete]);
   useEffect(() => {
-    if (imageUser !== null) {
-      setProfilePic(imageUser);
-    } else {
+    if (imageUser === null) {
       setProfilePic(noUserPic);
+    } else {
+      // console.log(imageUser);
+      setProfilePic(imageUser);
     }
   }, [myUser]);
   useEffect(() => {
