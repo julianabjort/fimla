@@ -11,7 +11,6 @@ export default async function handler(
     case "GET":
       try {
         const userInfo = await prisma.userInfo.findMany();
-        console.log("Wordle Stats: ", userInfo);
         return res.status(200).json(userInfo);
       } catch (error) {
         res

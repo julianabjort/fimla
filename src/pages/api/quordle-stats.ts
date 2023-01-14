@@ -27,7 +27,6 @@ export default async function handler(
         });
         return res.status(200).json(stats);
       } catch (error) {
-        console.log(error);
         res.status(500).json({ error: "Error posting stats to database" });
       }
     case "PUT":
@@ -42,7 +41,6 @@ export default async function handler(
         });
         return res.status(200).json(stats);
       } catch (error) {
-        console.log(error);
         res.status(500).json({ error: "Error updating stats" });
       }
     case "DELETE":
@@ -52,10 +50,8 @@ export default async function handler(
             userEmail: body,
           },
         });
-        console.log(deleteStats);
         return res.status(200).json(deleteStats);
       } catch (error) {
-        console.log(error);
         res.status(500).json({ error: "Error deleting stats from the DB" });
       }
       break;
