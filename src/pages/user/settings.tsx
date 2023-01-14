@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
-import { render } from "react-dom";
-import { AnyRecord } from "dns";
-import { profile } from "console";
 import ProfilePicModal from "../../components/ProfilePicModal";
-import UserInfoModal from "../../components/userInfoModal";
+import UserInfoModal from "../../components/UserInfoModal";
 
 const Settings = () => {
   const { data: session } = useSession();
