@@ -84,8 +84,11 @@ const Quordle = () => {
       const body = { userEmail, wins, losses, totalScore };
 
       if (stats) {
+        console.log(body);
         updateData("quordle-stats", "PUT", body);
       } else {
+        console.log("here");
+        console.log(body);
         updateData("quordle-stats", "POST", body);
       }
     }

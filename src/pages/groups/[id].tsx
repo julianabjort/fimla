@@ -1,26 +1,29 @@
 import React, { useEffect, useState, useRef } from "react";
 import { observer, useLocalObservable } from "mobx-react-lite";
+import { useSession } from "next-auth/react";
+import { VscCircleLargeFilled, VscCircleFilled } from "react-icons/vsc";
+import { useRouter } from "next/router";
+import { HiRefresh, HiX, HiOutlineChat } from "react-icons/hi";
+import Image from "next/image";
+import Link from "next/link";
 import WordGrid from "../../components/WordGrid";
 import Keyboard from "../../components/Keyboard";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { VscCircleLargeFilled, VscCircleFilled } from "react-icons/vsc";
 import WordleStore from "../../stores/WordleStore";
-import { useRouter } from "next/router";
-import { readFileSync } from "fs";
-import { io } from "socket.io-client";
-import { HiRefresh, HiX } from "react-icons/hi";
+import LoadingIcon from "../../components/LoadingIcon";
 
 const Tournament = () => {
   const { data: session, status } = useSession();
-
+  const [chat, showChat] = useState(false);
   const [tournament, setTournament] = useState([]);
   const [inTournament, setInTournament] = useState(false);
   const [UsersInTournament, setUsersInTournament] = useState([]);
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
   const [modal, setModal] = useState(false);
-
+  const [myUser, setMyUser] = useState([]);
+  const [pPic, setProfilePic] = useState(
+    "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png"
+  );
   const tournamentName = tournament[0]?.["name"];
   const router = useRouter();
   const tournamentID = router.query["id"];
@@ -30,6 +33,9 @@ const Tournament = () => {
   const userEmail = userSession?.["email"];
   const store = useLocalObservable(() => WordleStore);
   const divRef = useRef<HTMLDivElement>(null);
+  const imageUser = myUser[0]?.["image"];
+  const noUserPic =
+    "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
 
   useEffect(() => {
     store.startGame();
@@ -41,7 +47,20 @@ const Tournament = () => {
       window.removeEventListener("keyup", store.handleKeyup);
     };
   }, [modal]);
-
+  const readUser = async () => {
+    try {
+      const response = await fetch(`/api/user`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const allUsers = await response.json();
+      const info = allUsers.filter((i: number) => i["email"] === userEmail);
+      setMyUser(info);
+      return info;
+    } catch (error) {
+      console.log("There was an error reading from the DB", error);
+    }
+  };
   const readAllTournaments = async () => {
     try {
       const response = await fetch(`/api/tournaments`, {
@@ -151,25 +170,41 @@ const Tournament = () => {
     readUsersInTournaments();
     readAllTournaments();
     readComments();
+    readUser();
   }, [session]);
   useEffect(() => {
     handleScroll();
   }, [comments]);
   useEffect(() => {
-    console.log(inTournament);
-  }, [inTournament]);
-  useEffect(() => {
     if (store.won || store.lost) {
       updateGuesses();
     }
   }, [store.roundComplete]);
-
+  useEffect(() => {
+    if (imageUser !== null) {
+      setProfilePic(imageUser);
+    } else {
+      setProfilePic(noUserPic);
+    }
+  }, [myUser]);
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      /* Screen is smaller than 768 and is on mobileview */
+      showChat(false);
+    }
+    if (window.screen.width >= 768) {
+      /* Screen is bigger than 768 and is probably on desktop or ipad */
+      showChat(true);
+    }
+  }, []);
   /**************/
   /* LOOP */
   /**************/
   // useEffect(() => {
   //   readComments();
   // });
+  if (status === "loading") return <LoadingIcon />;
+
   return (
     <div>
       {tournament ? (
@@ -177,6 +212,12 @@ const Tournament = () => {
           <div className="flex flex-col">
             {inTournament === true ? (
               <>
+                <button
+                  className="md:hidden fixed bottom-3 flex right-3 h-20 w-20 rounded-full bg-purple2 shadow-md items-center  justify-center"
+                  onClick={() => showChat(true)}
+                >
+                  <HiOutlineChat className="text-6xl text-white" />
+                </button>
                 {modal ? (
                   <div
                     onClick={() => setModal(false)}
@@ -249,9 +290,17 @@ const Tournament = () => {
                           key={i}
                           className="flex items-center gap-2 p-2 my-2 rounded-md bg-lightest dark:bg-darker"
                         >
-                          <VscCircleLargeFilled />
+                          <div className=" rounded-full h-12 w-12  overflow-hidden">
+                            <Image
+                              src={pPic}
+                              width={100}
+                              height={100}
+                              alt="image"
+                              priority
+                            />
+                          </div>
                           <p>{user["userName"]}</p>
-                          <VscCircleFilled />
+                          <VscCircleFilled className="text-gray-300" />
                         </div>
                       ))}
                     </div>
@@ -265,42 +314,54 @@ const Tournament = () => {
                         </Link>
                       </div>
                     </div>
-                    <div className="fixed bottom-0 left-0 right-0 md:relative md:row-start-2 md:row-span-3 px-5 py-3 mx-2 rounded-md dark:bg-dark">
-                      <h2 className="pb-2 heading-2">Discussion</h2>
-                      <div
-                        ref={divRef}
-                        className={`flex flex-col bg-lightest dark:bg-darker rounded-t-md p-5 items-end overflow-x-hidden h-48 overflow-y-auto`}
-                      >
-                        {comments.map((user, i) => (
-                          <div key={i}>
-                            <p className="pl-1 text-xs">
-                              {`${i["userName"]}`.split(" ")[0]}
-                            </p>
-                            <div
-                              key={i}
-                              className="flex flex-col p-2 my-1 rounded-md bg-lighter dark:bg-dark w-fit"
-                            >
-                              <p className="text-s">{user["text"]}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="flex p-4 mb-1 bg-lightest dark:bg-darker rounded-b-md">
-                        <input
-                          type="text"
-                          className="p-1 w-full rounded-md dark:bg-dark"
-                          onChange={(e) => handleComment(e)}
-                          value={comment}
-                        />
-                        <button
-                          value="Submit"
-                          onClick={addComment}
-                          className="h-10 px-4 ml-4 rounded-md bg-light dark:bg-dark"
+
+                    {chat && (
+                      <div className="fixed bottom-0 left-0 right-0 md:relative md:row-start-2 md:row-span-3 px-5 py-3 mx-2 rounded-md bg-lightest dark:bg-dark">
+                        <div className="flex justify-between">
+                          <h2 className="pb-2 heading-2">Discussion</h2>
+                          <button
+                            className="md:hidden"
+                            onClick={() => showChat(false)}
+                          >
+                            <HiX className="text-xl" />
+                          </button>
+                        </div>
+
+                        <div
+                          ref={divRef}
+                          className={`flex flex-col bg-white dark:bg-darker rounded-t-md p-5 items-end overflow-x-hidden h-48 overflow-y-auto`}
                         >
-                          Send
-                        </button>
+                          {comments.map((user, i) => (
+                            <div key={i}>
+                              <p className="pl-1 text-xs">
+                                {`${user["userName"]}`.split(" ")[0]}
+                              </p>
+                              <div
+                                key={i}
+                                className="flex flex-col p-2 my-1 rounded-md bg-lighter dark:bg-dark w-fit"
+                              >
+                                <p className="text-s">{user["text"]}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="flex p-4 mb-1 bg-lightest dark:bg-darker rounded-b-md">
+                          <input
+                            type="text"
+                            className="p-1 w-full rounded-md dark:bg-dark"
+                            onChange={(e) => handleComment(e)}
+                            value={comment}
+                          />
+                          <button
+                            value="Submit"
+                            onClick={addComment}
+                            className="h-10 px-4 ml-4 rounded-md bg-light dark:bg-dark"
+                          >
+                            Send
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    )}
                     <div className="row-start-2 h-fit flex flex-col px-5 py-3 mx-2 rounded-md dark:bg-dark">
                       <div className="flex justify-between">
                         <h2 className="heading-2">Leaderboard</h2>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import LoadingIcon from "../components/LoadingIcon";
 
 const Groups = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const userID = session?.user?.["id"];
   const userEmail = session?.user?.["email"];
   const userName = session?.user?.["name"];
@@ -61,6 +62,8 @@ const Groups = () => {
     } catch (error) {
       console.log("error: ", error);
     }
+    readTournaments();
+    findUsersInTournaments();
   };
 
   useEffect(() => {
@@ -71,34 +74,34 @@ const Groups = () => {
     readTournaments();
     function1();
   }, [UserInTournament]);
+  if (status === "loading") return <LoadingIcon />;
+
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">
       <h1 className="mb-5 heading-1">Create a group</h1>
-      <div className="flex flex-col justify-center w-4/5 lg:w-3/4 p-6 lg:p-10 rounded-md bg-lighter dark:bg-darker">
+      <div className="flex flex-col justify-center w-4/5 lg:w-3/4 p-6 lg:p-10 rounded-md bg-lightest dark:bg-darker">
         {session ? (
           <>
-            <form action="" method="POST" className="flex flex-col">
-              <label
-                htmlFor=""
-                className="border-b-[0.5px] pb-1 heading-2 mb-4"
+            {/* <form action="#" method="POST" className="flex flex-col"> */}
+            <label htmlFor="" className="border-b-[0.5px] pb-1 heading-2 mb-4">
+              Group Name
+            </label>
+            <div className="flex flex-col lg:flex-row justify-evenly">
+              <input
+                type="text"
+                className="p-1 rounded-md lg:w-full lg:h-10 dark:bg-dark"
+                onChange={(e) => setName(e.target.value)}
+                value={tournamentName}
+              />
+              <button
+                // value="Submit"
+                onClick={createTournament}
+                className="mt-3 px-4 h-10 lg:ml-4 lg:mt-0 rounded-md bg-light dark:bg-dark"
               >
-                Group Name
-              </label>
-              <div className="flex flex-col lg:flex-row justify-evenly">
-                <input
-                  type="text"
-                  className="p-1 rounded-md lg:w-full lg:h-10 dark:bg-dark"
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <button
-                  value="Submit"
-                  onClick={createTournament}
-                  className="mt-3 px-4 h-10 lg:ml-4 lg:mt-0 rounded-md bg-light dark:bg-dark"
-                >
-                  Create
-                </button>
-              </div>
-            </form>
+                Create
+              </button>
+            </div>
+            {/* </form> */}
             <div className="flex flex-col mt-10">
               <h1 className="border-b-[0.5px] pb-1 heading-2 mb-4">
                 Your groups

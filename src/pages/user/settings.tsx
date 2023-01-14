@@ -1,20 +1,47 @@
 import React, { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
+import Image from "next/image";
+import ProfilePicModal from "../../components/ProfilePicModal";
+import UserInfoModal from "../../components/UserInfoModal";
+import LoadingIcon from "../../components/LoadingIcon";
 
 const Settings = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [userInfo, setUserInfo] = useState([]);
   const [userName, setUserName] = useState("");
   const [userLocation, setUserLocation] = useState("");
   const [userDob, setUserDob] = useState("");
+  const [myUser, setMyUser] = useState([]);
+  const [changeProfilePic, showProfileModal] = useState(false);
+  const [changeInfo, showInfoModal] = useState(false);
+  const [pPic, setProfilePic] = useState(
+    "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png"
+  );
 
+  const nameUser = myUser[0]?.["name"];
+  const imageUser =
+    myUser[0]?.["image"] ||
+    "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
   const userSession = session?.user;
   const userId = session?.user?.["id"];
   const userEmail = session?.user?.["email"];
+
   const user = session?.user;
+  const profilePic = session?.user?.["image"];
+  const noUserPic =
+    "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
+
   useEffect(() => {
     readUserInfo();
+    readUser();
   }, [session]);
+  useEffect(() => {
+    if (imageUser !== null) {
+      setProfilePic(imageUser);
+    } else {
+      setProfilePic(noUserPic);
+    }
+  }, [myUser]);
   useEffect(() => {
     if (userLocation === "") {
       setUserLocation(userInfo[0]?.["userLocation"]);
@@ -43,31 +70,19 @@ const Settings = () => {
       console.log("There was an error reading from the DB", error);
     }
   };
-  const updateUserInfo = async (e: any): Promise<any> => {
-    e.preventDefault();
-    const body = { userEmail, userName, userDob, userLocation };
-    if (userInfo[0]) {
-      try {
-        const response = fetch(`/api/userinfo`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-      } catch (error) {
-        console.log("There was an error deleting from the DB ", error);
-      }
-    } else {
-      try {
-        const response = fetch(`/api/userinfo`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-      } catch (error) {
-        console.log("There was an error deleting from the DB ", error);
-      }
+  const readUser = async () => {
+    try {
+      const response = await fetch(`/api/user`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const allUsers = await response.json();
+      const info = allUsers.filter((i: number) => i["email"] === userEmail);
+      setMyUser(info);
+      return info;
+    } catch (error) {
+      console.log("There was an error reading from the DB", error);
     }
-    window.location.reload();
   };
 
   const deleteUser = async (e: any) => {
@@ -86,7 +101,7 @@ const Settings = () => {
   };
 
   const deleteUserint = async () => {
-    console.log("here");
+    // console.log("here");
     try {
       const response = await fetch(`/api/single-tournament`, {
         method: "GET",
@@ -115,86 +130,98 @@ const Settings = () => {
       console.log("There was an error in deleting from the DB", error);
     }
   };
-  useEffect(() => {}, [session]);
+  if (status === "loading") return <LoadingIcon />;
+
   return (
     <div className="flex flex-col gap-y-4">
       <h1 className="my-10 heading-1">Settings</h1>
-      <div className="flex flex-col w-full p-6 rounded-md bg-lighter dark:bg-darker">
+      <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 w-full p-6 rounded-md">
         {session ? (
           <>
-            <h1 className="mb-10 heading-1">Hey {session.user?.name}</h1>
-            <h2 className="border-b-[0.5px] pb-1 heading-2">
-              User Information
-            </h2>
-            <div className="flex mb-4">
-              <form
-                className="flex flex-col mb-4"
-                action="#"
-                method="POST"
-                onSubmit={(e) => updateUserInfo(e)}
-              >
-                <label htmlFor="username">
-                  What is your favourite nickname? {userInfo[0]?.["username"]}
-                </label>
-                <input
-                  onChange={(e) => setUserName(e.target.value)}
-                  name="username"
-                  id="username"
-                  type="text"
-                  className="p-1 mb-5 rounded-md"
-                />
-                <label htmlFor="userLocation">
-                  Tell us where you are in the world!{" "}
-                  {userInfo[0]?.["userLocation"]}
-                </label>
-                <input
-                  onChange={(e) => setUserLocation(e.target.value)}
-                  name="userLocation"
-                  id="userLocation"
-                  type="text"
-                  className="p-1 mb-5 rounded-md"
-                />
-                <label htmlFor="userDob">
-                  Date of birth! {userInfo[0]?.["userDob"]}
-                </label>
-                <input
-                  onChange={(e) => setUserDob(e.target.value)}
-                  name="userDob"
-                  id="userDob"
-                  type="date"
-                  className="p-1 mb-5 rounded-md"
-                />
-                <button className="w-16 h-10 ml-4 rounded-md bg-light dark:bg-dark">
-                  Update
+            {changeProfilePic && (
+              <ProfilePicModal onClick={() => showProfileModal(false)} />
+            )}
+            {changeInfo && (
+              <UserInfoModal
+                onClick={() => showInfoModal(false)}
+                userInfo={userInfo}
+              />
+            )}
+            <div className="col-span-2">
+              <h1 className="heading-1 text-center">
+                Hey {session.user?.name}
+              </h1>
+            </div>
+            <div className="grid col-start-2 row-start-2 justify-center p-4">
+              <div className="flex flex-col gap-6">
+                <div className=" rounded-full h-56 w-56  overflow-hidden shadow-lg">
+                  <Image
+                    src={pPic}
+                    width={400}
+                    height={400}
+                    alt="image"
+                    priority
+                  />
+                </div>
+                <button
+                  className="btn-primary w-1/2 self-center"
+                  onClick={() => showProfileModal(true)}
+                >
+                  Edit
                 </button>
-              </form>
+              </div>
             </div>
-            <h2 className="border-b-[0.5px] pb-1 mt-2 heading-2">
-              Reset Account
-            </h2>
-            <div className="flex flex-col gap-2 mb-4">
-              <p>Clear your stats and game history</p>
-              <button
-                className="h-10 rounded-md w-28 bg-light"
-                onClick={() => deleteStats(userEmail)}
-              >
-                Reset Stats
-              </button>
+            <div className="grid col-start-1 row-start-2 bg-white dark:bg-darker shadow-md rounded-md p-4">
+              <h2 className="border-b-[0.5px] pb-1 heading-2">About Me</h2>
+              <div className="flex flex-col justify-evenly">
+                <p className="text-xs ml-1 mt-2">Name</p>
+                <p className="bg-gray-100 dark:bg-dark p-2 mb-1 h-10 rounded-md ">
+                  {userInfo[0]?.["username"]}
+                </p>
+                <p className="text-xs ml-1">Location</p>
+                <p className="bg-gray-100 dark:bg-dark p-2 mb-1 h-10 rounded-md ">
+                  {userInfo[0]?.["userLocation"]}
+                </p>
+                <p className="text-xs ml-1">Date of Birth</p>
+                <p className="bg-gray-100 dark:bg-dark p-2 mb-1 h-10 rounded-md ">
+                  {userInfo[0]?.["userDob"]}
+                </p>
+                <button
+                  className="btn-primary mt-3"
+                  onClick={() => showInfoModal(true)}
+                >
+                  Edit
+                </button>
+              </div>
             </div>
-            <h2 className="border-b-[0.5px] pb-1 mt-2 heading-2">
-              Delete Account
-            </h2>
-            <div className="flex flex-col gap-2 mb-4">
-              <p>
-                Want to delete your account? Note: This action can not be redone
-              </p>
-              <button
-                className="w-32 h-10 rounded-md bg-light"
-                // onClick={() => deleteUser(userEmail)}
-                onClick={() => deleteUserint()}
-              >
+            <div className="bg-white dark:bg-darker shadow-md rounded-md p-4">
+              <h2 className="border-b-[0.5px] pb-1 mt-2 heading-2">
+                Reset Account
+              </h2>
+              <div className="flex flex-col gap-2 mb-4">
+                <p className="text-sm">Clear your stats and game history</p>
+                <button
+                  className="btn-secondary w-2/3"
+                  onClick={() => deleteStats(userEmail)}
+                >
+                  Reset Stats
+                </button>
+              </div>
+            </div>
+            <div className="bg-white dark:bg-darker shadow-md rounded-md p-4">
+              <h2 className="border-b-[0.5px] pb-1 mt-2 heading-2">
                 Delete Account
-              </button>
+              </h2>
+              <div className="flex flex-col mb-4">
+                <p className="text-sm">Want to delete your account?</p>
+                <p className="text-xs"> Note: This action can not be redone</p>
+                <button
+                  className="btn-secondary w-2/3 mt-2"
+                  onClick={() => deleteUser(userEmail)}
+                >
+                  Delete Account
+                </button>
+              </div>
             </div>
           </>
         ) : (

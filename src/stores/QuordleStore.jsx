@@ -239,7 +239,7 @@ export default {
   },
   calculateScore() {
     const unUsedLetters = (180 - this.allGuessedLetters.length);
-    this.totalScore = unUsedLetters + this.correctLetters.length / 4;
+    this.totalScore = (unUsedLetters + this.correctLetters.length / 4).toFixed[0];
     this.scorePercentage = (this.totalScore / 110) * 100;
     console.log("usused letters: ", unUsedLetters)
     console.log("all guessed letters: ", this.allGuessedLetters.length)

@@ -53,7 +53,7 @@ const Leaderboard = ({ wordleSessionStats, quordleSessionStats }) => {
           Quordle
         </h3>
       </div>
-      <section className="flex w-full p-10 rounded-md bg-lighter dark:bg-darker">
+      <section className="flex w-full p-10 rounded-md bg-lightest dark:bg-darker">
         <table className="w-full">
           <tbody>
             <tr>

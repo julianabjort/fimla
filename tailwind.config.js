@@ -21,6 +21,7 @@ module.exports = {
         error: "#ff5454",
         green: "#17b787",
         yellow: "#efc64a",
+        purple2: "#cb99ff",
       },
       transitionDelay: {
         delay0: "0ms",
