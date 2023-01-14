@@ -136,7 +136,7 @@ const Settings = () => {
   return (
     <div className="flex flex-col gap-y-4">
       <h1 className="my-10 heading-1">Settings</h1>
-      <div className="flex flex-col md:grid md:grid-cols-2 gap-6 w-full p-6 rounded-md bg-lightest dark:bg-darker">
+      <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 w-full p-6 rounded-md">
         {session ? (
           <>
             {changeProfilePic && (
@@ -149,13 +149,13 @@ const Settings = () => {
               />
             )}
             <div className="col-span-2">
-              <h1 className="mb-10 heading-1 text-center">
+              <h1 className="heading-1 text-center">
                 Hey {session.user?.name}
               </h1>
             </div>
-            <div className="grid col-start-2 row-start-2 justify-center">
+            <div className="grid col-start-2 row-start-2 justify-center p-4">
               <div className="flex flex-col gap-6">
-                <div className=" rounded-full h-56 w-56  overflow-hidden">
+                <div className=" rounded-full h-56 w-56  overflow-hidden shadow-lg">
                   <Image
                     src={pPic}
                     width={400}
@@ -165,28 +165,26 @@ const Settings = () => {
                   />
                 </div>
                 <button
-                  className="btn-primary"
+                  className="btn-primary w-1/2 self-center"
                   onClick={() => showProfileModal(true)}
                 >
                   Edit
                 </button>
               </div>
             </div>
-            <div className="grid col-start-1 row-start-2">
-              <h2 className="border-b-[0.5px] pb-1 heading-2">
-                User Information
-              </h2>
-              <div className="flex flex-col self-end">
+            <div className="grid col-start-1 row-start-2 bg-white dark:bg-darker shadow-md rounded-md p-4">
+              <h2 className="border-b-[0.5px] pb-1 heading-2">About Me</h2>
+              <div className="flex flex-col justify-evenly">
                 <p className="text-xs ml-1 mt-2">Name</p>
-                <p className="bg-gray-100 p-2 mb-1 h-10 rounded-md ">
+                <p className="bg-gray-100 dark:bg-dark p-2 mb-1 h-10 rounded-md ">
                   {userInfo[0]?.["username"]}
                 </p>
                 <p className="text-xs ml-1">Location</p>
-                <p className="bg-gray-100 p-2 mb-1 h-10 rounded-md ">
+                <p className="bg-gray-100 dark:bg-dark p-2 mb-1 h-10 rounded-md ">
                   {userInfo[0]?.["userLocation"]}
                 </p>
                 <p className="text-xs ml-1">Date of Birth</p>
-                <p className="bg-gray-100 p-2 mb-1 h-10 rounded-md ">
+                <p className="bg-gray-100 dark:bg-dark p-2 mb-1 h-10 rounded-md ">
                   {userInfo[0]?.["userDob"]}
                 </p>
                 <button
@@ -197,7 +195,7 @@ const Settings = () => {
                 </button>
               </div>
             </div>
-            <div>
+            <div className="bg-white dark:bg-darker shadow-md rounded-md p-4">
               <h2 className="border-b-[0.5px] pb-1 mt-2 heading-2">
                 Reset Account
               </h2>
@@ -211,7 +209,7 @@ const Settings = () => {
                 </button>
               </div>
             </div>
-            <div className="row-start-4">
+            <div className="bg-white dark:bg-darker shadow-md rounded-md p-4">
               <h2 className="border-b-[0.5px] pb-1 mt-2 heading-2">
                 Delete Account
               </h2>
