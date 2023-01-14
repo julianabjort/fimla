@@ -3,9 +3,10 @@ import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import ProfilePicModal from "../../components/ProfilePicModal";
 import UserInfoModal from "../../components/UserInfoModal";
+import LoadingIcon from "../../components/LoadingIcon";
 
 const Settings = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [userInfo, setUserInfo] = useState([]);
   const [userName, setUserName] = useState("");
   const [userLocation, setUserLocation] = useState("");
@@ -129,6 +130,7 @@ const Settings = () => {
       console.log("There was an error in deleting from the DB", error);
     }
   };
+  if (status === "loading") return <LoadingIcon />;
 
   return (
     <div className="flex flex-col gap-y-4">

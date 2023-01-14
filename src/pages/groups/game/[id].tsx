@@ -9,6 +9,7 @@ import { readFileSync } from "fs";
 import { io } from "socket.io-client";
 import Link from "next/link";
 import { HiRefresh, HiArrowNarrowLeft } from "react-icons/hi";
+import LoadingIcon from "../../../components/LoadingIcon";
 
 const Tournament = () => {
   const { data: session, status } = useSession();
@@ -122,6 +123,7 @@ const Tournament = () => {
       updateGuesses();
     }
   }, [store.roundComplete]);
+  if (status === "loading") return <LoadingIcon />;
 
   return (
     <div>

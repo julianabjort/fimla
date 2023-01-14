@@ -60,6 +60,7 @@ const UserInfoModal = ({ onClick, userInfo }) => {
           type="text"
           className="p-1 mb-5 rounded-md"
         />
+        {userInfo[0]?.["username"]}
         <label htmlFor="userLocation">
           Tell us where you are in the world!
         </label>
@@ -78,9 +79,7 @@ const UserInfoModal = ({ onClick, userInfo }) => {
           type="date"
           className="p-1 mb-5 rounded-md"
         />
-        <button className="w-16 h-10 ml-4 rounded-md bg-light dark:bg-dark">
-          Update
-        </button>
+        <button className="btn-primary">Update</button>
       </form>
     </div>
   );

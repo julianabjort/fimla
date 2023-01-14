@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import LoadingIcon from "../components/LoadingIcon";
 
 const Groups = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const userID = session?.user?.["id"];
   const userEmail = session?.user?.["email"];
   const userName = session?.user?.["name"];
@@ -73,6 +74,8 @@ const Groups = () => {
     readTournaments();
     function1();
   }, [UserInTournament]);
+  if (status === "loading") return <LoadingIcon />;
+
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">
       <h1 className="mb-5 heading-1">Create a group</h1>

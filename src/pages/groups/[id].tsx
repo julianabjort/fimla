@@ -9,6 +9,7 @@ import Link from "next/link";
 import WordGrid from "../../components/WordGrid";
 import Keyboard from "../../components/Keyboard";
 import WordleStore from "../../stores/WordleStore";
+import LoadingIcon from "../../components/LoadingIcon";
 
 const Tournament = () => {
   const { data: session, status } = useSession();
@@ -202,6 +203,8 @@ const Tournament = () => {
   // useEffect(() => {
   //   readComments();
   // });
+  if (status === "loading") return <LoadingIcon />;
+
   return (
     <div>
       {tournament ? (
