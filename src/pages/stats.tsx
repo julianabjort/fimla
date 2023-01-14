@@ -100,9 +100,6 @@ const Stats = ({
     if (bee) initBeeStats();
   }, [bee]);
 
-  useEffect(() => {
-    console.log(router["components"]);
-  });
   if (status === "loading") return <LoadingIcon />;
   return (
     <div>

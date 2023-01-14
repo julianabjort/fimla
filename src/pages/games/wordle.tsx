@@ -1,16 +1,19 @@
-import React from "react";
+import Link from "next/link";
 import { observer, useLocalObservable } from "mobx-react-lite";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+
 import WordGrid from "../../components/WordGrid";
 import Keyboard from "../../components/Keyboard";
 import WordleStore from "../../stores/WordleStore.jsx";
-import { useSession } from "next-auth/react";
 import OnboardingModal from "../../components/OnboardingModal";
-import Link from "next/link";
 import getUserStats from "../../../lib/getUserStats";
+import updateData from "../../../lib/updateData";
 
 const Wordle = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const userSession = session?.user;
+  const user = session?.user?.email;
   const [stats, setStats] = useState({
     wins: 0,
     losses: 0,
@@ -21,7 +24,6 @@ const Wordle = () => {
   const store = useLocalObservable(() => WordleStore);
   const [onboardingModal, setOnboardingModal] = useState(false);
   const [wordleVisited, setWordleVisited] = useState(true);
-  const [test, setTest] = useState();
 
   useEffect(() => {
     store.startGame();
@@ -47,62 +49,31 @@ const Wordle = () => {
     }
   }, [wordleVisited]);
 
-  const readWordleStats = async () => {
-    if (session) {
-      const userSession = session?.user;
-      try {
-        const response = await fetch(`/api/wordle-stats`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-        const allStats = await response.json();
-        const myStats = allStats.filter(
-          (i: { userEmail: string | null | undefined }) =>
-            i.userEmail === userSession?.email
-        );
-        setStats(myStats);
-        return myStats;
-      } catch (error) {
-        console.log("error: ", error);
-      }
-    } else {
-      console.log("no session");
-    }
-  };
+  const getStats = async () =>
+    getUserStats("wordle-stats", userSession).then((result) =>
+      setStats(result[0])
+    );
 
   useEffect(() => {
     console.log(store.word);
-    const userSession = session?.user;
-    const stats = async () =>
-      getUserStats("wordle-stats", userSession).then((result) =>
-        setTest(result)
-      );
-
-    stats();
-  }, []);
-
-  useEffect(() => {
-    readWordleStats();
+    getStats();
   }, [session]);
 
   const addWordleStats = async () => {
-    readWordleStats();
     if (session) {
-      const user = session?.user?.email;
       let wins = 0;
       let losses = 0;
       let totalScore = 0;
 
-      if (stats[0]) {
-        const userStats = stats[0];
-        totalScore = userStats.totalScore + store.totalScore;
+      if (stats) {
+        totalScore = stats.totalScore + store.totalScore;
         if (store.won) {
-          wins = userStats.wins + 1;
-          losses = userStats.losses;
+          wins = stats.wins + 1;
+          losses = stats.losses;
         }
         if (store.lost) {
-          losses = userStats.losses + 1;
-          wins = userStats.wins;
+          losses = stats.losses + 1;
+          wins = stats.wins;
         }
       } else {
         totalScore = store.totalScore;
@@ -114,26 +85,10 @@ const Wordle = () => {
         }
       }
       const body = { user, totalScore, wins, losses };
-      if (stats[0]) {
-        try {
-          const response = await fetch(`/api/wordle-stats`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-          });
-        } catch (error) {
-          console.log("error: ", error);
-        }
+      if (stats) {
+        updateData("wordle-stats", "PUT", body);
       } else {
-        try {
-          const response = await fetch(`/api/wordle-stats`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-          });
-        } catch (error) {
-          console.log("error: ", error);
-        }
+        updateData("wordle-stats", "POST", body);
       }
     }
   };
