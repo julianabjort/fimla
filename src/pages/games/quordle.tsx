@@ -63,7 +63,7 @@ const Quordle = () => {
       let losses = 0;
       let totalScore = 0;
       if (stats) {
-        totalScore = stats.totalScore + store.totalScore;
+        totalScore = Math.round(stats.totalScore + store.totalScore);
         if (store.wonAll) {
           wins = stats.wins + 1;
           losses = stats.losses;
@@ -73,7 +73,7 @@ const Quordle = () => {
           wins = stats.wins;
         }
       } else {
-        totalScore = store.totalScore;
+        totalScore = Math.round(store.totalScore);
         if (store.wonAll) {
           wins = 1;
         }
@@ -82,6 +82,7 @@ const Quordle = () => {
         }
       }
       const body = { userEmail, wins, losses, totalScore };
+      console.log(body);
 
       if (stats) {
         updateData("quordle-stats", "PUT", body);

@@ -21,7 +21,7 @@ export default async function handler(
           data: {
             userEmail: body.userEmail,
             userName: body.userName,
-            tournamentId: body.tournamentID,
+            tournamentId: body.tournamentId,
             tournamentName: body.tournamentName,
           },
         });
@@ -35,7 +35,7 @@ export default async function handler(
           where: {
             userEmail_tournamentId: {
               userEmail: body.userEmail,
-              tournamentId: body.tournamentID,
+              tournamentId: body.tournamentId,
             },
           },
           data: {

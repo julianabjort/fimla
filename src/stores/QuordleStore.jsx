@@ -134,9 +134,7 @@ export default {
     this.error = "";
     if (words.includes(this.guesses[this.currentGuess])) {
       this.currentGuess += 1;
-    } else {
-      this.error = "Not a valid word";
-    }
+    }   
     if (words.includes(this.guesses2[this.currentGuess2])) {
       this.currentGuess2 += 1;
     }
@@ -145,6 +143,9 @@ export default {
     }
     if (words.includes(this.guesses4[this.currentGuess4])) {
       this.currentGuess4 += 1;
+    }
+    else {
+      this.error = "Not a valid word";
     }
     if (this.roundComplete) {
       console.log("Round Complete");
@@ -239,7 +240,7 @@ export default {
   },
   calculateScore() {
     const unUsedLetters = (180 - this.allGuessedLetters.length);
-    this.totalScore = (unUsedLetters + this.correctLetters.length / 4).toFixed[0];
+    this.totalScore = (unUsedLetters + this.correctLetters.length / 4);
     this.scorePercentage = (this.totalScore / 110) * 100;
     console.log("usused letters: ", unUsedLetters)
     console.log("all guessed letters: ", this.allGuessedLetters.length)

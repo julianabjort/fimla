@@ -54,6 +54,7 @@ const Tournament = () => {
     }
     const totalScore = usersInTournament[0]?.["totalScore"] + store.totalScore;
     const body = { userEmail, tournamentId, totalScore, gamesPlayed };
+    console.log(body);
     updateData("single-tournament", "PUT", body);
   };
 
@@ -68,7 +69,7 @@ const Tournament = () => {
     }
   }, [store.roundComplete]);
   if (status === "loading") return <LoadingIcon isPage />;
-
+  console.log(store.word);
   return (
     <div>
       {tournament ? (
