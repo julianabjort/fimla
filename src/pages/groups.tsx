@@ -83,9 +83,11 @@ const Groups = () => {
               <h2 className="border-b-[0.5px] pb-1 heading-2">
                 Create your account in a few seconds
               </h2>
-              <button className="h-10 px-4 rounded-md bg-light dark:bg-dark">
-                Get started
-              </button>
+              <Link href="/api/auth/signin">
+                <button className="h-10 px-4 rounded-md bg-light dark:bg-dark">
+                  Get started
+                </button>
+              </Link>
               <div className="flex flex-col items-center">
                 <p className="text-xs">Already have an account?</p>
                 <Link className="text-xs" href="/api/auth/signin">

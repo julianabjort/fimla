@@ -7,6 +7,7 @@ import UserInfoModal from "../../components/UserInfoModal";
 import LoadingIcon from "../../components/LoadingIcon";
 import getByUserEmail from "../../../lib/getByUserEmail";
 import deleteData from "../../../lib/deleteData";
+import Link from "next/link";
 
 const Settings = () => {
   const { data: session, status } = useSession();
@@ -16,7 +17,7 @@ const Settings = () => {
   const [user, setUser] = useState([]);
   const [changeProfilePic, showProfilePicModal] = useState(false);
   const [changeInfo, showInfoModal] = useState(false);
-  const [imageSrc, setImageSrcReady ] = useState("")
+  const [imageSrc, setImageSrcReady] = useState("");
 
   const defaultProfilePic =
     "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
@@ -42,9 +43,8 @@ const Settings = () => {
   }, [user]);
 
   useEffect(() => {
-    if (imageSrc)
-    setProfilePic(imageSrc)
-  }, [imageSrc])
+    if (imageSrc) setProfilePic(imageSrc);
+  }, [imageSrc]);
 
   const getUserInfo = async () => {
     getByUserEmail("userinfo", userSession).then((result) =>
@@ -75,7 +75,10 @@ const Settings = () => {
         {session ? (
           <>
             {changeProfilePic && (
-              <ProfilePicModal setImageSrcReady={setImageSrcReady} closeModal={() => showProfilePicModal(false)} />
+              <ProfilePicModal
+                setImageSrcReady={setImageSrcReady}
+                closeModal={() => showProfilePicModal(false)}
+              />
             )}
             {changeInfo && (
               <UserInfoModal
@@ -167,15 +170,23 @@ const Settings = () => {
           </>
         ) : (
           <>
-            <div className="flex flex-col items-center gap-4">
-              <h2 className="border-b-[0.5px] pb-1 heading-2">
-                You are not signed in
-              </h2>
-              <button className="h-10 px-4 rounded-md bg-light">
-                Create a new account
-              </button>
-              <p>or</p>
-              <button className="h-10 px-4 rounded-md bg-light">Sign in</button>
+            <div className="flex flex-col col-start-1 col-end-3 self-center justify-center p-6 rounded-md lg:mx-24 lg:p-10 bg-lightest dark:bg-darker">
+              <div className="flex flex-col items-center gap-4">
+                <h2 className="border-b-[0.5px] pb-1 heading-2">
+                  Create your account in a few seconds
+                </h2>
+                <Link href="/api/auth/signin">
+                  <button className="h-10 px-4 rounded-md bg-light dark:bg-dark">
+                    Get started
+                  </button>
+                </Link>
+                <div className="flex flex-col items-center">
+                  <p className="text-xs">Already have an account?</p>
+                  <Link className="text-xs" href="/api/auth/signin">
+                    Sign in
+                  </Link>
+                </div>
+              </div>
             </div>
           </>
         )}
