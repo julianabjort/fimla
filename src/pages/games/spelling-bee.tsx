@@ -103,6 +103,7 @@ const SpellingBee = () => {
       updateData("bee-stats", "POST", body);
     }
   };
+
   if (!store.letters.length || status === "loading")
     return <LoadingIcon isPage />;
 
@@ -211,7 +212,9 @@ const SpellingBee = () => {
           </div>
         </div>
       </div>
-      <button onClick={addBeeStats}>Save score & quit</button>
+      <button className="btn-primary mt-5" onClick={addBeeStats}>
+        Save score & quit
+      </button>
     </div>
   );
 };
