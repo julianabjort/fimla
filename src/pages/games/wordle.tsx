@@ -152,6 +152,10 @@ const Wordle = () => {
         </>
       )}
       <Keyboard store={store} />
+      <div className="delay-delay3"></div>
+      <div className="delay-delay2"></div>
+      <div className="delay-delay1"></div>
+      <div className="delay-delay0"></div>
     </div>
   );
 };
