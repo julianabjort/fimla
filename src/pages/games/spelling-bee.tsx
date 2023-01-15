@@ -8,7 +8,7 @@ import SpellingBeeStore from "../../stores/SpellingBeeStore.jsx";
 import SpellingBeeGrid from "../../components/SpellingBeeGrid";
 import OnboardingModal from "../../components/OnboardingModal";
 import ProgressBar from "../../components/ProgressBar";
-import getUserStats from "../../../lib/getUserStats";
+import getByUserEmail from "../../../lib/getByUserEmail";
 import updateData from "../../../lib/updateData";
 import LoadingIcon from "../../components/LoadingIcon";
 
@@ -77,7 +77,7 @@ const SpellingBee = () => {
   }, [store.error]);
 
   const getStats = async () =>
-    getUserStats("bee-stats", userSession).then((result) =>
+    getByUserEmail("bee-stats", userSession).then((result) =>
       setStats(result[0])
     );
   useEffect(() => {
@@ -86,7 +86,7 @@ const SpellingBee = () => {
 
   const addBeeStats = async () => {
     let totalScore = {};
-    if (session) {
+    if (session && stats) {
       totalScore =
         stats.totalScore +
         store.fourLetterWords.length +

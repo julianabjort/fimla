@@ -135,7 +135,7 @@ const Settings = () => {
   return (
     <div className="flex flex-col gap-y-4">
       <h1 className="my-10 heading-1">Settings</h1>
-      <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 w-full p-6 rounded-md">
+      <div className="flex flex-col w-full gap-6 p-6 rounded-md lg:grid lg:grid-cols-2">
         {session ? (
           <>
             {changeProfilePic && (
@@ -148,67 +148,69 @@ const Settings = () => {
               />
             )}
             <div className="col-span-2">
-              <h1 className="heading-1 text-center">
+              <h1 className="text-center heading-1">
                 Hey {session.user?.name}
               </h1>
             </div>
-            <div className="grid col-start-2 row-start-2 justify-center p-4">
+            <div className="grid justify-center col-start-2 row-start-2 p-4">
               <div className="flex flex-col gap-6">
-                <div className=" rounded-full h-56 w-56  overflow-hidden shadow-lg">
+                <div className="w-56 h-56 overflow-hidden rounded-full shadow-lg ">
                   <Image
                     src={pPic}
                     width={400}
                     height={400}
+                    placeholder="blur"
+                    blurDataURL="/user.png"
                     alt="image"
                     priority
                   />
                 </div>
                 <button
-                  className="btn-primary w-1/2 self-center"
+                  className="self-center w-1/2 btn-primary"
                   onClick={() => showProfileModal(true)}
                 >
                   Edit
                 </button>
               </div>
             </div>
-            <div className="grid col-start-1 row-start-2 bg-white dark:bg-darker shadow-md rounded-md p-4">
+            <div className="grid col-start-1 row-start-2 p-4 bg-white rounded-md shadow-md dark:bg-darker">
               <h2 className="border-b-[0.5px] pb-1 heading-2">About Me</h2>
               <div className="flex flex-col justify-evenly">
-                <p className="text-xs ml-1 mt-2">Name</p>
-                <p className="bg-gray-100 dark:bg-dark p-2 mb-1 h-10 rounded-md ">
+                <p className="mt-2 ml-1 text-xs">Name</p>
+                <p className="h-10 p-2 mb-1 bg-gray-100 rounded-md dark:bg-dark ">
                   {userInfo[0]?.["username"]}
                 </p>
-                <p className="text-xs ml-1">Location</p>
-                <p className="bg-gray-100 dark:bg-dark p-2 mb-1 h-10 rounded-md ">
+                <p className="ml-1 text-xs">Location</p>
+                <p className="h-10 p-2 mb-1 bg-gray-100 rounded-md dark:bg-dark ">
                   {userInfo[0]?.["userLocation"]}
                 </p>
-                <p className="text-xs ml-1">Date of Birth</p>
-                <p className="bg-gray-100 dark:bg-dark p-2 mb-1 h-10 rounded-md ">
+                <p className="ml-1 text-xs">Date of Birth</p>
+                <p className="h-10 p-2 mb-1 bg-gray-100 rounded-md dark:bg-dark ">
                   {userInfo[0]?.["userDob"]}
                 </p>
                 <button
-                  className="btn-primary mt-3"
+                  className="mt-3 btn-primary"
                   onClick={() => showInfoModal(true)}
                 >
                   Edit
                 </button>
               </div>
             </div>
-            <div className="bg-white dark:bg-darker shadow-md rounded-md p-4">
+            <div className="p-4 bg-white rounded-md shadow-md dark:bg-darker">
               <h2 className="border-b-[0.5px] pb-1 mt-2 heading-2">
                 Reset Account
               </h2>
               <div className="flex flex-col gap-2 mb-4">
                 <p className="text-sm">Clear your stats and game history</p>
                 <button
-                  className="btn-secondary w-2/3"
+                  className="w-2/3 btn-secondary"
                   onClick={() => deleteStats(userEmail)}
                 >
                   Reset Stats
                 </button>
               </div>
             </div>
-            <div className="bg-white dark:bg-darker shadow-md rounded-md p-4">
+            <div className="p-4 bg-white rounded-md shadow-md dark:bg-darker">
               <h2 className="border-b-[0.5px] pb-1 mt-2 heading-2">
                 Delete Account
               </h2>
@@ -216,7 +218,7 @@ const Settings = () => {
                 <p className="text-sm">Want to delete your account?</p>
                 <p className="text-xs"> Note: This action can not be redone</p>
                 <button
-                  className="btn-secondary w-2/3 mt-2"
+                  className="w-2/3 mt-2 btn-secondary"
                   onClick={() => deleteUser(userEmail)}
                 >
                   Delete Account

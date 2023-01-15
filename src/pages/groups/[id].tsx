@@ -1,40 +1,44 @@
-import React, { useEffect, useState, useRef } from "react";
+import { HiRefresh, HiX, HiOutlineChat } from "react-icons/hi";
+import { VscCircleFilled } from "react-icons/vsc";
+import { useEffect, useState, useRef } from "react";
 import { observer, useLocalObservable } from "mobx-react-lite";
 import { useSession } from "next-auth/react";
-import { VscCircleLargeFilled, VscCircleFilled } from "react-icons/vsc";
 import { useRouter } from "next/router";
-import { HiRefresh, HiX, HiOutlineChat } from "react-icons/hi";
 import Image from "next/image";
 import Link from "next/link";
+
 import WordGrid from "../../components/WordGrid";
 import Keyboard from "../../components/Keyboard";
 import WordleStore from "../../stores/WordleStore";
 import LoadingIcon from "../../components/LoadingIcon";
+import getByUserEmail from "../../../lib/getByUserEmail";
+import getById from "../../../lib/getById";
 
 const Tournament = () => {
   const { data: session, status } = useSession();
+  const store = useLocalObservable(() => WordleStore);
+  const router = useRouter();
+  const userSession = session?.user;
+  const userName = session?.user?.["name"];
+  const userEmail = session?.user?.["email"];
+  const tournamentId = router.query["id"];
+
   const [chat, showChat] = useState(false);
   const [tournament, setTournament] = useState([]);
+  const tournamentName = tournament[0]?.["name"];
   const [inTournament, setInTournament] = useState(false);
   const [UsersInTournament, setUsersInTournament] = useState([]);
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
   const [modal, setModal] = useState(false);
   const [myUser, setMyUser] = useState([]);
-  const [pPic, setProfilePic] = useState(
+  const [profilePic, setProfilePic] = useState(
     "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png"
   );
-  const tournamentName = tournament[0]?.["name"];
-  const router = useRouter();
-  const tournamentID = router.query["id"];
-  const userSession = session?.user;
-  const userName = session?.user?.["name"];
-  const userID = userSession?.["id"];
-  const userEmail = userSession?.["email"];
-  const store = useLocalObservable(() => WordleStore);
+
   const divRef = useRef<HTMLDivElement>(null);
   const imageUser = myUser[0]?.["image"];
-  const noUserPic =
+  const defaultProfilePic =
     "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
 
   useEffect(() => {
@@ -47,54 +51,32 @@ const Tournament = () => {
       window.removeEventListener("keyup", store.handleKeyup);
     };
   }, [modal]);
-  const readUser = async () => {
-    try {
-      const response = await fetch(`/api/user`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const allUsers = await response.json();
-      const info = allUsers.filter((i: number) => i["email"] === userEmail);
-      setMyUser(info);
-      return info;
-    } catch (error) {
-      console.log("There was an error reading from the DB", error);
-    }
+
+  const getUser = async () => {
+    getByUserEmail("user", userSession).then((result) => {
+      setMyUser(result);
+    });
   };
-  const readAllTournaments = async () => {
-    try {
-      const response = await fetch(`/api/tournaments`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await response.json();
-      const thisTournament = data.filter((i) => i.id === tournamentID);
-      setTournament(thisTournament);
-    } catch (error) {
-      console.log("error reading tournaments: ", error);
-    }
+  const getAllTournaments = async () => {
+    getById("tournaments", tournamentId).then((result) => {
+      setTournament(result);
+    });
   };
-  const readUsersInTournaments = async () => {
-    try {
-      const response = await fetch(`/api/single-tournament`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await response.json();
-      const thisTournament = data.filter(
-        (i) => i.tournamentId === tournamentID
-      );
-      setUsersInTournament(thisTournament);
-      const check = thisTournament.filter((i) => i.userEmail === userEmail);
-      if (check.length === 1) {
+
+  useEffect(() => {
+    getUser();
+    getAllTournaments();
+    getUsersInTournaments();
+  }, [session]);
+
+  const getUsersInTournaments = async () => {
+    getById("single-tournament", tournamentId).then((result) => {
+      setUsersInTournament(result);
+      if (result.filter((i) => i.userEmail === userEmail))
         setInTournament(true);
-      } else {
-        setInTournament(false);
-      }
-    } catch (error) {
-      console.log("error reading tournaments: ", error);
-    }
+    });
   };
+
   const readComments = async () => {
     try {
       const response = await fetch(`/api/comment`, {
@@ -102,7 +84,7 @@ const Tournament = () => {
         headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
-      const comments = data.filter((i) => i.tournamentId === tournamentID);
+      const comments = data.filter((i) => i.tournamentId === tournamentId);
       setComments(comments);
     } catch (error) {
       console.log("error reading tournaments: ", error);
@@ -117,7 +99,7 @@ const Tournament = () => {
     }
   };
   const addComment = async () => {
-    const body = { userName, tournamentID, userEmail, comment };
+    const body = { userName, tournamentId, userEmail, comment };
     try {
       const response = await fetch(`/api/comment`, {
         method: "POST",
@@ -131,7 +113,7 @@ const Tournament = () => {
     readComments();
   };
   const addUserToTournament = async () => {
-    const body = { userName, tournamentID, userEmail, tournamentName };
+    const body = { userName, tournamentId, userEmail, tournamentName };
     console.log(body);
     try {
       const response = await fetch(`/api/single-tournament`, {
@@ -150,7 +132,7 @@ const Tournament = () => {
       gamesPlayed = UsersInTournament[0]?.["gamesPlayed"] + 1;
     }
     const totalScore = UsersInTournament[0]?.["totalScore"] + store.totalScore;
-    const body = { userEmail, tournamentID, totalScore, gamesPlayed };
+    const body = { userEmail, tournamentId, totalScore, gamesPlayed };
     console.log(store.totalScore, "total Score!");
     try {
       const response = await fetch(`/api/single-tournament`, {
@@ -163,14 +145,11 @@ const Tournament = () => {
     }
   };
   useEffect(() => {
-    readUsersInTournaments();
+    getUsersInTournaments();
     readComments();
   }, [modal]);
   useEffect(() => {
-    readUsersInTournaments();
-    readAllTournaments();
     readComments();
-    readUser();
   }, [session]);
   useEffect(() => {
     handleScroll();
@@ -184,7 +163,7 @@ const Tournament = () => {
     if (imageUser !== null) {
       setProfilePic(imageUser);
     } else {
-      setProfilePic(noUserPic);
+      setProfilePic(defaultProfilePic);
     }
   }, [myUser]);
   useEffect(() => {
@@ -197,12 +176,7 @@ const Tournament = () => {
       showChat(true);
     }
   }, []);
-  /**************/
-  /* LOOP */
-  /**************/
-  // useEffect(() => {
-  //   readComments();
-  // });
+
   if (status === "loading") return <LoadingIcon />;
 
   return (
@@ -213,7 +187,7 @@ const Tournament = () => {
             {inTournament === true ? (
               <>
                 <button
-                  className="md:hidden fixed bottom-3 flex right-3 h-20 w-20 rounded-full bg-purple2 shadow-md items-center  justify-center"
+                  className="fixed flex items-center justify-center w-20 h-20 rounded-full shadow-md md:hidden bottom-3 right-3 bg-purple2"
                   onClick={() => showChat(true)}
                 >
                   <HiOutlineChat className="text-6xl text-white" />
@@ -282,17 +256,17 @@ const Tournament = () => {
                 ) : null}
                 <h1 className="mt-10 heading-1">{tournamentName}</h1>
                 <div className="flex flex-col">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
-                    <div className="row-start-3 md:row-start-1 h-fit px-5 py-3 mx-2 rounded-md dark:bg-dark">
+                  <div className="grid grid-cols-1 gap-4 mt-5 md:grid-cols-2">
+                    <div className="row-start-3 px-5 py-3 mx-2 rounded-md md:row-start-1 h-fit dark:bg-dark">
                       <h2 className="heading-2">Members</h2>
                       {UsersInTournament.map((user, i) => (
                         <div
                           key={i}
                           className="flex items-center gap-2 p-2 my-2 rounded-md bg-lightest dark:bg-darker"
                         >
-                          <div className=" rounded-full h-12 w-12  overflow-hidden">
+                          <div className="w-12 h-12 overflow-hidden rounded-full ">
                             <Image
-                              src={pPic}
+                              src={profilePic}
                               width={100}
                               height={100}
                               alt="image"
@@ -305,18 +279,18 @@ const Tournament = () => {
                       ))}
                     </div>
 
-                    <div className="row-start-1 h-fit px-5 py-3 mx-2 rounded-md dark:bg-dark">
+                    <div className="row-start-1 px-5 py-3 mx-2 rounded-md h-fit dark:bg-dark">
                       <h2 className="heading-2">Tournaments</h2>
                       <div className="flex items-center justify-between p-2 my-2 rounded-md bg-lightest dark:bg-darker">
                         <p className="">Wordle</p>
-                        <Link href={`/groups/game/${tournamentID}`}>
+                        <Link href={`/groups/game/${tournamentId}`}>
                           <button className="">Play</button>
                         </Link>
                       </div>
                     </div>
 
                     {chat && (
-                      <div className="fixed bottom-0 left-0 right-0 md:relative md:row-start-2 md:row-span-3 px-5 py-3 mx-2 rounded-md bg-lightest dark:bg-dark">
+                      <div className="fixed bottom-0 left-0 right-0 px-5 py-3 mx-2 rounded-md md:relative md:row-start-2 md:row-span-3 bg-lightest dark:bg-dark">
                         <div className="flex justify-between">
                           <h2 className="pb-2 heading-2">Discussion</h2>
                           <button
@@ -348,7 +322,7 @@ const Tournament = () => {
                         <div className="flex p-4 mb-1 bg-lightest dark:bg-darker rounded-b-md">
                           <input
                             type="text"
-                            className="p-1 w-full rounded-md dark:bg-dark"
+                            className="w-full p-1 rounded-md dark:bg-dark"
                             onChange={(e) => handleComment(e)}
                             value={comment}
                           />
@@ -362,10 +336,10 @@ const Tournament = () => {
                         </div>
                       </div>
                     )}
-                    <div className="row-start-2 h-fit flex flex-col px-5 py-3 mx-2 rounded-md dark:bg-dark">
+                    <div className="flex flex-col row-start-2 px-5 py-3 mx-2 rounded-md h-fit dark:bg-dark">
                       <div className="flex justify-between">
                         <h2 className="heading-2">Leaderboard</h2>
-                        <button onClick={readUsersInTournaments}>
+                        <button onClick={getUsersInTournaments}>
                           <HiRefresh />
                         </button>
                       </div>
@@ -402,13 +376,13 @@ const Tournament = () => {
                         </tbody>
                       </table>
                     </div>
-                    <div className="md:col-start-2 p-5 mx-2 rounded-md dark:bg-dark">
+                    <div className="p-5 mx-2 rounded-md md:col-start-2 dark:bg-dark">
                       <h2 className="heading-2">Invite Friends</h2>
                       <button
                         className="px-4 py-2 my-2 rounded-md bg-light dark:bg-darker"
                         onClick={() => {
                           navigator.clipboard.writeText(
-                            `http://localhost:3000/groups/${tournamentID}`
+                            `http://localhost:3000/groups/${tournamentId}`
                           );
                         }}
                       >

@@ -26,5 +26,5 @@
     "src/pages/chat/chat.js"
   ],
   "types": ["cypress", "cypress-axe", "node"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", ".next"]
 }

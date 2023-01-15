@@ -1,29 +1,31 @@
-import React, { useEffect, useState } from "react";
+import { HiRefresh, HiArrowNarrowLeft } from "react-icons/hi";
 import { observer, useLocalObservable } from "mobx-react-lite";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import Link from "next/link";
+
 import WordGrid from "../../../components/WordGrid";
 import Keyboard from "../../../components/Keyboard";
-import { useSession } from "next-auth/react";
 import WordleStore from "../../../stores/WordleStore";
-import { useRouter } from "next/router";
-import { readFileSync } from "fs";
-import { io } from "socket.io-client";
-import Link from "next/link";
-import { HiRefresh, HiArrowNarrowLeft } from "react-icons/hi";
 import LoadingIcon from "../../../components/LoadingIcon";
+import getById from "../../../../lib/getById";
+import updateData from "../../../../lib/updateData";
 
 const Tournament = () => {
   const { data: session, status } = useSession();
   const [tournament, setTournament] = useState([]);
   const tournamentName = tournament[0]?.["name"];
   const router = useRouter();
-  const tournamentID = router.query["id"];
+  const tournamentId = router.query["id"];
   const userSession = session?.user;
   const userName = session?.user?.["name"];
-  const userID = userSession?.["id"];
+  const userId = userSession?.["id"];
   const userEmail = userSession?.["email"];
   const [inTournament, setInTournament] = useState(false);
   const [UsersInTournament, setUsersInTournament] = useState([]);
   const store = useLocalObservable(() => WordleStore);
+
   useEffect(() => {
     store.startGame();
     window.addEventListener("keyup", store.handleKeyup);
@@ -31,93 +33,41 @@ const Tournament = () => {
       window.removeEventListener("keyup", store.handleKeyup);
     };
   }, []);
-  const readAllUsers = async () => {
-    try {
-      const response = await fetch(`/api/user`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await response.json();
-      const thisTournament = data.filter((i) => i.id === tournamentID);
-      setTournament(thisTournament);
-    } catch (error) {
-      console.log("error reading tournaments: ", error);
-    }
+
+  const getAllTournaments = async () => {
+    getById("tournaments", tournamentId).then((result) => {
+      setTournament(result);
+    });
   };
 
-  const readAllTournaments = async () => {
-    try {
-      const response = await fetch(`/api/tournaments`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await response.json();
-      const thisTournament = data.filter((i) => i.id === tournamentID);
-      setTournament(thisTournament);
-    } catch (error) {
-      console.log("error reading tournaments: ", error);
-    }
+  const getUsersInTournaments = async () => {
+    getById("single-tournament", tournamentId).then((result) => {
+      setUsersInTournament(result);
+      if (result.filter((i) => i.userId === userId)) setInTournament(true);
+    });
   };
-  const readUsersInTournaments = async () => {
-    try {
-      const response = await fetch(`/api/single-tournament`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await response.json();
-      const thisTournament = data.filter(
-        (i) => i.tournamentId === tournamentID
-      );
-      setUsersInTournament(thisTournament);
-      const check = thisTournament.filter((i) => i.userId === userID);
-      if (check.length === 1) {
-        setInTournament(true);
-      } else {
-        setInTournament(false);
-      }
-    } catch (error) {
-      console.log("error reading tournaments: ", error);
-    }
-  };
+
   const addUserToTournament = async () => {
-    const body = { userName, tournamentID, userID, tournamentName };
-    console.log(body);
-    try {
-      const response = await fetch(`/api/single-tournament`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-    } catch (error) {
-      console.log("error: ", error);
-    }
+    const body = { userName, tournamentId, userId, tournamentName };
+    updateData("single-tournament", "POST", body);
     window.location.reload();
   };
+
   const updateGuesses = async () => {
     let gamesPlayed: any;
     if (store.won || store.lost) {
       gamesPlayed = UsersInTournament[0]?.["gamesPlayed"] + 1;
     }
     const totalScore = UsersInTournament[0]?.["totalScore"] + store.totalScore;
-    const body = { userEmail, tournamentID, totalScore, gamesPlayed };
-    console.log(store.totalScore, "total Score!");
-    try {
-      const response = await fetch(`/api/single-tournament`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-    } catch (error) {
-      console.log("error: ", error);
-    }
+    const body = { userEmail, tournamentId, totalScore, gamesPlayed };
+    updateData("single-tournament", "PUT", body);
   };
+
   useEffect(() => {
-    readUsersInTournaments();
-    readAllTournaments();
+    getAllTournaments();
+    getUsersInTournaments();
   }, [session]);
-  useEffect(() => {
-    console.log(inTournament);
-  }, [inTournament]);
+
   useEffect(() => {
     if (store.won || store.lost) {
       updateGuesses();
@@ -133,7 +83,7 @@ const Tournament = () => {
             {inTournament === true ? (
               <>
                 <button className="h-full p-5 mx-2 my-8 heading-2">
-                  <Link href={`/groups/${tournamentID}`}>
+                  <Link href={`/groups/${tournamentId}`}>
                     <HiArrowNarrowLeft />
                   </Link>
                 </button>
@@ -179,7 +129,7 @@ const Tournament = () => {
                 <div className="flex flex-col h-full p-5 mx-2 my-20 rounded-md dark:bg-dark">
                   <div className="flex flex-row justify-center gap-4">
                     <h2 className="heading-2">Status</h2>
-                    <button onClick={readUsersInTournaments}>
+                    <button onClick={getUsersInTournaments}>
                       <HiRefresh />
                     </button>
                   </div>

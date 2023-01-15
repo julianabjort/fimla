@@ -1,91 +1,45 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import LoadingIcon from "../components/LoadingIcon";
+import getByUserEmail from "../../lib/getByUserEmail";
+import updateData from "../../lib/updateData";
 
 const Groups = () => {
   const { data: session, status } = useSession();
-  const userID = session?.user?.["id"];
+  const userSession = session?.user;
   const userEmail = session?.user?.["email"];
   const userName = session?.user?.["name"];
   const [tournamentName, setName] = useState("");
-  const [tournaments, setTournaments] = useState([]);
   const [UserInTournament, setUsersInTournament] = useState([]);
-  const findUsersInTournaments = async () => {
-    try {
-      const response = await fetch(`/api/single-tournament`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await response.json();
-      const userInTournament = data.filter(
-        (i: { userEmail: any }) => i.userEmail === session?.user?.["email"]
-      );
-      setUsersInTournament(userInTournament);
-    } catch (error) {
-      console.log("error reading tournaments: ", error);
-    }
-  };
 
-  const readTournaments = async () => {
-    try {
-      const response = await fetch(`/api/tournaments`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await response.json();
-      const myTournaments = data.filter(
-        (i: { id: any }) => i.id === UserInTournament["id"]
-      );
-      data.includes();
-      setTournaments(data);
-      console.log("data: ", data);
-    } catch (error) {
-      console.log("error reading tournaments: ", error);
-    }
+  const getUsersInTournaments = async () => {
+    getByUserEmail("single-tournament", userSession).then((result) => {
+      setUsersInTournament(result);
+    });
   };
-  const function1 = () => {
-    console.log(
-      "hello",
-      UserInTournament.filter((i) => i["tournamentId"] === tournaments["id"])
-    );
-  };
+  useEffect(() => {
+    getUsersInTournaments();
+  }, [session]);
+
   const createTournament = async () => {
     const body = { tournamentName, userName, userEmail };
-    console.log(body);
-    try {
-      const response = await fetch(`/api/tournaments`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-    } catch (error) {
-      console.log("error: ", error);
-    }
-    readTournaments();
-    findUsersInTournaments();
+    updateData("tournaments", "POST", body);
+    getUsersInTournaments();
   };
 
-  useEffect(() => {
-    findUsersInTournaments();
-  }, [session]);
-  useEffect(() => {
-    console.log(UserInTournament);
-    readTournaments();
-    function1();
-  }, [UserInTournament]);
   if (status === "loading") return <LoadingIcon />;
 
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">
       <h1 className="mb-5 heading-1">Create a group</h1>
-      <div className="flex flex-col justify-center w-4/5 lg:w-3/4 p-6 lg:p-10 rounded-md bg-lightest dark:bg-darker">
+      <div className="flex flex-col justify-center w-4/5 p-6 rounded-md lg:w-3/4 lg:p-10 bg-lightest dark:bg-darker">
         {session ? (
           <>
-            {/* <form action="#" method="POST" className="flex flex-col"> */}
-            <label htmlFor="" className="border-b-[0.5px] pb-1 heading-2 mb-4">
+            <label className="border-b-[0.5px] pb-1 heading-2 mb-4">
               Group Name
             </label>
+
             <div className="flex flex-col lg:flex-row justify-evenly">
               <input
                 type="text"
@@ -94,14 +48,13 @@ const Groups = () => {
                 value={tournamentName}
               />
               <button
-                // value="Submit"
                 onClick={createTournament}
-                className="mt-3 px-4 h-10 lg:ml-4 lg:mt-0 rounded-md bg-light dark:bg-dark"
+                className="h-10 px-4 mt-3 rounded-md lg:ml-4 lg:mt-0 bg-light dark:bg-dark"
               >
                 Create
               </button>
             </div>
-            {/* </form> */}
+
             <div className="flex flex-col mt-10">
               <h1 className="border-b-[0.5px] pb-1 heading-2 mb-4">
                 Your groups

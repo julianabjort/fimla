@@ -1,8 +1,6 @@
 import { getSession, useSession } from "next-auth/react";
-import React from "react";
 import { useEffect, useState } from "react";
 import { prisma } from "../../lib/prisma";
-import { useRouter } from "next/router";
 import LoadingIcon from "../components/LoadingIcon";
 
 const Stats = ({
@@ -10,7 +8,6 @@ const Stats = ({
   quordleSessionStats,
   beeSessionStats,
 }) => {
-  const router = useRouter();
   const { data: session, status } = useSession();
   const [message, setMessage] = useState("");
 
@@ -53,7 +50,6 @@ const Stats = ({
         if (stats !== null) {
           let data = [JSON.parse(localStorage.getItem("stats")!)];
           const wordleLocalStats = data[0];
-          console.log("here", wordleLocalStats);
           if (wordleLocalStats === null) {
             setStats(noStats);
           } else {

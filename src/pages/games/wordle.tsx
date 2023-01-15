@@ -7,7 +7,7 @@ import WordGrid from "../../components/WordGrid";
 import Keyboard from "../../components/Keyboard";
 import WordleStore from "../../stores/WordleStore.jsx";
 import OnboardingModal from "../../components/OnboardingModal";
-import getUserStats from "../../../lib/getUserStats";
+import getByUserEmail from "../../../lib/getByUserEmail";
 import updateData from "../../../lib/updateData";
 
 const Wordle = () => {
@@ -50,7 +50,7 @@ const Wordle = () => {
   }, [wordleVisited]);
 
   const getStats = async () =>
-    getUserStats("wordle-stats", userSession).then((result) =>
+    getByUserEmail("wordle-stats", userSession).then((result) =>
       setStats(result[0])
     );
 

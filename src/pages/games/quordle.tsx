@@ -8,7 +8,7 @@ import QuordleGrid from "../../components/QuordleGrid";
 import QuordleStore from "../../stores/QuordleStore.jsx";
 import OnboardingModal from "../../components/OnboardingModal";
 import updateData from "../../../lib/updateData";
-import getUserStats from "../../../lib/getUserStats";
+import getByUserEmail from "../../../lib/getByUserEmail";
 
 const Quordle = () => {
   const { data: session } = useSession();
@@ -49,7 +49,7 @@ const Quordle = () => {
   }, [quordleVisited]);
 
   const getStats = async () =>
-    getUserStats("quordle-stats", userSession).then((result) =>
+    getByUserEmail("quordle-stats", userSession).then((result) =>
       setStats(result[0])
     );
   useEffect(() => {
@@ -84,11 +84,8 @@ const Quordle = () => {
       const body = { userEmail, wins, losses, totalScore };
 
       if (stats) {
-        console.log(body);
         updateData("quordle-stats", "PUT", body);
       } else {
-        console.log("here");
-        console.log(body);
         updateData("quordle-stats", "POST", body);
       }
     }

@@ -1,17 +1,11 @@
 import React from "react";
-import { getSession, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { prisma } from "../../lib/prisma";
 
 const Leaderboard = ({ wordleSessionStats, quordleSessionStats }) => {
-  const { data: session } = useSession();
   const [wordle, setWordle] = useState(true);
   const [quordle, setQuordle] = useState(false);
-  const [spellingBee, setSpellingBee] = useState(false);
-  const [wHighScore, setWhighScore] = useState({});
-  const [qHighScore, setQhighScore] = useState({});
   const [stats, setStats] = useState([]);
-  const [users, setUsers] = useState([]);
 
   const wordleClick = () => {
     setWordle(true);
@@ -27,9 +21,6 @@ const Leaderboard = ({ wordleSessionStats, quordleSessionStats }) => {
   const initLeaderBoardQ = () => {
     setStats(quordleSessionStats);
   };
-  useEffect(() => {
-    // readUsers();
-  }, []);
   useEffect(() => {
     if (quordle) initLeaderBoardQ();
   }, [quordle]);
