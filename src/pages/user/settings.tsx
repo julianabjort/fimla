@@ -1,134 +1,60 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
+
 import ProfilePicModal from "../../components/ProfilePicModal";
 import UserInfoModal from "../../components/UserInfoModal";
 import LoadingIcon from "../../components/LoadingIcon";
+import getByUserEmail from "../../../lib/getByUserEmail";
+import deleteData from "../../../lib/deleteData";
 
 const Settings = () => {
   const { data: session, status } = useSession();
+  const userSession = session?.user;
+  const userEmail = session?.user?.["email"];
   const [userInfo, setUserInfo] = useState([]);
-  const [userName, setUserName] = useState("");
-  const [userLocation, setUserLocation] = useState("");
-  const [userDob, setUserDob] = useState("");
-  const [myUser, setMyUser] = useState([]);
+  const [user, setUser] = useState([]);
   const [changeProfilePic, showProfileModal] = useState(false);
   const [changeInfo, showInfoModal] = useState(false);
-  const [pPic, setProfilePic] = useState(
-    "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png"
+
+  const defaultProfilePic =
+  "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
+  
+  const [profilePic, setProfilePic] = useState(
+    defaultProfilePic
   );
-
-  const nameUser = myUser[0]?.["name"];
-  const imageUser =
-    myUser[0]?.["image"] ||
-    "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
-  const userSession = session?.user;
-  const userId = session?.user?.["id"];
-  const userEmail = session?.user?.["email"];
-
-  const user = session?.user;
-  const profilePic = session?.user?.["image"];
-  const noUserPic =
-    "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
+  const userImage =
+    user?.["image"] || defaultProfilePic
+    
 
   useEffect(() => {
-    readUserInfo();
-    readUser();
+    getUserInfo();
+    getUser();
   }, [session]);
   useEffect(() => {
-    if (imageUser !== null) {
-      setProfilePic(imageUser);
+    if (userImage !== null) {
+      setProfilePic(userImage);
     } else {
-      setProfilePic(noUserPic);
+      setProfilePic(defaultProfilePic);
     }
-  }, [myUser]);
-  useEffect(() => {
-    if (userLocation === "") {
-      setUserLocation(userInfo[0]?.["userLocation"]);
-    }
-    if (userName === "") {
-      setUserName(userInfo[0]?.["username"]);
-    }
-    if (userDob === "") {
-      setUserDob(userInfo[0]?.["userDob"]);
-    }
-  }, [userInfo]);
+  }, [user]);
 
-  const readUserInfo = async () => {
-    try {
-      const response = await fetch(`/api/userinfo`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const allUserInfo = await response.json();
-      const info = allUserInfo.filter(
-        (i: number) => i["userEmail"] === userEmail
-      );
-      setUserInfo(info);
-      return info;
-    } catch (error) {
-      console.log("There was an error reading from the DB", error);
-    }
+  const getUserInfo = async () => {
+    getByUserEmail("userinfo", userSession).then((result) => setUserInfo(result[0]))
   };
-  const readUser = async () => {
-    try {
-      const response = await fetch(`/api/user`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const allUsers = await response.json();
-      const info = allUsers.filter((i: number) => i["email"] === userEmail);
-      setMyUser(info);
-      return info;
-    } catch (error) {
-      console.log("There was an error reading from the DB", error);
-    }
+
+  const getUser = async () => {
+    getByUserEmail("user", userSession).then((result) => setUser(result[0]))
   };
 
   const deleteUser = async (e: any) => {
-    try {
-      const response = await fetch(`/api/user`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(e),
-      });
-      signOut();
-
-      // Redirect to home page ? //
-    } catch (error) {
-      console.log("There was an error deleting from the DB ", error);
-    }
-  };
-
-  const deleteUserint = async () => {
-    // console.log("here");
-    try {
-      const response = await fetch(`/api/single-tournament`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      // Redirect to home page ? //
-      console.log(await response.json());
-    } catch (error) {
-      console.log("There was an error deleting from the DB ", error);
-    }
+    deleteData("user", e)
+    signOut();
   };
 
   const deleteStats = async (e: any) => {
-    try {
-      const response = await fetch(`/api/wordle-stats`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(e),
-      });
-      const response2 = await fetch(`/api/quordle-stats`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(e),
-      });
-    } catch (error) {
-      console.log("There was an error in deleting from the DB", error);
-    }
+    deleteData("wordle-stats", e)
+    deleteData("quordle-stats", e)
   };
   if (status === "loading") return <LoadingIcon />;
 
@@ -156,7 +82,7 @@ const Settings = () => {
               <div className="flex flex-col gap-6">
                 <div className="w-56 h-56 overflow-hidden rounded-full shadow-lg ">
                   <Image
-                    src={pPic}
+                    src={profilePic}
                     width={400}
                     height={400}
                     placeholder="blur"
@@ -178,15 +104,15 @@ const Settings = () => {
               <div className="flex flex-col justify-evenly">
                 <p className="mt-2 ml-1 text-xs">Name</p>
                 <p className="h-10 p-2 mb-1 bg-gray-100 rounded-md dark:bg-dark ">
-                  {userInfo[0]?.["username"]}
+                  {userInfo?.["username"]}
                 </p>
                 <p className="ml-1 text-xs">Location</p>
                 <p className="h-10 p-2 mb-1 bg-gray-100 rounded-md dark:bg-dark ">
-                  {userInfo[0]?.["userLocation"]}
+                  {userInfo?.["userLocation"]}
                 </p>
                 <p className="ml-1 text-xs">Date of Birth</p>
                 <p className="h-10 p-2 mb-1 bg-gray-100 rounded-md dark:bg-dark ">
-                  {userInfo[0]?.["userDob"]}
+                  {userInfo?.["userDob"]}
                 </p>
                 <button
                   className="mt-3 btn-primary"
@@ -201,7 +127,9 @@ const Settings = () => {
                 Reset Account
               </h2>
               <div className="flex flex-col gap-2 mb-4">
-                <p className="text-sm">Clear your stats and game history</p>
+                <p className="my-1 text-sm">
+                  Clear your stats and game history
+                </p>
                 <button
                   className="w-2/3 btn-secondary"
                   onClick={() => deleteStats(userEmail)}
@@ -215,8 +143,7 @@ const Settings = () => {
                 Delete Account
               </h2>
               <div className="flex flex-col mb-4">
-                <p className="text-sm">Want to delete your account?</p>
-                <p className="text-xs"> Note: This action can not be redone</p>
+                <p className="my-1 text-sm">Warning: this action cannot be undone</p>
                 <button
                   className="w-2/3 mt-2 btn-secondary"
                   onClick={() => deleteUser(userEmail)}

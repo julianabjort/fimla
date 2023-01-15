@@ -1,42 +1,37 @@
 import { HiX } from "react-icons/hi";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import updateData from "../../lib/updateData";
 
 const UserInfoModal = ({ onClick, userInfo }) => {
   const { data: session } = useSession();
-
   const [userName, setUserName] = useState("");
   const [userLocation, setUserLocation] = useState("");
   const [userDob, setUserDob] = useState("");
-
   const userEmail = session?.user?.["email"];
 
   const updateUserInfo = async (e: any): Promise<any> => {
     e.preventDefault();
     const body = { userEmail, userName, userDob, userLocation };
-    if (userInfo[0]) {
-      try {
-        const response = fetch(`/api/userinfo`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-      } catch (error) {
-        console.log("There was an error deleting from the DB ", error);
-      }
+    if (userInfo) {
+      updateData("userinfo", "PUT", body)
     } else {
-      try {
-        const response = fetch(`/api/userinfo`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-      } catch (error) {
-        console.log("There was an error deleting from the DB ", error);
-      }
+        updateData("userinfo", "POST", body)
     }
     window.location.reload();
   };
+
+  useEffect(() => {
+    if (userLocation === "") {
+      setUserLocation(userInfo?.["userLocation"]);
+    }
+    if (userName === "") {
+      setUserName(userInfo?.["username"]);
+    }
+    if (userDob === "") {
+      setUserDob(userInfo?.["userDob"]);
+    }
+  }, [userInfo]);
 
   return (
     <div className="absolute flex flex-col w-2/3 shadow-xl left-0 right-0 m-auto p-8 space-y-4 justify-evenly md:w-1/2 rounded-xl bg-lightest dark:bg-dark">
@@ -60,7 +55,6 @@ const UserInfoModal = ({ onClick, userInfo }) => {
           type="text"
           className="p-1 mb-5 rounded-md"
         />
-        {userInfo[0]?.["username"]}
         <label htmlFor="userLocation">
           Tell us where you are in the world!
         </label>

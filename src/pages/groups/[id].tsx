@@ -13,6 +13,7 @@ import WordleStore from "../../stores/WordleStore";
 import LoadingIcon from "../../components/LoadingIcon";
 import getByUserEmail from "../../../lib/getByUserEmail";
 import getById from "../../../lib/getById";
+import updateData from "../../../lib/updateData";
 
 const Tournament = () => {
   const { data: session, status } = useSession();
@@ -27,7 +28,7 @@ const Tournament = () => {
   const [tournament, setTournament] = useState([]);
   const tournamentName = tournament[0]?.["name"];
   const [inTournament, setInTournament] = useState(false);
-  const [UsersInTournament, setUsersInTournament] = useState([]);
+  const [usersInTournament, setUsersInTournament] = useState([]);
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
   const [modal, setModal] = useState(false);
@@ -37,7 +38,7 @@ const Tournament = () => {
   );
 
   const divRef = useRef<HTMLDivElement>(null);
-  const imageUser = myUser[0]?.["image"];
+  const imageUser = myUser[0]?.["image"] || null;
   const defaultProfilePic =
     "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
 
@@ -63,12 +64,6 @@ const Tournament = () => {
     });
   };
 
-  useEffect(() => {
-    getUser();
-    getAllTournaments();
-    getUsersInTournaments();
-  }, [session]);
-
   const getUsersInTournaments = async () => {
     getById("single-tournament", tournamentId).then((result) => {
       setUsersInTournament(result);
@@ -78,78 +73,52 @@ const Tournament = () => {
   };
 
   const readComments = async () => {
-    try {
-      const response = await fetch(`/api/comment`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await response.json();
-      const comments = data.filter((i) => i.tournamentId === tournamentId);
-      setComments(comments);
-    } catch (error) {
-      console.log("error reading tournaments: ", error);
-    }
+    getById("comment", tournamentId).then((result) => {
+      setComments(result);
+    });
   };
+
   const handleComment = (e) => {
     setComment(e.target.value);
   };
+
   const handleScroll = () => {
     if (divRef.current) {
       divRef.current.scrollTop = divRef.current.scrollHeight;
     }
   };
+
   const addComment = async () => {
     const body = { userName, tournamentId, userEmail, comment };
-    try {
-      const response = await fetch(`/api/comment`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-    } catch (error) {
-      console.log("error: ", error);
-    }
+    updateData("comment", "POST", body);
     setComment("");
     readComments();
   };
   const addUserToTournament = async () => {
     const body = { userName, tournamentId, userEmail, tournamentName };
-    console.log(body);
-    try {
-      const response = await fetch(`/api/single-tournament`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-    } catch (error) {
-      console.log("error: ", error);
-    }
+    updateData("single-tournament", "POST", body);
     window.location.reload();
   };
+
   const updateGuesses = async () => {
     let gamesPlayed: any;
     if (store.won || store.lost) {
-      gamesPlayed = UsersInTournament[0]?.["gamesPlayed"] + 1;
+      gamesPlayed = usersInTournament[0]?.["gamesPlayed"] + 1;
     }
-    const totalScore = UsersInTournament[0]?.["totalScore"] + store.totalScore;
+    const totalScore = usersInTournament[0]?.["totalScore"] + store.totalScore;
     const body = { userEmail, tournamentId, totalScore, gamesPlayed };
-    console.log(store.totalScore, "total Score!");
-    try {
-      const response = await fetch(`/api/single-tournament`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-    } catch (error) {
-      console.log("error: ", error);
-    }
+    updateData("single-tournament", "PUT", body);
   };
+
   useEffect(() => {
     getUsersInTournaments();
     readComments();
   }, [modal]);
   useEffect(() => {
     readComments();
+    getUser();
+    getAllTournaments();
+    getUsersInTournaments();
   }, [session]);
   useEffect(() => {
     handleScroll();
@@ -159,11 +128,12 @@ const Tournament = () => {
       updateGuesses();
     }
   }, [store.roundComplete]);
+
   useEffect(() => {
-    if (imageUser !== null) {
-      setProfilePic(imageUser);
-    } else {
+    if (imageUser === null) {
       setProfilePic(defaultProfilePic);
+    } else {
+      setProfilePic(imageUser);
     }
   }, [myUser]);
   useEffect(() => {
@@ -259,7 +229,7 @@ const Tournament = () => {
                   <div className="grid grid-cols-1 gap-4 mt-5 md:grid-cols-2">
                     <div className="row-start-3 px-5 py-3 mx-2 rounded-md md:row-start-1 h-fit dark:bg-dark">
                       <h2 className="heading-2">Members</h2>
-                      {UsersInTournament.map((user, i) => (
+                      {usersInTournament.map((user, i) => (
                         <div
                           key={i}
                           className="flex items-center gap-2 p-2 my-2 rounded-md bg-lightest dark:bg-darker"
@@ -345,10 +315,11 @@ const Tournament = () => {
                       </div>
                       <table className="">
                         <tbody>
-                          {UsersInTournament.sort(
-                            (prev, next) =>
-                              next["totalScore"] - prev["totalScore"]
-                          )
+                          {usersInTournament
+                            .sort(
+                              (prev, next) =>
+                                next["totalScore"] - prev["totalScore"]
+                            )
                             .slice(0, 10)
                             .map((user, i) => (
                               <tr

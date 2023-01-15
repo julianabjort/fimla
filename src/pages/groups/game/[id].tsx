@@ -23,7 +23,7 @@ const Tournament = () => {
   const userId = userSession?.["id"];
   const userEmail = userSession?.["email"];
   const [inTournament, setInTournament] = useState(false);
-  const [UsersInTournament, setUsersInTournament] = useState([]);
+  const [usersInTournament, setUsersInTournament] = useState([]);
   const store = useLocalObservable(() => WordleStore);
 
   useEffect(() => {
@@ -56,15 +56,15 @@ const Tournament = () => {
   const updateGuesses = async () => {
     let gamesPlayed: any;
     if (store.won || store.lost) {
-      gamesPlayed = UsersInTournament[0]?.["gamesPlayed"] + 1;
+      gamesPlayed = usersInTournament[0]?.["gamesPlayed"] + 1;
     }
-    const totalScore = UsersInTournament[0]?.["totalScore"] + store.totalScore;
+    const totalScore = usersInTournament[0]?.["totalScore"] + store.totalScore;
     const body = { userEmail, tournamentId, totalScore, gamesPlayed };
     updateData("single-tournament", "PUT", body);
   };
 
   useEffect(() => {
-    getAllTournaments();
+    // getAllTournaments();
     getUsersInTournaments();
   }, [session]);
 
@@ -136,9 +136,11 @@ const Tournament = () => {
 
                   <table className="">
                     <tbody>
-                      {UsersInTournament.sort(
-                        (prev, next) => next["totalScore"] - prev["totalScore"]
-                      )
+                      {usersInTournament
+                        .sort(
+                          (prev, next) =>
+                            next["totalScore"] - prev["totalScore"]
+                        )
                         .slice(0, 10)
                         .map((user, i) => (
                           <tr

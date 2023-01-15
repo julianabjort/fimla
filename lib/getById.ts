@@ -8,8 +8,8 @@ export default async function getById(apiRoute, id) {
     const filterByTournamentId = data.filter((i: any) => i.tournamentId === id);
     const filterById = data.filter((i: any) => i.id === id);
 
-    if (apiRoute === "single-tournament") return filterByTournamentId;
-    else return filterById;
+    if (apiRoute === "tournaments") return filterById;
+    else return filterByTournamentId;
   } catch (error) {
     console.log("error: ", error);
   }

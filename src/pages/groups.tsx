@@ -10,12 +10,12 @@ const Groups = () => {
   const userSession = session?.user;
   const userEmail = session?.user?.["email"];
   const userName = session?.user?.["name"];
-  const [tournamentName, setName] = useState("");
-  const [UserInTournament, setUsersInTournament] = useState([]);
+  const [tournamentName, setTournamentName] = useState("");
+  const [userInTournament, setUserInTournament] = useState([]);
 
   const getUsersInTournaments = async () => {
     getByUserEmail("single-tournament", userSession).then((result) => {
-      setUsersInTournament(result);
+      setUserInTournament(result);
     });
   };
   useEffect(() => {
@@ -24,8 +24,8 @@ const Groups = () => {
 
   const createTournament = async () => {
     const body = { tournamentName, userName, userEmail };
-    updateData("tournaments", "POST", body);
-    getUsersInTournaments();
+    updateData("tournaments", "POST", body).then(() => getUsersInTournaments());
+    setTournamentName("")
   };
 
   if (status === "loading") return <LoadingIcon />;
@@ -44,7 +44,7 @@ const Groups = () => {
               <input
                 type="text"
                 className="p-1 rounded-md lg:w-full lg:h-10 dark:bg-dark"
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => setTournamentName(e.target.value)}
                 value={tournamentName}
               />
               <button
@@ -60,7 +60,7 @@ const Groups = () => {
                 Your groups
               </h1>
 
-              {UserInTournament.map((o, key) => (
+              {userInTournament.map((o, key) => (
                 <ul key={key}>
                   <Link
                     href={{
