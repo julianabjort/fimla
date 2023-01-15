@@ -19,28 +19,25 @@ const Tournament = () => {
   const { data: session, status } = useSession();
   const store = useLocalObservable(() => WordleStore);
   const router = useRouter();
+  const divRef = useRef<HTMLDivElement>(null);
   const userSession = session?.user;
   const userName = session?.user?.["name"];
   const userEmail = session?.user?.["email"];
   const tournamentId = router.query["id"];
-
+  
   const [chat, showChat] = useState(false);
   const [tournament, setTournament] = useState([]);
-  const tournamentName = tournament[0]?.["name"];
+  const tournamentName = tournament?.["name"];
   const [inTournament, setInTournament] = useState(false);
   const [usersInTournament, setUsersInTournament] = useState([]);
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
   const [modal, setModal] = useState(false);
-  const [myUser, setMyUser] = useState([]);
-  const [profilePic, setProfilePic] = useState(
-    "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png"
-  );
-
-  const divRef = useRef<HTMLDivElement>(null);
-  const imageUser = myUser[0]?.["image"] || null;
+  const [user, setUser] = useState([]);
   const defaultProfilePic =
     "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
+  const [profilePic, setProfilePic] = useState(defaultProfilePic);
+  const userImage = user?.["image"] || defaultProfilePic;
 
   useEffect(() => {
     store.startGame();
@@ -55,12 +52,12 @@ const Tournament = () => {
 
   const getUser = async () => {
     getByUserEmail("user", userSession).then((result) => {
-      setMyUser(result);
+      setUser(result[0]);
     });
   };
   const getAllTournaments = async () => {
     getById("tournaments", tournamentId).then((result) => {
-      setTournament(result);
+      setTournament(result[0]);
     });
   };
 
@@ -103,9 +100,9 @@ const Tournament = () => {
   const updateGuesses = async () => {
     let gamesPlayed: any;
     if (store.won || store.lost) {
-      gamesPlayed = usersInTournament[0]?.["gamesPlayed"] + 1;
+      gamesPlayed = usersInTournament?.["gamesPlayed"] + 1;
     }
-    const totalScore = usersInTournament[0]?.["totalScore"] + store.totalScore;
+    const totalScore = usersInTournament?.["totalScore"] + store.totalScore;
     const body = { userEmail, tournamentId, totalScore, gamesPlayed };
     updateData("single-tournament", "PUT", body);
   };
@@ -130,12 +127,13 @@ const Tournament = () => {
   }, [store.roundComplete]);
 
   useEffect(() => {
-    if (imageUser === null) {
-      setProfilePic(defaultProfilePic);
+    if (userImage !== null) {
+      setProfilePic(userImage);
     } else {
-      setProfilePic(imageUser);
+      setProfilePic(defaultProfilePic);
     }
-  }, [myUser]);
+  }, [user]);
+  
   useEffect(() => {
     if (window.innerWidth < 768) {
       /* Screen is smaller than 768 and is on mobileview */

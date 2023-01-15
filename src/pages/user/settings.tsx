@@ -21,16 +21,16 @@ const Settings = () => {
   "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
   
   const [profilePic, setProfilePic] = useState(
-    defaultProfilePic
+    "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png"
   );
   const userImage =
-    user?.["image"] || defaultProfilePic
-    
-
+    user?.["image"] || "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png"
+  
   useEffect(() => {
     getUserInfo();
     getUser();
   }, [session]);
+  
   useEffect(() => {
     if (userImage !== null) {
       setProfilePic(userImage);

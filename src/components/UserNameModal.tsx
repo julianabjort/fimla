@@ -1,32 +1,19 @@
-import { HiX } from "react-icons/hi";
-import Image from "next/image";
 import { getSession, signOut } from "next-auth/react";
 import { useState } from "react";
+import updateData from "../../lib/updateData";
 
 const UserNameModal = () => {
-  const [session, setSession] = useState();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
   const readUser = async () => {
     const session = await getSession();
-    // console.log("layout session", session);
     const email = session?.user?.email || "";
     setEmail(email);
   };
   const updateUser = async () => {
     const body = { name, email };
-    console.log(body);
-    try {
-      const response = fetch(`/api/user`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      console.log(response);
-    } catch (error) {
-      console.log("There was an error deleting from the DB ", error);
-    }
+    updateData("user", "PUT", body)
     signOut();
   };
   readUser();
