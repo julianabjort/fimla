@@ -3,17 +3,17 @@ import Image from "next/image";
 import { getSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import LoadingIcon from "./LoadingIcon";
+import updateData from "../../lib/updateData";
 
-const ProfilePicModal = ({ onClick }) => {
-  const [session, setSession] = useState();
-  const [name, setName] = useState("");
+const ProfilePicModal = ({ closeModal, setImageSrcReady }) => {
   const [isFile, setFile] = useState(false);
   const [userEmail, setEmail] = useState("");
   const [imageSrc, setImageSrc] = useState(
     "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png"
   );
   const [uploadData, setUploadData] = useState();
-
+  const [imageUploaded, setImageUploaded] = useState(false)
+  
   /* Session */
   const readUser = async () => {
     const session = await getSession();
@@ -38,8 +38,6 @@ const ProfilePicModal = ({ onClick }) => {
   const handleOnSubmit = async (event: any) => {
     event.preventDefault();
     setFile(true);
-
-    // const form = document.getElementById("formId") as HTMLFormElement;
     const form = event.currentTarget;
     const fileInput: any = Array.from(form.elements).find(
       ({ name }: any) => name === "file"
@@ -54,28 +52,25 @@ const ProfilePicModal = ({ onClick }) => {
     const data = await fetch(
       "https://api.cloudinary.com/v1_1/diczrtchl/image/upload",
       { method: "POST", body: formData }
-    ).then((response) => response.json());
-
-    setImageSrc(data.secure_url);
-    setUploadData(data);
+    ).then((response) => response.json())
+    .then(data => {
+      setImageSrc(data.secure_url)
+      setUploadData(data)
+    })
+    .then(() => {
+      setImageSrcReady(imageSrc)
+      setImageUploaded(true)
+    })
   };
-  const updateProfilePic = async () => {
+
+  useEffect(() => {
+    if (imageUploaded) {
     const body = { userEmail, imageSrc };
-
-    try {
-      const response = fetch(`/api/profile-pic`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      console.log(response);
-    } catch (error) {
-      console.log("There was an error deleting from the DB ", error);
+    updateData("profile-pic", "PUT", body)
+    closeModal();
     }
-    onClick();
-  };
-  /*******************************/
-
+  }, [imageUploaded])
+  
   useEffect(() => {
     readUser();
   }, []);
@@ -84,7 +79,7 @@ const ProfilePicModal = ({ onClick }) => {
     <div className="absolute left-0 shadow-xl right-0 m-auto flex flex-col w-4/5 p-8 space-y-4 justify-evenly items-center lg:w-2/3 rounded-xl bg-lightest dark:bg-dark">
       <div className="flex justify-between">
         <h1 className="heading-1">Profile Picture</h1>
-        <button className="heading-1" onClick={onClick}>
+        <button className="heading-1" onClick={closeModal}>
           <HiX />
         </button>
       </div>
@@ -99,7 +94,6 @@ const ProfilePicModal = ({ onClick }) => {
         action="#"
         method="POST"
         onChange={handleOnChange}
-        // onChange={handleOnSubmit}
         onSubmit={handleOnSubmit}
         className="flex flex-col items-center gap-4"
       >
@@ -109,7 +103,6 @@ const ProfilePicModal = ({ onClick }) => {
             name="file"
             id="file"
             hidden
-            // value=""
           />
           <HiOutlineDocumentAdd className="text-4xl cursor-pointer" />
         </label>
@@ -122,21 +115,6 @@ const ProfilePicModal = ({ onClick }) => {
       {isFile && !uploadData && (
         <button className="pb-5">
           <LoadingIcon isPage={false} />
-        </button>
-      )}
-      {/* {isFile ? (
-          <button className="btn-secondary">Choose</button>
-        ) : (
-          <button className="btn-secondary-dis">Choose</button>
-        )} */}
-      {imageSrc && uploadData && (
-        <button
-          className="btn-primary"
-          onClick={() => {
-            updateProfilePic();
-          }}
-        >
-          Save
         </button>
       )}
     </div>

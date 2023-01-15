@@ -34,12 +34,6 @@ const Tournament = () => {
     };
   }, []);
 
-  const getAllTournaments = async () => {
-    getById("tournaments", tournamentId).then((result) => {
-      setTournament(result);
-    });
-  };
-
   const getUsersInTournaments = async () => {
     getById("single-tournament", tournamentId).then((result) => {
       setUsersInTournament(result);
@@ -89,7 +83,7 @@ const Tournament = () => {
                 </button>
 
                 <div className="flex flex-col items-center my-10 justify-evenly">
-                  <h1 className="heading-1">{tournament[0]?.["name"]}</h1>
+                  <h1 className="heading-1">{tournamentName}</h1>
                   <h1 className="h-6 px-2 rounded-md text-error">
                     {store.error}
                   </h1>
@@ -174,7 +168,7 @@ const Tournament = () => {
                   <h2 className="mb-5 heading-2">
                     Somebody has invited you the group
                   </h2>
-                  <h1 className="mb-5 heading-1">{tournament[0]?.["name"]}</h1>
+                  <h1 className="mb-5 heading-1">{tournamentName}</h1>
                   <button
                     className="w-16 h-10 ml-4 rounded-md bg-light dark:bg-dark"
                     onClick={addUserToTournament}

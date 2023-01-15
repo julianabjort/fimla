@@ -14,8 +14,9 @@ const Settings = () => {
   const userEmail = session?.user?.["email"];
   const [userInfo, setUserInfo] = useState([]);
   const [user, setUser] = useState([]);
-  const [changeProfilePic, showProfileModal] = useState(false);
+  const [changeProfilePic, showProfilePicModal] = useState(false);
   const [changeInfo, showInfoModal] = useState(false);
+  const [imageSrc, setImageSrcReady ] = useState("")
 
   const defaultProfilePic =
     "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
@@ -40,6 +41,11 @@ const Settings = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (imageSrc)
+    setProfilePic(imageSrc)
+  }, [imageSrc])
+
   const getUserInfo = async () => {
     getByUserEmail("userinfo", userSession).then((result) =>
       setUserInfo(result[0])
@@ -59,6 +65,7 @@ const Settings = () => {
     deleteData("wordle-stats", e);
     deleteData("quordle-stats", e);
   };
+
   if (status === "loading") return <LoadingIcon isPage />;
 
   return (
@@ -68,7 +75,7 @@ const Settings = () => {
         {session ? (
           <>
             {changeProfilePic && (
-              <ProfilePicModal onClick={() => showProfileModal(false)} />
+              <ProfilePicModal setImageReady={setImageReady} closeModal={() => showProfilePicModal(false)} />
             )}
             {changeInfo && (
               <UserInfoModal
@@ -96,7 +103,7 @@ const Settings = () => {
                 </div>
                 <button
                   className="self-center w-1/2 btn-primary"
-                  onClick={() => showProfileModal(true)}
+                  onClick={() => showProfilePicModal(true)}
                 >
                   Edit
                 </button>
