@@ -75,7 +75,7 @@ const Settings = () => {
         {session ? (
           <>
             {changeProfilePic && (
-              <ProfilePicModal setImageReady={setImageReady} closeModal={() => showProfilePicModal(false)} />
+              <ProfilePicModal setImageSrcReady={setImageSrcReady} closeModal={() => showProfilePicModal(false)} />
             )}
             {changeInfo && (
               <UserInfoModal
