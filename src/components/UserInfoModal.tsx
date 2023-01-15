@@ -14,9 +14,9 @@ const UserInfoModal = ({ onClick, userInfo }) => {
     e.preventDefault();
     const body = { userEmail, userName, userDob, userLocation };
     if (userInfo) {
-      updateData("userinfo", "PUT", body)
+      updateData("userinfo", "PUT", body);
     } else {
-        updateData("userinfo", "POST", body)
+      updateData("userinfo", "POST", body);
     }
     window.location.reload();
   };
@@ -34,7 +34,7 @@ const UserInfoModal = ({ onClick, userInfo }) => {
   }, [userInfo]);
 
   return (
-    <div className="absolute flex flex-col w-2/3 shadow-xl left-0 right-0 m-auto p-8 space-y-4 justify-evenly md:w-1/2 rounded-xl bg-lightest dark:bg-dark">
+    <div className="absolute flex flex-col w-2/3 shadow-xl left-0 right-0 m-auto p-8 space-y-4 justify-evenly md:w-1/2 rounded-xl bg-lightest dark:bg-darker">
       <div className="flex justify-between">
         <h1 className="heading-1">Information</h1>
         <button className="heading-1" onClick={onClick}>
@@ -53,7 +53,7 @@ const UserInfoModal = ({ onClick, userInfo }) => {
           name="username"
           id="username"
           type="text"
-          className="p-1 mb-5 rounded-md"
+          className="p-1 mb-5 rounded-md dark:bg-dark"
         />
         <label htmlFor="userLocation">
           Tell us where you are in the world!
@@ -63,7 +63,7 @@ const UserInfoModal = ({ onClick, userInfo }) => {
           name="userLocation"
           id="userLocation"
           type="text"
-          className="p-1 mb-5 rounded-md"
+          className="p-1 mb-5 rounded-md dark:bg-dark"
         />
         <label htmlFor="userDob">Date of birth!</label>
         <input
@@ -71,7 +71,7 @@ const UserInfoModal = ({ onClick, userInfo }) => {
           name="userDob"
           id="userDob"
           type="date"
-          className="p-1 mb-5 rounded-md"
+          className="p-1 mb-5 rounded-md dark:bg-dark"
         />
         <button className="btn-primary">Update</button>
       </form>

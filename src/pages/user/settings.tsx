@@ -112,23 +112,32 @@ const Settings = () => {
                 </button>
               </div>
             </div>
-            <div className="grid col-start-1 row-start-2 p-4 bg-white rounded-md shadow-md dark:bg-darker">
-              <h2 className="border-b-[0.5px] pb-1 heading-2">About Me</h2>
-              <div className="flex flex-col justify-evenly">
-                <p className="mt-2 ml-1 text-xs">Name</p>
-                <p className="h-10 p-2 mb-1 bg-gray-100 rounded-md dark:bg-dark ">
-                  {userInfo?.["username"]}
-                </p>
-                <p className="ml-1 text-xs">Location</p>
-                <p className="h-10 p-2 mb-1 bg-gray-100 rounded-md dark:bg-dark ">
-                  {userInfo?.["userLocation"]}
-                </p>
-                <p className="ml-1 text-xs">Date of Birth</p>
-                <p className="h-10 p-2 mb-1 bg-gray-100 rounded-md dark:bg-dark ">
-                  {userInfo?.["userDob"]}
-                </p>
+            <div className="grid col-start-1 h-full row-start-2 p-4 bg-white rounded-md shadow-md dark:bg-darker">
+              <h2 className="border-b-[0.5px] h-10 pb-1 heading-2">About Me</h2>
+              <div className="flex flex-col">
+                {userInfo?.["username"] !== null && (
+                  <>
+                    <p className="mt-2 ml-1 text-xs text-gray-400">Name</p>
+                    <p className="h-10 p-2 mb-1">{userInfo?.["username"]}</p>
+                  </>
+                )}
+                {userInfo?.["userLocation"] !== null && (
+                  <>
+                    <p className="ml-1 text-xs text-gray-400">Location</p>
+                    <p className="h-10 p-2 mb-1">
+                      {userInfo?.["userLocation"]}
+                    </p>
+                  </>
+                )}
+                {userInfo?.["userDob"] !== null && (
+                  <>
+                    <p className="ml-1 text-xs text-gray-400">Date of Birth</p>
+                    <p className="h-10 p-2 mb-1">{userInfo?.["userDob"]}</p>
+                  </>
+                )}
+
                 <button
-                  className="mt-3 btn-primary"
+                  className="flex mt-auto justify-center btn-primary "
                   onClick={() => showInfoModal(true)}
                 >
                   Edit
