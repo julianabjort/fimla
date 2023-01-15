@@ -25,10 +25,10 @@ const Groups = () => {
   const createTournament = async () => {
     const body = { tournamentName, userName, userEmail };
     updateData("tournaments", "POST", body).then(() => getUsersInTournaments());
-    setTournamentName("")
+    setTournamentName("");
   };
 
-  if (status === "loading") return <LoadingIcon />;
+  if (status === "loading") return <LoadingIcon isPage />;
 
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">

@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-const LoadingIcon = () => {
+const LoadingIcon = ({ isPage }) => {
   const loadingContainerVariants = {
     start: {
       transition: {
@@ -24,8 +24,10 @@ const LoadingIcon = () => {
     },
   };
 
+  const height = isPage === true ? "h-[50vh]" : "h-full";
+
   return (
-    <div className="flex w-full h-[50vh] center">
+    <div className={`flex w-full ${height} center`}>
       <motion.div
         variants={loadingContainerVariants}
         initial="false"

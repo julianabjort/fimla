@@ -2,6 +2,7 @@ import { HiX, HiOutlineDocumentAdd } from "react-icons/hi";
 import Image from "next/image";
 import { getSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
+import LoadingIcon from "./LoadingIcon";
 
 const ProfilePicModal = ({ onClick }) => {
   const [session, setSession] = useState();
@@ -36,6 +37,8 @@ const ProfilePicModal = ({ onClick }) => {
 
   const handleOnSubmit = async (event: any) => {
     event.preventDefault();
+    setFile(true);
+
     // const form = document.getElementById("formId") as HTMLFormElement;
     const form = event.currentTarget;
     const fileInput: any = Array.from(form.elements).find(
@@ -58,7 +61,7 @@ const ProfilePicModal = ({ onClick }) => {
   };
   const updateProfilePic = async () => {
     const body = { userEmail, imageSrc };
-    console.log(body);
+
     try {
       const response = fetch(`/api/profile-pic`, {
         method: "PUT",
@@ -69,12 +72,14 @@ const ProfilePicModal = ({ onClick }) => {
     } catch (error) {
       console.log("There was an error deleting from the DB ", error);
     }
+    onClick();
   };
   /*******************************/
 
   useEffect(() => {
     readUser();
   }, []);
+
   return (
     <div className="absolute left-0 shadow-xl right-0 m-auto flex flex-col w-4/5 p-8 space-y-4 justify-evenly items-center lg:w-2/3 rounded-xl bg-lightest dark:bg-dark">
       <div className="flex justify-between">
@@ -104,38 +109,36 @@ const ProfilePicModal = ({ onClick }) => {
             name="file"
             id="file"
             hidden
-            value=""
-            onChange={(e) => {
-              const { target } = e;
-              if (target.value.length > 0) {
-                setFile(true);
-              } else {
-                setFile(false);
-              }
-            }}
+            // value=""
           />
           <HiOutlineDocumentAdd className="text-4xl cursor-pointer" />
         </label>
-        {isFile ? (
-          <button className="btn-secondary">Choose</button>
-        ) : (
-          <button className="btn-secondary-dis">Choose</button>
-        )}
-        {imageSrc && uploadData ? (
-          <button
-            className="btn-primary"
-            onClick={() => {
-              updateProfilePic();
-            }}
-          >
-            Upload Profile Picture
-          </button>
-        ) : (
-          <button className="btn-primary-dis" disabled>
-            Upload Profile Picture
+        {imageSrc && !uploadData && !isFile && (
+          <button type="submit" className="btn-secondary">
+            Confirm
           </button>
         )}
       </form>
+      {isFile && !uploadData && (
+        <button className="pb-5">
+          <LoadingIcon isPage={false} />
+        </button>
+      )}
+      {/* {isFile ? (
+          <button className="btn-secondary">Choose</button>
+        ) : (
+          <button className="btn-secondary-dis">Choose</button>
+        )} */}
+      {imageSrc && uploadData && (
+        <button
+          className="btn-primary"
+          onClick={() => {
+            updateProfilePic();
+          }}
+        >
+          Save
+        </button>
+      )}
     </div>
   );
 };

@@ -18,19 +18,20 @@ const Settings = () => {
   const [changeInfo, showInfoModal] = useState(false);
 
   const defaultProfilePic =
-  "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
-  
+    "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
+
   const [profilePic, setProfilePic] = useState(
     "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png"
   );
   const userImage =
-    user?.["image"] || "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png"
-  
+    user?.["image"] ||
+    "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png";
+
   useEffect(() => {
     getUserInfo();
     getUser();
   }, [session]);
-  
+
   useEffect(() => {
     if (userImage !== null) {
       setProfilePic(userImage);
@@ -40,23 +41,25 @@ const Settings = () => {
   }, [user]);
 
   const getUserInfo = async () => {
-    getByUserEmail("userinfo", userSession).then((result) => setUserInfo(result[0]))
+    getByUserEmail("userinfo", userSession).then((result) =>
+      setUserInfo(result[0])
+    );
   };
 
   const getUser = async () => {
-    getByUserEmail("user", userSession).then((result) => setUser(result[0]))
+    getByUserEmail("user", userSession).then((result) => setUser(result[0]));
   };
 
   const deleteUser = async (e: any) => {
-    deleteData("user", e)
+    deleteData("user", e);
     signOut();
   };
 
   const deleteStats = async (e: any) => {
-    deleteData("wordle-stats", e)
-    deleteData("quordle-stats", e)
+    deleteData("wordle-stats", e);
+    deleteData("quordle-stats", e);
   };
-  if (status === "loading") return <LoadingIcon />;
+  if (status === "loading") return <LoadingIcon isPage />;
 
   return (
     <div className="flex flex-col gap-y-4">
@@ -143,7 +146,9 @@ const Settings = () => {
                 Delete Account
               </h2>
               <div className="flex flex-col mb-4">
-                <p className="my-1 text-sm">Warning: this action cannot be undone</p>
+                <p className="my-1 text-sm">
+                  Warning: this action cannot be undone
+                </p>
                 <button
                   className="w-2/3 mt-2 btn-secondary"
                   onClick={() => deleteUser(userEmail)}

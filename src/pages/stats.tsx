@@ -96,7 +96,7 @@ const Stats = ({
     if (bee) initBeeStats();
   }, [bee]);
 
-  if (status === "loading") return <LoadingIcon />;
+  if (status === "loading") return <LoadingIcon isPage />;
   return (
     <div>
       <h1 className="my-10 heading-1">Game Stats</h1>

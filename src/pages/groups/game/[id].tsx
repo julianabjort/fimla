@@ -73,7 +73,7 @@ const Tournament = () => {
       updateGuesses();
     }
   }, [store.roundComplete]);
-  if (status === "loading") return <LoadingIcon />;
+  if (status === "loading") return <LoadingIcon isPage />;
 
   return (
     <div>

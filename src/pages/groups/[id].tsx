@@ -24,7 +24,7 @@ const Tournament = () => {
   const userName = session?.user?.["name"];
   const userEmail = session?.user?.["email"];
   const tournamentId = router.query["id"];
-  
+
   const [chat, showChat] = useState(false);
   const [tournament, setTournament] = useState([]);
   const tournamentName = tournament?.["name"];
@@ -133,7 +133,7 @@ const Tournament = () => {
       setProfilePic(defaultProfilePic);
     }
   }, [user]);
-  
+
   useEffect(() => {
     if (window.innerWidth < 768) {
       /* Screen is smaller than 768 and is on mobileview */
@@ -145,7 +145,7 @@ const Tournament = () => {
     }
   }, []);
 
-  if (status === "loading") return <LoadingIcon />;
+  if (status === "loading") return <LoadingIcon isPage />;
 
   return (
     <div>

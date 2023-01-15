@@ -103,7 +103,8 @@ const SpellingBee = () => {
       updateData("bee-stats", "POST", body);
     }
   };
-  if (!store.letters.length || status === "loading") return <LoadingIcon />;
+  if (!store.letters.length || status === "loading")
+    return <LoadingIcon isPage />;
 
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">
