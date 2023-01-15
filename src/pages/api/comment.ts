@@ -21,7 +21,7 @@ export default async function handler(
           data: {
             text: body.comment,
             userName: body.userName,
-            tournamentId: body.tournamentID,
+            tournamentId: body.tournamentId,
             userEmail: body.userEmail,
           },
         });
