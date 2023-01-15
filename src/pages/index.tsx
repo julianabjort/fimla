@@ -34,7 +34,7 @@ export default function Home() {
         {React.Children.toArray(
           games.map((game) => (
             <Link href={game.path}>
-              <GameCard image={game.image} title={game.name} />
+              <GameCard image={game.image} title={game.name} placeholderImg={game.placeholderImg}/>
             </Link>
           ))
         )}
