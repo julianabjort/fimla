@@ -1,8 +1,11 @@
+import { useSession } from "next-auth/react";
 import React from "react";
 import { useEffect, useState } from "react";
 import { prisma } from "../../lib/prisma";
+import LoadingIcon from "../components/LoadingIcon";
 
 const Leaderboard = ({ wordleSessionStats, quordleSessionStats }) => {
+  const { data: session, status } = useSession();
   const [wordle, setWordle] = useState(true);
   const [quordle, setQuordle] = useState(false);
   const [stats, setStats] = useState([]);
@@ -27,6 +30,9 @@ const Leaderboard = ({ wordleSessionStats, quordleSessionStats }) => {
   useEffect(() => {
     if (wordle) initLeaderBoardW();
   }, [wordle]);
+
+  if (status === "loading") return <LoadingIcon isPage />;
+
   return (
     <div className="flex flex-col gap-y-4">
       <h1 className="my-10 heading-1">Leaderboard</h1>
