@@ -9,6 +9,7 @@ import WordleStore from "../../stores/WordleStore.jsx";
 import OnboardingModal from "../../components/OnboardingModal";
 import getByUserEmail from "../../../lib/getByUserEmail";
 import updateData from "../../../lib/updateData";
+import LoadingIcon from "../../components/LoadingIcon";
 
 const Wordle = () => {
   const { data: session, status } = useSession();
@@ -98,6 +99,8 @@ const Wordle = () => {
     }
   }, [store.roundComplete]);
 
+  if (status === "loading") return <LoadingIcon isPage />;
+
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">
       <div className="flex justify-center">
@@ -149,6 +152,10 @@ const Wordle = () => {
         </>
       )}
       <Keyboard store={store} />
+      <div className="delay-delay3"></div>
+      <div className="delay-delay2"></div>
+      <div className="delay-delay1"></div>
+      <div className="delay-delay0"></div>
     </div>
   );
 };

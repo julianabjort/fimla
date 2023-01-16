@@ -9,6 +9,7 @@ import QuordleStore from "../../stores/QuordleStore.jsx";
 import OnboardingModal from "../../components/OnboardingModal";
 import updateData from "../../../lib/updateData";
 import getByUserEmail from "../../../lib/getByUserEmail";
+import LoadingIcon from "../../components/LoadingIcon";
 
 const Quordle = () => {
   const { data: session } = useSession();
@@ -96,6 +97,9 @@ const Quordle = () => {
       addQuordleStats();
     }
   }, [store.roundComplete]);
+
+  if (status === "loading") return <LoadingIcon isPage />;
+
   return (
     <div className="flex flex-col items-center my-10 justify-evenly">
       <div className="flex justify-center">
