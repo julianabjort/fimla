@@ -1,17 +1,17 @@
-import { HiX, HiOutlineDocumentAdd } from "react-icons/hi";
+import { HiX } from "react-icons/hi";
 import Image from "next/image";
-import { getSession, signOut } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import LoadingIcon from "./LoadingIcon";
 import updateData from "../../lib/updateData";
 
 const ProfilePicModal = ({ closeModal, setImageSrcReady }) => {
-  const [isFile, setFile] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [userEmail, setEmail] = useState("");
   const [imageSrc, setImageSrc] = useState(
     "https://res.cloudinary.com/diczrtchl/image/upload/v1673611647/figma-profile-pics/a5gyee4oj1tlk9edfzlv.png"
   );
-  const [uploadData, setUploadData] = useState();
+  const [uploadStarted, setUploadStarted] = useState(false);
   const [imageUploaded, setImageUploaded] = useState(false)
   
   /* Session */
@@ -30,19 +30,18 @@ const ProfilePicModal = ({ closeModal, setImageSrcReady }) => {
     const reader = new FileReader();
     reader.onload = function (onLoadEvent: any) {
       setImageSrc(onLoadEvent.target?.result);
-      setUploadData(undefined);
+      setUploadStarted(true);
     };
     reader.readAsDataURL(changeEvent.target.files?.[0]);
   };
 
   const handleOnSubmit = async (event: any) => {
     event.preventDefault();
-    setFile(true);
+    setIsSubmitted(true);
     const form = event.currentTarget;
     const fileInput: any = Array.from(form.elements).find(
       ({ name }: any) => name === "file"
     );
-
     const formData = new FormData();
 
     for (const file of fileInput.files) {
@@ -55,7 +54,6 @@ const ProfilePicModal = ({ closeModal, setImageSrcReady }) => {
     ).then((response) => response.json())
     .then(data => {
       setImageSrc(data.secure_url)
-      setUploadData(data)
     })
     .then(() => {
       setImageSrcReady(imageSrc)
@@ -104,15 +102,16 @@ const ProfilePicModal = ({ closeModal, setImageSrcReady }) => {
             id="file"
             hidden
           />
-          <HiOutlineDocumentAdd className="text-4xl cursor-pointer" />
+          <p className="btn-secondary cursor-pointer">Choose Image</p>
+          
         </label>
-        {imageSrc && !uploadData && !isFile && (
+        {imageSrc && uploadStarted && !isSubmitted && (
           <button type="submit" className="btn-secondary">
-            Confirm
+            Save
           </button>
         )}
       </form>
-      {isFile && !uploadData && (
+      {isSubmitted && (
         <button className="pb-5">
           <LoadingIcon isPage={false} />
         </button>
