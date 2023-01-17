@@ -64,8 +64,21 @@ const Tournament = () => {
   const getUsersInTournaments = async () => {
     getById("single-tournament", tournamentId).then((result) => {
       setUsersInTournament(result);
-      if (result.filter((i) => i.userEmail === userEmail))
-        setInTournament(true);
+      // console.log(result);
+      // console.log(userEmail);
+      // console.log(usersInTournament);
+
+      if (result.filter((i) => i["userEmail"] !== userEmail)) {
+        const filterById = result.filter((i: any) => i.userEmail === userEmail);
+        if (filterById[0]) {
+          console.log("hello");
+          setInTournament(true);
+        } else {
+          console.log("not in tournament");
+        }
+      } else {
+        console.log("hello");
+      }
     });
   };
 
@@ -144,6 +157,8 @@ const Tournament = () => {
       showChat(true);
     }
   }, []);
+
+  console.log(inTournament);
 
   if (status === "loading") return <LoadingIcon isPage />;
 
